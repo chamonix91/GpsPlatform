@@ -1,0 +1,8 @@
+api_gps_administration_homepage:
+    path:     /
+    defaults: { _controller: ApiGpsAdministrationBundle:Default:index }
+
+
+new_vehicle:
+    path:     /new_vehicle
+    defaults: { _controller: ApiGpsAdministrationBundle:Default:create }

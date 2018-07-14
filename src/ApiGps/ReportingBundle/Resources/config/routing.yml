@@ -1,0 +1,3 @@
+api_gps_reporting_homepage:
+    path:     /
+    defaults: { _controller: ApiGpsReportingBundle:Default:index }

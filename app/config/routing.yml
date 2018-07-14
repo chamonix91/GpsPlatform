@@ -1,0 +1,23 @@
+api_gps_reporting:
+    resource: "@ApiGpsReportingBundle/Resources/config/routing.yml"
+    prefix:   /
+
+api_gps_administration:
+    resource: "@ApiGpsAdministrationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+api_gps_espace_user:
+    resource: "@ApiGpsEspaceUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+#Company_rest
+company:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/CompanyController.php"
+    prefix:   /api
+
+
