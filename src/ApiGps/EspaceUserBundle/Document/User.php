@@ -10,12 +10,14 @@ namespace ApiGps\EspaceUserBundle\Document;
 
 use ApiGps\AdministrationBundle\Document\Company;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use FOS\UserBundle\Model\User as BaseUser;
+
 
 
 /**
  * @MongoDB\Document
  */
-class User
+class User extends BaseUser
 {
     /**
      * @MongoDB\Id
