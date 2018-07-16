@@ -33,7 +33,7 @@ company:
     prefix:   /api
 
 #Vehicle_rest
-vehicule:
+vehicle:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/VehicleController.php"
     prefix:   /api
