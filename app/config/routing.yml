@@ -32,4 +32,14 @@ company:
     resource: "@ApiGpsAdministrationBundle/Controller/CompanyController.php"
     prefix:   /api
 
+#Vehicle_rest
+vehicule:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/VehicleController.php"
+    prefix:   /api
 
+#Box_rest
+box:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/BoxController.php"
+    prefix:   /api
