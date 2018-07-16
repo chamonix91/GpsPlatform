@@ -21,6 +21,7 @@ class CompanyController extends FOSRestController
     /////////////////////////////
     ///// Get All companies /////
     /// /////////////////////////
+
     /**
      * @Rest\Get("/company")
      */
