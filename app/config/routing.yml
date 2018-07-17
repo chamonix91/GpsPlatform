@@ -43,3 +43,8 @@ box:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/BoxController.php"
     prefix:   /api
+#Trame_rest
+trame:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/TrameController.php"
+    prefix:   /api

@@ -9,6 +9,7 @@
 namespace ApiGps\AdministrationBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
 
 
 /**

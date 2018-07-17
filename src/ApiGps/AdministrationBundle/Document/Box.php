@@ -9,6 +9,7 @@
 namespace ApiGps\AdministrationBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
 
 
 /**
@@ -34,9 +35,15 @@ class Box
     private $imei;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Vehicle", inversedBy="box")
+     * @MongoDB\ReferenceOne(targetDocument="Vehicle", inversedBy="Box")
      */
     public $vehicle;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Trame", inversedBy="Box")
+     */
+    public $trame;
+
 
 
     /**
@@ -99,7 +106,7 @@ class Box
      * @param Vehicle $vehicle
      * @return $this
      */
-    public function setVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    public function setVehicle( $vehicle)
     {
         $this->vehicle = $vehicle;
         return $this;
@@ -108,10 +115,28 @@ class Box
     /**
      * Get vehicle
      *
-     * @return ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     * @return mixed $vehicle
      */
     public function getVehicle()
     {
         return $this->vehicle;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTrame()
+    {
+        return $this->trame;
+    }
+
+    /**
+     * @param mixed $trame
+     */
+    public function setTrame($trame)
+    {
+        $this->trame = $trame;
+    }
+
+
 }
