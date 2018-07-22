@@ -26,17 +26,29 @@ fos_oauth_server_authorize:
 # app/config/routing.yml
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
 #Company_rest
 company:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/CompanyController.php"
     prefix:   /api
-
-#user_rest
-user:
+#Session_rest
+session:
     type:     rest
-    resource: "@ApiGpsEspaceUserBundle/Controller/UserController.php"
+    resource: "@ApiGpsEspaceUserBundle/Controller/SessionController.php"
+    prefix:   /
+#Vehicle_rest
+vehicle:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/VehicleController.php"
     prefix:   /api
 
-
+#Box_rest
+box:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/BoxController.php"
+    prefix:   /api
+#Trame_rest
+trame:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/TrameController.php"
+    prefix:   /api

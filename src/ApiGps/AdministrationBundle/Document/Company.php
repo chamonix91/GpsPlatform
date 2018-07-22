@@ -9,8 +9,9 @@
 namespace ApiGps\AdministrationBundle\Document;
 
 use ApiGps\EspaceUserBundle\Document\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
