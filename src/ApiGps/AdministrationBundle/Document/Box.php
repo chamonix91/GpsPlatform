@@ -34,13 +34,9 @@ class Box
      */
     private $imei;
 
-    /**
-     * @MongoDB\ReferenceOne(targetDocument="Vehicle", inversedBy="Box")
-     */
-    public $vehicle;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Trame", inversedBy="Box")
+     * @MongoDB\ReferenceOne(targetDocument="Trame", inversedBy="box" )
      */
     public $trame;
 
@@ -100,27 +96,8 @@ class Box
         return $this->imei;
     }
 
-    /**
-     * Set vehicle
-     *
-     * @param Vehicle $vehicle
-     * @return $this
-     */
-    public function setVehicle( $vehicle)
-    {
-        $this->vehicle = $vehicle;
-        return $this;
-    }
 
-    /**
-     * Get vehicle
-     *
-     * @return mixed $vehicle
-     */
-    public function getVehicle()
-    {
-        return $this->vehicle;
-    }
+
 
     /**
      * @return mixed

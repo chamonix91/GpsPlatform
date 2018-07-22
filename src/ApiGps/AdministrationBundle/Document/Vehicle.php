@@ -27,6 +27,10 @@ class Vehicle
      * @MongoDB\Field(type="string")
      */
     private $reg_number;
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    private $reservoir;
 
     /**
      * @MongoDB\Field(type="string")
@@ -34,7 +38,22 @@ class Vehicle
     private $type;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Box", mappedBy="vehicle")
+     * @MongoDB\Field(type="string")
+     */
+    private $typeCarburant;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    private $puissance;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    private $rpmMax;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Box")
      */
     public $box;
 
@@ -113,5 +132,93 @@ class Vehicle
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set reservoir
+     *
+     * @param float $reservoir
+     * @return $this
+     */
+    public function setReservoir($reservoir)
+    {
+        $this->reservoir = $reservoir;
+        return $this;
+    }
+
+    /**
+     * Get reservoir
+     *
+     * @return float $reservoir
+     */
+    public function getReservoir()
+    {
+        return $this->reservoir;
+    }
+
+    /**
+     * Set typeCarburant
+     *
+     * @param string $typeCarburant
+     * @return $this
+     */
+    public function setTypeCarburant($typeCarburant)
+    {
+        $this->typeCarburant = $typeCarburant;
+        return $this;
+    }
+
+    /**
+     * Get typeCarburant
+     *
+     * @return string $typeCarburant
+     */
+    public function getTypeCarburant()
+    {
+        return $this->typeCarburant;
+    }
+
+    /**
+     * Set puissance
+     *
+     * @param int $puissance
+     * @return $this
+     */
+    public function setPuissance($puissance)
+    {
+        $this->puissance = $puissance;
+        return $this;
+    }
+
+    /**
+     * Get puissance
+     *
+     * @return int $puissance
+     */
+    public function getPuissance()
+    {
+        return $this->puissance;
+    }
+
+    /**
+     * Set rpmMax
+     *
+     * @param int $rpmMax
+     * @return $this
+     */
+    public function setRpmMax($rpmMax)
+    {
+        $this->rpmMax = $rpmMax;
+        return $this;
+    }
+
+    /**
+     * Get rpmMax
+     *
+     * @return int $rpmMax
+     */
+    public function getRpmMax()
+    {
+        return $this->rpmMax;
     }
 }

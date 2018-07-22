@@ -31,7 +31,11 @@ company:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/CompanyController.php"
     prefix:   /api
-
+#Session_rest
+session:
+    type:     rest
+    resource: "@ApiGpsEspaceUserBundle/Controller/SessionController.php"
+    prefix:   /
 #Vehicle_rest
 vehicle:
     type:     rest
