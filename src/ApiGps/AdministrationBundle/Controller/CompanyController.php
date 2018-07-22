@@ -12,11 +12,6 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 
 class CompanyController extends FOSRestController
 {
-    public function indexAction($name)
-    {
-        return $this->render('', array('name' => $name));
-    }
-
 
     /////////////////////////////
     ///// Get All companies /////
@@ -25,7 +20,7 @@ class CompanyController extends FOSRestController
     /**
      * @Rest\Get("/company")
      */
-    public function getCompanyAction()
+    public function getCompaniesAction()
     {
         $companies = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->findAll();
         if ($companies === null) {
@@ -41,6 +36,8 @@ class CompanyController extends FOSRestController
 
     /**
      * @Rest\Get("/company/{id}")
+     * @param $id
+     * @return Company|View|null|object
      */
     public function GetCompanyByIdAction($id)
     {
@@ -73,6 +70,35 @@ class CompanyController extends FOSRestController
         $em->persist($company);
         $em->flush();
         return new View("Company Added Successfully", Response::HTTP_OK);
+    }
+
+    /////////////////////////////
+    /////  update company   /////
+    /////////////////////////////
+
+
+    /**
+     * @Rest\Put("/company/{id}")
+     * @param $id
+     * @param Request $request
+     * @return View
+     */
+    public function updateCompanyAction($id,Request $request)
+    {
+        $name = $request->get('name');
+
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+        if (empty($company)) {
+            return new View("company not found", Response::HTTP_NOT_FOUND);
+        }
+        elseif(!empty($name)){
+            $company->setName($name);
+            $em->flush();
+            return new View("company Updated Successfully", Response::HTTP_OK);
+        }
+
+        else return new View("company name cannot be empty", Response::HTTP_NOT_ACCEPTABLE);
     }
 
 

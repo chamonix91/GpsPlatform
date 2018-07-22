@@ -29,7 +29,7 @@ class Company
      */
     private $name;
 
-    /** @MongoDB\ReferenceMany(targetDocument="User", mappedBy="company") */
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
 

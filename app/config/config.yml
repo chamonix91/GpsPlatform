@@ -71,7 +71,7 @@ swiftmailer:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017
+            server: mongodb://localhost:27017/
             options: {}
     default_database: gpsdb
     document_managers:
