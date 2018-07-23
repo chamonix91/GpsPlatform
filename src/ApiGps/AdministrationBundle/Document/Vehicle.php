@@ -53,6 +53,17 @@ class Vehicle
     private $rpmMax;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $marque;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $modele;
+
+
+    /**
      * @MongoDB\ReferenceOne(targetDocument="Box")
      */
     public $box;
@@ -122,6 +133,38 @@ class Vehicle
     {
         $this->type = $type;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarque()
+    {
+        return $this->marque;
+    }
+
+    /**
+     * @param mixed $marque
+     */
+    public function setMarque($marque)
+    {
+        $this->marque = $marque;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModele()
+    {
+        return $this->modele;
+    }
+
+    /**
+     * @param mixed $modele
+     */
+    public function setModele($modele)
+    {
+        $this->modele = $modele;
     }
 
     /**
