@@ -60,6 +60,8 @@ class BoxController extends  FOSRestController
         $numTel = $request->get('phone_num');
         $IMEI = $request->get('imei');
 
+
+
         if(empty($numTel) || empty($IMEI))
         {
             return "NULL VALUES ARE NOT ALLOWED";

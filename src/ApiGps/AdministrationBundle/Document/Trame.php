@@ -135,7 +135,7 @@ class Trame
      */
     private $externalvoltage;
     /**
-     * @MongoDB\ReferenceMany(targetDocument="Box", mappedBy="trame")
+     * @MongoDB\ReferenceOne(targetDocument="Box", inversedBy="trame")
      */
     private $box;
 
@@ -352,27 +352,6 @@ class Trame
         $this->box = $box;
     }
 
-
-
-    /**
-     * Add box
-     *
-     * @param ApiGps\AdministrationBundle\Document\Box $box
-     */
-    public function addBox(\ApiGps\AdministrationBundle\Document\Box $box)
-    {
-        $this->box[] = $box;
-    }
-
-    /**
-     * Remove box
-     *
-     * @param ApiGps\AdministrationBundle\Document\Box $box
-     */
-    public function removeBox(\ApiGps\AdministrationBundle\Document\Box $box)
-    {
-        $this->box->removeElement($box);
-    }
 
     /**
      * Set feelConsumed

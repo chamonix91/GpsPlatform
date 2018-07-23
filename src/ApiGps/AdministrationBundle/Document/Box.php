@@ -34,13 +34,10 @@ class Box
      */
     private $imei;
 
-
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Trame", inversedBy="box" )
+     * @MongoDB\ReferenceMany(targetDocument="Trame",mappedBy="box")
      */
-    public $trame;
-
-
+    private $trame;
 
     /**
      * Get id
