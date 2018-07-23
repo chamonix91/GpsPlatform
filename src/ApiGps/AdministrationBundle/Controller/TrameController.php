@@ -13,16 +13,14 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class TrameController extends FOSRestController
 {
 
-
-
     /**
      * @Rest\Get("/trame")
      */
-    public function getCompanyAction()
+    public function getTrameAction()
     {
         $trame = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findAll();
         if ($trame === null) {
-            return new View("trame dosen't exist", Response::HTTP_NOT_FOUND);
+            return new View("no trame found", Response::HTTP_NOT_FOUND);
         }
         return $trame;
     }
@@ -32,11 +30,12 @@ class TrameController extends FOSRestController
      * @param $id
      * @return Trame|View|null|object
      */
-    public function GetCompanyByIdAction($id)
+    public function GetTrameByIdAction($id)
     {
         $trame = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->find($id);
+
         if ($trame === null) {
-            return new View("Trame not found", Response::HTTP_NOT_FOUND);
+            return new View("Trame dosen't exist", Response::HTTP_NOT_FOUND);
         }
         return $trame;
     }
@@ -61,6 +60,10 @@ class TrameController extends FOSRestController
         $angle= $request->get('angle');
         $sat= $request->get('sat');
         $speed= $request->get('speed');
+        $b= $request->get('box');
+        $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($b);
+
+        //$box= $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($b);
 
         if(empty($speed) || empty($altitude)|| empty($longitude)|| empty($latitude))
         {
@@ -77,6 +80,7 @@ class TrameController extends FOSRestController
         $data->setSat($sat);
         $data->setSpeed($speed);
         $data->setTimestamp($timestamp);
+        $data->setBox($box);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -85,4 +89,9 @@ class TrameController extends FOSRestController
         return new View("Trame Added Successfully", Response::HTTP_OK);
     }
 
+    public function getCarburant ()
+    {
+
+
+    }
 }
