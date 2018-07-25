@@ -48,7 +48,6 @@ class TrameController extends FOSRestController
     public function postTrameAction(Request $request)
     {
         $data = new Trame();
-        //$imei= $request->get('imei');
         $header= $request->get('header');
         $codecid= $request->get('codecid');
         $nbrdata= $request->get('nbrdata');
@@ -60,6 +59,21 @@ class TrameController extends FOSRestController
         $angle= $request->get('angle');
         $sat= $request->get('sat');
         $speed= $request->get('speed');
+        $fuelConsumed= $request->get('fuelconsumed');
+        $fuelLvl= $request->get('fuelLvl');
+        $engineRpm= $request->get('enginerpm');
+        $fuelLvlp= $request->get('fuelLvlp');
+        $engineworktime= $request->get('engineworktime');
+        $engineworktimecounted= $request->get('engineworktimecounted');
+        $engineload= $request->get('engineload');
+        $enginetemperature= $request->get('enginetemperature');
+        $batterielvl= $request->get('batterielvl');
+        $batterietemperature= $request->get('batterietemperature');
+        $totalmil= $request->get('totalmil');
+        $totalmilc= $request->get('totalmilc');
+        $contact= $request->get('contact');
+            $externalvoltage= $request->get('externalvoltage');
+
         $b= $request->get('box');
         $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($b);
 
@@ -80,6 +94,20 @@ class TrameController extends FOSRestController
         $data->setSat($sat);
         $data->setSpeed($speed);
         $data->setTimestamp($timestamp);
+        $data->setFeelConsumed($fuelConsumed);
+        $data->setFeelLvl($fuelLvl);
+        $data->setFeelLvlp($fuelLvlp);
+        $data->setEngineRpm($engineRpm);
+        $data->setEngineload($engineload);
+        $data->setEnginetempirature($enginetemperature);
+        $data->setEngineworktime($engineworktime);
+        $data->setEngineworktimecounted($engineworktimecounted);
+        $data->setBatrieLvl($batterielvl);
+        $data->setBatrietempirature($batterietemperature);
+        $data->setTotalMileage($totalmil);
+        $data->setTotalMileagec($totalmilc);
+        $data->setContact($contact);
+        $data->setExternalvoltage($externalvoltage);
         $data->setBox($box);
 
         $em = $this->get('doctrine_mongodb')->getManager();

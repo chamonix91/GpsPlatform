@@ -9,8 +9,6 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ODM\MongoDB\DocumentRepository As DocumentRepository;
-use Doctrine\ODM\MongoDB\DocumentManager as DocumentManager;
 class VehicleController extends FOSRestController
 {
     public function indexAction($name)
@@ -18,23 +16,18 @@ class VehicleController extends FOSRestController
         return $this->render('', array('name' => $name));
     }
 
-    /** @var DocumentRepository  */
-    private  $dm;
-    /*
-    public function __construct(DocumentRepository $dm)
-    {
-        $this->dm = $dm;
-    }*/
+
     /**
-     * @Rest\Get("/vehicle")
-     */
+ * @Rest\Get("/vehicle")
+ */
     public function getVehicleAction()
     {
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
 
         return $result;
-        //return json_decode(json_encode($result),true);
     }
+
+
 
     /**
      * @Rest\Get("/vehicle/{id}")
@@ -60,9 +53,11 @@ class VehicleController extends FOSRestController
         $type = $request->get('type');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('typeCarburant');
+        $marque = $request->get('marque');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
+        $modele =  $request->get('modele');
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
 
         //var_dump($boitier);die();
@@ -70,6 +65,7 @@ class VehicleController extends FOSRestController
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
+
         $data->setRegNumber($matricule);
         $data->setBox($boitier);
         $data->setType($type);
@@ -77,6 +73,9 @@ class VehicleController extends FOSRestController
         $data->setReservoir($reservoir);
         $data->setRpmMax($rpmMax);
         $data->setTypeCarburant($typeCarburant);
+        $data->setMarque($marque);
+        $data->setModele($modele);
+
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
         $em->flush();

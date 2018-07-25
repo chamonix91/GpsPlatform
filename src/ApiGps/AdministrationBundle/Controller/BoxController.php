@@ -96,10 +96,10 @@ class BoxController extends  FOSRestController
             return new View("box not found", Response::HTTP_NOT_FOUND);
 
         }
-            $boitier->setPhoneNum($numTel);
-            $boitier->setImei($IMEI);
-            $sn->flush();
-            return new View("box Updated Successfully", Response::HTTP_NOT_FOUND);
+        $boitier->setPhoneNum($numTel);
+        $boitier->setImei($IMEI);
+        $sn->flush();
+        return new View("box Updated Successfully", Response::HTTP_OK);
 
 
     }
