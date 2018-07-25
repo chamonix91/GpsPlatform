@@ -39,11 +39,15 @@ class User extends BaseUser
      */
     private $phone;
 
-    /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="users") */
+    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="users") */
     private $company;
 
 
-
+    public function __construct()
+    {
+        parent::__construct();
+        $this->roles = array('ROLE_CLIENT');
+    }
 
     /**
      * Get id
