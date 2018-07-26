@@ -83,6 +83,11 @@ class Box
      */
     private $trame;
 
+    public function __construct()
+    {
+        $this->trame = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -91,28 +96,6 @@ class Box
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set phoneNum
-     *
-     * @param string $phoneNum
-     * @return $this
-     */
-    public function setPhoneNum($phoneNum)
-    {
-        $this->phone_num = $phoneNum;
-        return $this;
-    }
-
-    /**
-     * Get phoneNum
-     *
-     * @return string $phoneNum
-     */
-    public function getPhoneNum()
-    {
-        return $this->phone_num;
     }
 
     /**
@@ -137,31 +120,6 @@ class Box
         return $this->imei;
     }
 
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getTrame()
-    {
-        return $this->trame;
-    }
-
-    /**
-     * @param mixed $trame
-     */
-    public function setTrame($trame)
-    {
-        $this->trame = $trame;
-    }
-
-
-    public function __construct()
-    {
-        $this->trame = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
     /**
      * Set assSim
      *
@@ -209,10 +167,10 @@ class Box
     /**
      * Set buyDate
      *
-     * @param Date $buyDate
+     * @param DateTime $buyDate
      * @return $this
      */
-    public function setBuyDate(\Date $buyDate)
+    public function setBuyDate(\DateTime $buyDate)
     {
         $this->buy_date = $buyDate;
         return $this;
@@ -221,7 +179,7 @@ class Box
     /**
      * Get buyDate
      *
-     * @return Date $buyDate
+     * @return DateTime $buyDate
      */
     public function getBuyDate()
     {
@@ -339,26 +297,6 @@ class Box
     }
 
     /**
-     * Add trame
-     *
-     * @param ApiGps\AdministrationBundle\Document\Trame $trame
-     */
-    public function addTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
-    {
-        $this->trame[] = $trame;
-    }
-
-    /**
-     * Remove trame
-     *
-     * @param ApiGps\AdministrationBundle\Document\Trame $trame
-     */
-    public function removeTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
-    {
-        $this->trame->removeElement($trame);
-    }
-
-    /**
      * Set active
      *
      * @param boolean $active
@@ -400,5 +338,35 @@ class Box
     public function getRetraitDate()
     {
         return $this->retrait_date;
+    }
+
+    /**
+     * Add trame
+     *
+     * @param ApiGps\AdministrationBundle\Document\Trame $trame
+     */
+    public function addTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
+    {
+        $this->trame[] = $trame;
+    }
+
+    /**
+     * Remove trame
+     *
+     * @param ApiGps\AdministrationBundle\Document\Trame $trame
+     */
+    public function removeTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
+    {
+        $this->trame->removeElement($trame);
+    }
+
+    /**
+     * Get trame
+     *
+     * @return \Doctrine\Common\Collections\Collection $trame
+     */
+    public function getTrame()
+    {
+        return $this->trame;
     }
 }

@@ -82,30 +82,9 @@ class Vehicle
      */
     public $box;
 
-    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="vehicles") */
-    private $company;
-
-
-    /**
-     * @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="vehicles")
+    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="vehicles")
      */
     private $company;
-
-    /**
-     * @return mixed
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    /**
-     * @param mixed $company
-     */
-    public function setCompany($company)
-    {
-        $this->company = $company;
-    }
 
     /**
      * Get id
@@ -140,82 +119,6 @@ class Vehicle
     }
 
     /**
-     * Set box
-     *
-     * @param Box $box
-     * @return $this
-     */
-    public function setBox(Box $box)
-    {
-        $this->box = $box;
-        return $this;
-    }
-
-    /**
-     * Get box
-     *
-     * @return Box $box
-     */
-    public function getBox()
-    {
-        return $this->box;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarque()
-    {
-        return $this->marque;
-    }
-
-    /**
-     * @param mixed $marque
-     */
-    public function setMarque($marque)
-    {
-        $this->marque = $marque;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModele()
-    {
-        return $this->modele;
-    }
-
-    /**
-     * @param mixed $modele
-     */
-    public function setModele($modele)
-    {
-        $this->modele = $modele;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set reservoir
      *
      * @param float $reservoir
@@ -238,69 +141,25 @@ class Vehicle
     }
 
     /**
-     * Set typeCarburant
+     * Set type
      *
-     * @param string $typeCarburant
+     * @param string $type
      * @return $this
      */
-    public function setTypeCarburant($typeCarburant)
+    public function setType($type)
     {
-        $this->typeCarburant = $typeCarburant;
+        $this->type = $type;
         return $this;
     }
 
     /**
-     * Get typeCarburant
+     * Get type
      *
-     * @return string $typeCarburant
+     * @return string $type
      */
-    public function getTypeCarburant()
+    public function getType()
     {
-        return $this->typeCarburant;
-    }
-
-    /**
-     * Set puissance
-     *
-     * @param int $puissance
-     * @return $this
-     */
-    public function setPuissance($puissance)
-    {
-        $this->puissance = $puissance;
-        return $this;
-    }
-
-    /**
-     * Get puissance
-     *
-     * @return int $puissance
-     */
-    public function getPuissance()
-    {
-        return $this->puissance;
-    }
-
-    /**
-     * Set rpmMax
-     *
-     * @param int $rpmMax
-     * @return $this
-     */
-    public function setRpmMax($rpmMax)
-    {
-        $this->rpmMax = $rpmMax;
-        return $this;
-    }
-
-    /**
-     * Get rpmMax
-     *
-     * @return int $rpmMax
-     */
-    public function getRpmMax()
-    {
-        return $this->rpmMax;
+        return $this->type;
     }
 
     /**
@@ -370,6 +229,50 @@ class Vehicle
     }
 
     /**
+     * Set puissance
+     *
+     * @param int $puissance
+     * @return $this
+     */
+    public function setPuissance($puissance)
+    {
+        $this->puissance = $puissance;
+        return $this;
+    }
+
+    /**
+     * Get puissance
+     *
+     * @return int $puissance
+     */
+    public function getPuissance()
+    {
+        return $this->puissance;
+    }
+
+    /**
+     * Set rpmMax
+     *
+     * @param int $rpmMax
+     * @return $this
+     */
+    public function setRpmMax($rpmMax)
+    {
+        $this->rpmMax = $rpmMax;
+        return $this;
+    }
+
+    /**
+     * Get rpmMax
+     *
+     * @return int $rpmMax
+     */
+    public function getRpmMax()
+    {
+        return $this->rpmMax;
+    }
+
+    /**
      * Set technicalVisit
      *
      * @param DateTime $technicalVisit
@@ -433,6 +336,28 @@ class Vehicle
     public function getVignettes()
     {
         return $this->vignettes;
+    }
+
+    /**
+     * Set box
+     *
+     * @param ApiGps\AdministrationBundle\Document\Box $box
+     * @return $this
+     */
+    public function setBox(\ApiGps\AdministrationBundle\Document\Box $box)
+    {
+        $this->box = $box;
+        return $this;
+    }
+
+    /**
+     * Get box
+     *
+     * @return ApiGps\AdministrationBundle\Document\Box $box
+     */
+    public function getBox()
+    {
+        return $this->box;
     }
 
     /**

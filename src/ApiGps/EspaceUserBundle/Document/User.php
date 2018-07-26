@@ -9,6 +9,7 @@
 namespace ApiGps\EspaceUserBundle\Document;
 
 use ApiGps\AdministrationBundle\Document\Company;
+use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -52,22 +53,6 @@ class User extends BaseUser
     /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="users") */
     private $company;
 
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array('ROLE_CLIENT');
-    }
-
-    /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set firstName
@@ -136,31 +121,9 @@ class User extends BaseUser
     }
 
     /**
-     * Set company
-     *
-     * @param Company $company
-     * @return $this
-     */
-    public function setCompany(Company $company)
-    {
-        $this->company = $company;
-        return $this;
-    }
-
-    /**
-     * Get company
-     *
-     * @return Company $company
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    /**
      * Set createdDate
      *
-     * @param DateTime $createdDate
+     * @param \DateTime $createdDate
      * @return $this
      */
     public function setCreatedDate(\DateTime $createdDate)
@@ -182,7 +145,7 @@ class User extends BaseUser
     /**
      * Set endDate
      *
-     * @param DateTime $endDate
+     * @param \DateTime $endDate
      * @return $this
      */
     public function setEndDate(\DateTime $endDate)
@@ -199,5 +162,27 @@ class User extends BaseUser
     public function getEndDate()
     {
         return $this->end_date;
+    }
+
+    /**
+     * Set company
+     *
+     * @param Company $company
+     * @return $this
+     */
+    public function setCompany(Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }
