@@ -40,7 +40,17 @@ class Vehicle
     /**
      * @MongoDB\Field(type="string")
      */
-    private $typeCarburant;
+    private $mark;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $model;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $fuel_type;
 
     /**
      * @MongoDB\Field(type="int")
@@ -53,20 +63,27 @@ class Vehicle
     private $rpmMax;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="DateTime")
      */
-    private $marque;
+    private $technical_visit;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="DateTime")
      */
-    private $modele;
+    private $insurance;
 
+    /**
+     * @MongoDB\Field(type="DateTime")
+     */
+    private $vignettes;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box")
      */
     public $box;
+
+    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="vehicles") */
+    private $company;
 
 
     /**
@@ -263,5 +280,159 @@ class Vehicle
     public function getRpmMax()
     {
         return $this->rpmMax;
+    }
+
+    /**
+     * Set mark
+     *
+     * @param string $mark
+     * @return $this
+     */
+    public function setMark($mark)
+    {
+        $this->mark = $mark;
+        return $this;
+    }
+
+    /**
+     * Get mark
+     *
+     * @return string $mark
+     */
+    public function getMark()
+    {
+        return $this->mark;
+    }
+
+    /**
+     * Set model
+     *
+     * @param string $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * Get model
+     *
+     * @return string $model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set fuelType
+     *
+     * @param string $fuelType
+     * @return $this
+     */
+    public function setFuelType($fuelType)
+    {
+        $this->fuel_type = $fuelType;
+        return $this;
+    }
+
+    /**
+     * Get fuelType
+     *
+     * @return string $fuelType
+     */
+    public function getFuelType()
+    {
+        return $this->fuel_type;
+    }
+
+    /**
+     * Set technicalVisit
+     *
+     * @param DateTime $technicalVisit
+     * @return $this
+     */
+    public function setTechnicalVisit(\DateTime $technicalVisit)
+    {
+        $this->technical_visit = $technicalVisit;
+        return $this;
+    }
+
+    /**
+     * Get technicalVisit
+     *
+     * @return DateTime $technicalVisit
+     */
+    public function getTechnicalVisit()
+    {
+        return $this->technical_visit;
+    }
+
+    /**
+     * Set insurance
+     *
+     * @param DateTime $insurance
+     * @return $this
+     */
+    public function setInsurance(\DateTime $insurance)
+    {
+        $this->insurance = $insurance;
+        return $this;
+    }
+
+    /**
+     * Get insurance
+     *
+     * @return DateTime $insurance
+     */
+    public function getInsurance()
+    {
+        return $this->insurance;
+    }
+
+    /**
+     * Set vignettes
+     *
+     * @param DateTime $vignettes
+     * @return $this
+     */
+    public function setVignettes(\DateTime $vignettes)
+    {
+        $this->vignettes = $vignettes;
+        return $this;
+    }
+
+    /**
+     * Get vignettes
+     *
+     * @return DateTime $vignettes
+     */
+    public function getVignettes()
+    {
+        return $this->vignettes;
+    }
+
+    /**
+     * Set company
+     *
+     * @param ApiGps\AdministrationBundle\Document\Company $company
+     * @return $this
+     */
+    public function setCompany(\ApiGps\AdministrationBundle\Document\Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return ApiGps\AdministrationBundle\Document\Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }
