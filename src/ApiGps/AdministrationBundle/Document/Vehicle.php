@@ -70,6 +70,27 @@ class Vehicle
 
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="vehicles")
+     */
+    private $company;
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
+    }
+
+    /**
      * Get id
      *
      * @return id $id

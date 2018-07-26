@@ -28,6 +28,8 @@ class BoxController extends  FOSRestController
         if ($result === null) {
             return new View("there are no boxes exist", Response::HTTP_NOT_FOUND);
         }
+
+
         return $result;
     }
     /////////////////////////////

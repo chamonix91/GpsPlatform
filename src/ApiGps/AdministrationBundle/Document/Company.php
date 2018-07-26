@@ -33,6 +33,27 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
+    /**
+    * @MongoDB\ReferenceMany(targetDocument="Vehicle", mappedBy="company")
+     * */
+    private $vehicles;
+
+    /**
+     * @return mixed
+     */
+    public function getVehicles()
+    {
+        return $this->vehicles;
+    }
+
+    /**
+     * @param mixed $vehicles
+     */
+    public function setVehicles($vehicles)
+    {
+        $this->vehicles = $vehicles;
+    }
+
 
     /**
      * Get id
