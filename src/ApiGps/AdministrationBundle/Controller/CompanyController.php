@@ -61,11 +61,25 @@ class CompanyController extends FOSRestController
     {
         $company = new Company();
         $name = $request->get('name');
-        if(empty($name))
+        $adress = $request->get('adress');
+        $phone = $request->get('phone');
+        $end_date = $request->get('end_date');
+        $cp_name = $request->get('cp_name');
+        $cp_phone = $request->get('cp_phone');
+        $cpa_name = $request->get('cpa_name');
+        $cpa_phone = $request->get('cpa_phone');
+        if(empty($company))
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
         $company->setName($name);
+        $company->setAdress($adress);
+        $company->setPhone($phone);
+        $company->setEndDate($end_date);
+        $company->setCpaName($cp_name);
+        $company->setCpaPhone($cp_phone);
+        $company->setCpaName($cpa_name);
+        $company->setCpaPhone($cpa_phone);
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($company);
         $em->flush();
@@ -86,14 +100,30 @@ class CompanyController extends FOSRestController
     public function updateCompanyAction($id,Request $request)
     {
         $name = $request->get('name');
+        $adress = $request->get('adress');
+        $phone = $request->get('phone');
+        $created_date = $request->get('created_date');
+        $end_date = $request->get('end_date');
+        $cp_name = $request->get('cp_name');
+        $cp_phone = $request->get('cp_phone');
+        $cpa_name = $request->get('cpa_name');
+        $cpa_phone = $request->get('cpa_phone');
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
         if (empty($company)) {
             return new View("company not found", Response::HTTP_NOT_FOUND);
         }
-        elseif(!empty($name)){
+        elseif(!empty($company)){
             $company->setName($name);
+            $company->setAdress($adress);
+            $company->setPhone($phone);
+            $company->setCreatedDate($created_date);
+            $company->setEndDate($end_date);
+            $company->setCpaName($cp_name);
+            $company->setCpaPhone($cp_phone);
+            $company->setCpaName($cpa_name);
+            $company->setCpaPhone($cpa_phone);
             $em->flush();
             return new View("company Updated Successfully", Response::HTTP_OK);
         }
