@@ -9,7 +9,6 @@
 namespace ApiGps\EspaceUserBundle\Document;
 
 use ApiGps\AdministrationBundle\Document\Company;
-use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -41,12 +40,12 @@ class User extends BaseUser
     private $phone;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $created_date;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $end_date;
 
@@ -123,10 +122,10 @@ class User extends BaseUser
     /**
      * Set createdDate
      *
-     * @param \DateTime $createdDate
+     * @param \timestamp $createdDate
      * @return $this
      */
-    public function setCreatedDate(\DateTime $createdDate)
+    public function setCreatedDate( $createdDate)
     {
         $this->created_date = $createdDate;
         return $this;
@@ -135,7 +134,7 @@ class User extends BaseUser
     /**
      * Get createdDate
      *
-     * @return DateTime $createdDate
+     * @return timestamp $createdDate
      */
     public function getCreatedDate()
     {
@@ -145,10 +144,10 @@ class User extends BaseUser
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param \timestamp $endDate
      * @return $this
      */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate( $endDate)
     {
         $this->end_date = $endDate;
         return $this;
@@ -157,7 +156,7 @@ class User extends BaseUser
     /**
      * Get endDate
      *
-     * @return DateTime $endDate
+     * @return timestamp $endDate
      */
     public function getEndDate()
     {

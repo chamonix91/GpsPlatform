@@ -29,4 +29,16 @@ class SessionController extends FOSRestController
         return $user;
         //return $user->getId();
     }
+    /**
+     * @Rest\Post("/ss", name="oth")
+     * @param Request $request
+     */
+    public function posSessionAction(Request $request)
+    {
+
+//var_dump('aaaaa');die();
+        return 'aaaaa';
+        //return $user->getId();
+    }
+
 }

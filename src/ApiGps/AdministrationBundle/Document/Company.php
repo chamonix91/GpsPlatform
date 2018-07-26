@@ -41,12 +41,12 @@ class Company
     private $phone;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $created_date;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $end_date;
 
@@ -224,10 +224,10 @@ class Company
     /**
      * Set createdDate
      *
-     * @param DateTime $createdDate
+     * @param timestamp $createdDate
      * @return $this
      */
-    public function setCreatedDate(\DateTime $createdDate)
+    public function setCreatedDate( $createdDate)
     {
         $this->created_date = $createdDate;
         return $this;
@@ -236,7 +236,7 @@ class Company
     /**
      * Get createdDate
      *
-     * @return DateTime $createdDate
+     * @return timestamp $createdDate
      */
     public function getCreatedDate()
     {
@@ -246,10 +246,10 @@ class Company
     /**
      * Set endDate
      *
-     * @param DateTime $endDate
+     * @param timestamp $endDate
      * @return $this
      */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate( $endDate)
     {
         $this->end_date = $endDate;
         return $this;
@@ -258,7 +258,7 @@ class Company
     /**
      * Get endDate
      *
-     * @return DateTime $endDate
+     * @return timestamp $endDate
      */
     public function getEndDate()
     {

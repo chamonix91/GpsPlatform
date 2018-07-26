@@ -61,6 +61,16 @@ class BoxController extends  FOSRestController
         $data = new Box();
         $numTel = $request->get('phone_num');
         $IMEI = $request->get('imei');
+        $ass_sim = $request->get('ass_sim');
+        $client_sim = $request->get('client_sim');
+        $buy_date = $request->get('buy_date');
+        $bond_date = $request->get('bond_date');
+        $endbond_date = $request->get('endbond_date');
+        $mark = $request->get('mark');
+        $model = $request->get('model');
+        $type = $request->get('type');
+        $active = $request->get('active');
+        $retrait_date = $request->get('retrait_date');
 
 
 
@@ -68,8 +78,17 @@ class BoxController extends  FOSRestController
         {
             return "NULL VALUES ARE NOT ALLOWED";
         }
-        $data->setPhoneNum($numTel);
+        $data->setEndbondDate($endbond_date);
+        $data->setRetraitDate($retrait_date);
+        $data->setModel($model);
+        $data->setMark($mark);
         $data->setImei($IMEI);
+        $data->setActive($active);
+        $data->setType($type);
+        $data->setAssSim($ass_sim);
+        $data->setBondDate($bond_date);
+        $data->setClientSim($client_sim);
+        $data->setBuyDate($buy_date);
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
         $em->flush();
