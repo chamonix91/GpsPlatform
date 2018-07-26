@@ -63,17 +63,17 @@ class Vehicle
     private $rpmMax;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $technical_visit;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $insurance;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $vignettes;
 
@@ -275,10 +275,10 @@ class Vehicle
     /**
      * Set technicalVisit
      *
-     * @param DateTime $technicalVisit
+     * @param timestamp $technicalVisit
      * @return $this
      */
-    public function setTechnicalVisit(\DateTime $technicalVisit)
+    public function setTechnicalVisit( $technicalVisit)
     {
         $this->technical_visit = $technicalVisit;
         return $this;
@@ -287,7 +287,7 @@ class Vehicle
     /**
      * Get technicalVisit
      *
-     * @return DateTime $technicalVisit
+     * @return timestamp $technicalVisit
      */
     public function getTechnicalVisit()
     {
@@ -297,10 +297,10 @@ class Vehicle
     /**
      * Set insurance
      *
-     * @param DateTime $insurance
+     * @param timestamp $insurance
      * @return $this
      */
-    public function setInsurance(\DateTime $insurance)
+    public function setInsurance( $insurance)
     {
         $this->insurance = $insurance;
         return $this;
@@ -309,7 +309,7 @@ class Vehicle
     /**
      * Get insurance
      *
-     * @return DateTime $insurance
+     * @return timestamp $insurance
      */
     public function getInsurance()
     {
@@ -319,10 +319,10 @@ class Vehicle
     /**
      * Set vignettes
      *
-     * @param DateTime $vignettes
+     * @param timestamp $vignettes
      * @return $this
      */
-    public function setVignettes(\DateTime $vignettes)
+    public function setVignettes( $vignettes)
     {
         $this->vignettes = $vignettes;
         return $this;
@@ -331,7 +331,7 @@ class Vehicle
     /**
      * Get vignettes
      *
-     * @return DateTime $vignettes
+     * @return timestamp $vignettes
      */
     public function getVignettes()
     {
@@ -341,7 +341,7 @@ class Vehicle
     /**
      * Set box
      *
-     * @param ApiGps\AdministrationBundle\Document\Box $box
+     * @param Box $box
      * @return $this
      */
     public function setBox(\ApiGps\AdministrationBundle\Document\Box $box)
@@ -353,7 +353,7 @@ class Vehicle
     /**
      * Get box
      *
-     * @return ApiGps\AdministrationBundle\Document\Box $box
+     * @return Box $box
      */
     public function getBox()
     {
@@ -363,7 +363,7 @@ class Vehicle
     /**
      * Set company
      *
-     * @param ApiGps\AdministrationBundle\Document\Company $company
+     * @param Company $company
      * @return $this
      */
     public function setCompany(\ApiGps\AdministrationBundle\Document\Company $company)
@@ -375,7 +375,7 @@ class Vehicle
     /**
      * Get company
      *
-     * @return ApiGps\AdministrationBundle\Document\Company $company
+     * @return Company $company
      */
     public function getCompany()
     {

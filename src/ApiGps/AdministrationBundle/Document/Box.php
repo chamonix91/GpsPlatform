@@ -39,7 +39,7 @@ class Box
     private $client_sim;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $buy_date;
 
@@ -73,7 +73,7 @@ class Box
     private $active;
 
     /**
-     * @MongoDB\Field(type="DateTime")
+     * @MongoDB\Field(type="timestamp")
      */
     private $retrait_date;
 
@@ -167,10 +167,10 @@ class Box
     /**
      * Set buyDate
      *
-     * @param DateTime $buyDate
+     * @param timestamp $buyDate
      * @return $this
      */
-    public function setBuyDate(\DateTime $buyDate)
+    public function setBuyDate( $buyDate)
     {
         $this->buy_date = $buyDate;
         return $this;
@@ -179,7 +179,7 @@ class Box
     /**
      * Get buyDate
      *
-     * @return DateTime $buyDate
+     * @return timestamp $buyDate
      */
     public function getBuyDate()
     {
@@ -321,10 +321,10 @@ class Box
     /**
      * Set retraitDate
      *
-     * @param DateTime $retraitDate
+     * @param timestamp $retraitDate
      * @return $this
      */
-    public function setRetraitDate(\DateTime $retraitDate)
+    public function setRetraitDate( $retraitDate)
     {
         $this->retrait_date = $retraitDate;
         return $this;
@@ -333,7 +333,7 @@ class Box
     /**
      * Get retraitDate
      *
-     * @return DateTime $retraitDate
+     * @return timestamp $retraitDate
      */
     public function getRetraitDate()
     {
@@ -343,7 +343,7 @@ class Box
     /**
      * Add trame
      *
-     * @param ApiGps\AdministrationBundle\Document\Trame $trame
+     * @param Trame $trame
      */
     public function addTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
     {
@@ -353,9 +353,9 @@ class Box
     /**
      * Remove trame
      *
-     * @param ApiGps\AdministrationBundle\Document\Trame $trame
+     * @param Trame $trame
      */
-    public function removeTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
+    public function removeTrame(Trame $trame)
     {
         $this->trame->removeElement($trame);
     }
