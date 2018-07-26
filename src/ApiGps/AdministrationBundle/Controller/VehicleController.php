@@ -28,7 +28,6 @@ class VehicleController extends FOSRestController
     }
 
 
-
     /**
      * @Rest\Get("/vehicle/{id}")
      * @param $id
@@ -37,7 +36,10 @@ class VehicleController extends FOSRestController
     public function idVehicleAction($id)
     {
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
-        return $result;
+        $response = new Response(json_encode(array('voitures' => $result)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        //return $result;
     }
 
 
@@ -132,4 +134,12 @@ class VehicleController extends FOSRestController
             return new View("reg_number or Box cannot be empty", Response::HTTP_NOT_ACCEPTABLE);*/
 
     }
+
+    public function getLastVehicleAction()
+    {
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+      
+        return $result;
+    }
+
 }
