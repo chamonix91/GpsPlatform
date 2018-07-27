@@ -2,7 +2,6 @@
 
 namespace ApiGps\AdministrationBundle\Controller;
 
-
 use ApiGps\AdministrationBundle\Document\Vehicle;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -22,26 +21,37 @@ class VehicleController extends FOSRestController
  */
     public function getVehicleAction()
     {
-        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+        $formatted = [];
+        foreach ($results as $result) {
+            $b = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($result->getBox()->getId());
+            $t = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findByBox($b);
 
-        return $result;
+            $formatted[] = [
+                'reg_number' => $result->getRegNumber(),
+                'imei' => $result->getBox()->getImei(),
+                'type_carburant' => $result->getTypeCarburant(),
+                'reservoir' => $result->getReservoir(),
+                'id' => $result->getId(),
+                'fuel_consumed' => $t[count($t)-1]->getFeelConsumed(),
+                'time_stamp' => $t[count($t)-1]->getTimestamp(),
+                'speed' => $t[count($t)-1]->getSpeed(),
+                'fuel_lvl' => $t[count($t)-1]->getFeelLvl(),
+                'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),
+                 'engine_work_time' => $t[count($t)-1]->getEngineworktime(),
+                'engine_worktime_counted' => $t[count($t)-1]->getEngineworktimecounted(),
+                'engine_load' => $t[count($t)-1]->getEngineload(),
+                'batterie_lvl' => $t[count($t)-1]->getBatrieLvl(),
+
+                //'id' => $result->getId(),
+               // 'id' => $result->getId(),
+               // 'type_carburant' => $result->getTypeCarburant(),
+
+            ];
+        }
+
+        return $formatted;
     }
-
-
-    /**
-     * @Rest\Get("/vehicle/{id}")
-     * @param $id
-     * @return Vehicle|null|object
-     */
-    public function idVehicleAction($id)
-    {
-        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
-        $response = new Response(json_encode(array('voitures' => $result)));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-        //return $result;
-    }
-
 
     /**
      * @Rest\Post("/vehicle")
@@ -60,7 +70,9 @@ class VehicleController extends FOSRestController
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
         $modele =  $request->get('modele');
+        $idCompany= $request->get('company');
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
 
         //var_dump($boitier);die();
         if(empty($matricule)|| empty($type))
@@ -77,6 +89,7 @@ class VehicleController extends FOSRestController
         $data->setTypeCarburant($typeCarburant);
         $data->setMarque($marque);
         $data->setModele($modele);
+        $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -135,11 +148,16 @@ class VehicleController extends FOSRestController
 
     }
 
-    public function getLastVehicleAction()
+    /**
+     * @Rest\Get("/vehicle/{idc}")
+     * @param $idc
+     * @return  Vehicle|null|object
+     */
+    public function getVehiculeBetweentwodates($datemin,$datemax)
     {
-        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
-      
-        return $result;
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+
+
     }
 
 }
