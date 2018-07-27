@@ -39,25 +39,19 @@ class User extends BaseUser
      */
     private $phone;
 
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $created_date;
+
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $end_date;
+
     /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="users") */
     private $company;
 
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roles = array('ROLE_CLIENT');
-    }
-
-    /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set firstName
@@ -123,6 +117,50 @@ class User extends BaseUser
     public function getPhone()
     {
         return $this->phone;
+    }
+
+    /**
+     * Set createdDate
+     *
+     * @param \timestamp $createdDate
+     * @return $this
+     */
+    public function setCreatedDate( $createdDate)
+    {
+        $this->created_date = $createdDate;
+        return $this;
+    }
+
+    /**
+     * Get createdDate
+     *
+     * @return timestamp $createdDate
+     */
+    public function getCreatedDate()
+    {
+        return $this->created_date;
+    }
+
+    /**
+     * Set endDate
+     *
+     * @param \timestamp $endDate
+     * @return $this
+     */
+    public function setEndDate( $endDate)
+    {
+        $this->end_date = $endDate;
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return timestamp $endDate
+     */
+    public function getEndDate()
+    {
+        return $this->end_date;
     }
 
     /**

@@ -40,7 +40,17 @@ class Vehicle
     /**
      * @MongoDB\Field(type="string")
      */
-    private $typeCarburant;
+    private $mark;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $model;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $fuel_type;
 
     /**
      * @MongoDB\Field(type="int")
@@ -53,42 +63,28 @@ class Vehicle
     private $rpmMax;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="timestamp")
      */
-    private $marque;
+    private $technical_visit;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="timestamp")
      */
-    private $modele;
+    private $insurance;
 
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $vignettes;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box")
      */
     public $box;
 
-
-    /**
-     * @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="vehicles")
+    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="vehicles")
      */
     private $company;
-
-    /**
-     * @return mixed
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    /**
-     * @param mixed $company
-     */
-    public function setCompany($company)
-    {
-        $this->company = $company;
-    }
 
     /**
      * Get id
@@ -123,82 +119,6 @@ class Vehicle
     }
 
     /**
-     * Set box
-     *
-     * @param Box $box
-     * @return $this
-     */
-    public function setBox(Box $box)
-    {
-        $this->box = $box;
-        return $this;
-    }
-
-    /**
-     * Get box
-     *
-     * @return Box $box
-     */
-    public function getBox()
-    {
-        return $this->box;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarque()
-    {
-        return $this->marque;
-    }
-
-    /**
-     * @param mixed $marque
-     */
-    public function setMarque($marque)
-    {
-        $this->marque = $marque;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModele()
-    {
-        return $this->modele;
-    }
-
-    /**
-     * @param mixed $modele
-     */
-    public function setModele($modele)
-    {
-        $this->modele = $modele;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string $type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set reservoir
      *
      * @param float $reservoir
@@ -221,25 +141,91 @@ class Vehicle
     }
 
     /**
-     * Set typeCarburant
+     * Set type
      *
-     * @param string $typeCarburant
+     * @param string $type
      * @return $this
      */
-    public function setTypeCarburant($typeCarburant)
+    public function setType($type)
     {
-        $this->typeCarburant = $typeCarburant;
+        $this->type = $type;
         return $this;
     }
 
     /**
-     * Get typeCarburant
+     * Get type
      *
-     * @return string $typeCarburant
+     * @return string $type
      */
-    public function getTypeCarburant()
+    public function getType()
     {
-        return $this->typeCarburant;
+        return $this->type;
+    }
+
+    /**
+     * Set mark
+     *
+     * @param string $mark
+     * @return $this
+     */
+    public function setMark($mark)
+    {
+        $this->mark = $mark;
+        return $this;
+    }
+
+    /**
+     * Get mark
+     *
+     * @return string $mark
+     */
+    public function getMark()
+    {
+        return $this->mark;
+    }
+
+    /**
+     * Set model
+     *
+     * @param string $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * Get model
+     *
+     * @return string $model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set fuelType
+     *
+     * @param string $fuelType
+     * @return $this
+     */
+    public function setFuelType($fuelType)
+    {
+        $this->fuel_type = $fuelType;
+        return $this;
+    }
+
+    /**
+     * Get fuelType
+     *
+     * @return string $fuelType
+     */
+    public function getFuelType()
+    {
+        return $this->fuel_type;
     }
 
     /**
@@ -284,5 +270,115 @@ class Vehicle
     public function getRpmMax()
     {
         return $this->rpmMax;
+    }
+
+    /**
+     * Set technicalVisit
+     *
+     * @param timestamp $technicalVisit
+     * @return $this
+     */
+    public function setTechnicalVisit( $technicalVisit)
+    {
+        $this->technical_visit = $technicalVisit;
+        return $this;
+    }
+
+    /**
+     * Get technicalVisit
+     *
+     * @return timestamp $technicalVisit
+     */
+    public function getTechnicalVisit()
+    {
+        return $this->technical_visit;
+    }
+
+    /**
+     * Set insurance
+     *
+     * @param timestamp $insurance
+     * @return $this
+     */
+    public function setInsurance( $insurance)
+    {
+        $this->insurance = $insurance;
+        return $this;
+    }
+
+    /**
+     * Get insurance
+     *
+     * @return timestamp $insurance
+     */
+    public function getInsurance()
+    {
+        return $this->insurance;
+    }
+
+    /**
+     * Set vignettes
+     *
+     * @param timestamp $vignettes
+     * @return $this
+     */
+    public function setVignettes( $vignettes)
+    {
+        $this->vignettes = $vignettes;
+        return $this;
+    }
+
+    /**
+     * Get vignettes
+     *
+     * @return timestamp $vignettes
+     */
+    public function getVignettes()
+    {
+        return $this->vignettes;
+    }
+
+    /**
+     * Set box
+     *
+     * @param Box $box
+     * @return $this
+     */
+    public function setBox(\ApiGps\AdministrationBundle\Document\Box $box)
+    {
+        $this->box = $box;
+        return $this;
+    }
+
+    /**
+     * Get box
+     *
+     * @return Box $box
+     */
+    public function getBox()
+    {
+        return $this->box;
+    }
+
+    /**
+     * Set company
+     *
+     * @param Company $company
+     * @return $this
+     */
+    public function setCompany(\ApiGps\AdministrationBundle\Document\Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

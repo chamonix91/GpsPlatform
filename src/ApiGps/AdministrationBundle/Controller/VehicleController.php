@@ -64,11 +64,17 @@ class VehicleController extends FOSRestController
         $matricule = $request->get('reg_number');
         $type = $request->get('type');
         $reservoir = $request->get('reservoir');
-        $typeCarburant = $request->get('typeCarburant');
-        $marque = $request->get('marque');
+        //$typeCarburant = $request->get('typeCarburant');
+        $marque = $request->get('mark');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
+        $modele =  $request->get('model');
+        $insurance = $request->get('insurance');
+        $vignettes = $request->get('vignettes');
+        $technical_visit = $request->get('technical_visit');
+        $idcompany = $request->get('company');
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
         $modele =  $request->get('modele');
         $idCompany= $request->get('company');
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
@@ -80,6 +86,10 @@ class VehicleController extends FOSRestController
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 
+        $data->setInsurance($insurance);
+        $data->setVignettes($vignettes);
+        $data->setTechnicalVisit($technical_visit);
+        $data->setCompany($company);
         $data->setRegNumber($matricule);
         $data->setBox($boitier);
         $data->setType($type);
@@ -109,6 +119,9 @@ class VehicleController extends FOSRestController
         $typeCarburant = $request->get('typeCarburant');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
+        $technical_visit = $request->get('technical_visit');
+        $insurance = $request->get('insurance');
+        $vignettes = $request->get('vignettes');
         $idBoitier = $request->get('box');
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
         $type = $request->get('type');
@@ -121,6 +134,9 @@ class VehicleController extends FOSRestController
 
 
        // elseif(!empty($matricule) && !empty($idBoitier)&& !empty($type)){
+            $vehicule->setTechnicalVisit($technical_visit);
+            $vehicule->setVignettes($vignettes);
+            $vehicule->setInsurance($insurance);
             $vehicule->setRegNumber($matricule);
             $vehicule->setBox($boitier);
             $vehicule->setType($type);
