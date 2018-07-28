@@ -17,11 +17,11 @@ class UserController extends FOSRestController
     /////////////////////////////
 
     /**
-     * @Rest\Post("/user")
+     * @Rest\Post("/user/{id}")
      * @param Request $request
      * @return View
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(Request $request, $id)
     {
         $userManager = $this->get('fos_user.user_manager');
         $first_name = $request->get('first_name');
@@ -33,12 +33,13 @@ class UserController extends FOSRestController
         $password = $request->get('password');
         $plainpassword = $request->get('plainpassword');
 
-        if(empty($first_name) || empty($last_name)|| empty($phone))
+        if(empty($username) || empty($email)|| empty($password))
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 
         $user = $userManager->createUser();
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
 
         $user->setUsername($username);
         $user->setEmail($email);
@@ -49,6 +50,7 @@ class UserController extends FOSRestController
         $user->setFirstName($first_name);
         $user->setLastName($last_name);
         $user->setPhone($phone);
+        $user->setCompany($company);
 
 
 
@@ -105,15 +107,18 @@ class UserController extends FOSRestController
         $em = $this->get('doctrine_mongodb')->getManager();
         $userManager = $this->get('fos_user.user_manager');
 
+
         $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
         $phone = $request->get('phone');
+        $idcompany = $request->get('company');
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         if (empty($user)) {
             return new View("user not found", Response::HTTP_NOT_FOUND);
         }
-        elseif(!empty($first_name) && !empty($last_name)&& !empty($phone)){
+
+        /*elseif(!empty($first_name) && !empty($last_name)&& !empty($phone)){
             $user->setFirstName($first_name);
             $user->setLastName($last_name);
             $user->setPhone($phone);
@@ -152,9 +157,22 @@ class UserController extends FOSRestController
             $user->setLastName($last_name);
             $em->flush();
             return new View("last name & first name Updated Successfully", Response::HTTP_OK);
+        }*/
+        elseif(!empty($user)){
+
+            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+
+
+            $user->setFirstName($first_name);
+            $user->setLastName($last_name);
+            $user->setPhone($phone);
+            $user->setCompany($company);
+
+            $em->flush();
+            return new View("User Updated Successfully", Response::HTTP_OK);
         }
 
-        else return new View("User name or role cannot be empty", Response::HTTP_NOT_ACCEPTABLE);
+        else return new View("User cannot be empty", Response::HTTP_NOT_ACCEPTABLE);
     }
 
 
