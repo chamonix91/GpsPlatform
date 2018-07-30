@@ -108,9 +108,9 @@ class UserController extends FOSRestController
         $userManager = $this->get('fos_user.user_manager');
 
 
-        $first_name = $request->get('first_name');
+       /* $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
-        $phone = $request->get('phone');
+        $phone = $request->get('phone');*/
         $idcompany = $request->get('company');
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
@@ -163,9 +163,9 @@ class UserController extends FOSRestController
             $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
 
 
-            $user->setFirstName($first_name);
+            /*$user->setFirstName($first_name);
             $user->setLastName($last_name);
-            $user->setPhone($phone);
+            $user->setPhone($phone);*/
             $user->setCompany($company);
 
             $em->flush();
