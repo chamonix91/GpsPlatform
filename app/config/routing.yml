@@ -43,6 +43,11 @@ session:
     type:     rest
     resource: "@ApiGpsEspaceUserBundle/Controller/SessionController.php"
     prefix:   /
+#trafic_rest
+traffic:
+    type:     rest
+    resource: "@ApiGpsReportingBundle/Controller/TraficController.php"
+    prefix:   /api
 #Vehicle_rest
 vehicle:
     type:     rest

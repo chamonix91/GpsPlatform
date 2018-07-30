@@ -79,6 +79,8 @@ class Company
 
     public function __construct()
     {
+        $this->created_date = new \DateTime('now');
+
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->vehicles = new \Doctrine\Common\Collections\ArrayCollection();
     }
