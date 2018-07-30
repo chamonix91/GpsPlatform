@@ -59,7 +59,6 @@ class BoxController extends  FOSRestController
     public function postBoxAction(Request $request)
     {
         $data = new Box();
-        $numTel = $request->get('phone_num');
         $IMEI = $request->get('imei');
         $ass_sim = $request->get('ass_sim');
         $client_sim = $request->get('client_sim');
@@ -74,7 +73,7 @@ class BoxController extends  FOSRestController
 
 
 
-        if(empty($numTel) || empty($IMEI))
+        if( empty($IMEI))
         {
             return "NULL VALUES ARE NOT ALLOWED";
         }
@@ -109,7 +108,7 @@ class BoxController extends  FOSRestController
      */
     public function updateBoxAction($id,Request $request)
     {
-        $numTel = $request->get('phone_num');
+        $numTel = $request->get('client_sim');
         $IMEI = $request->get('imei');
         $sn = $this->get('doctrine_mongodb')->getManager();
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
@@ -117,7 +116,7 @@ class BoxController extends  FOSRestController
             return new View("box not found", Response::HTTP_NOT_FOUND);
 
         }
-        $boitier->setPhoneNum($numTel);
+        $boitier->setClientSim($numTel);
         $boitier->setImei($IMEI);
         $sn->flush();
         return new View("box Updated Successfully", Response::HTTP_OK);

@@ -10,6 +10,7 @@ namespace ApiGps\AdministrationBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Timestamp;
 
 
 /**
@@ -344,7 +345,7 @@ class Vehicle
      * @param Box $box
      * @return $this
      */
-    public function setBox(\ApiGps\AdministrationBundle\Document\Box $box)
+    public function setBox( $box)
     {
         $this->box = $box;
         return $this;
@@ -366,7 +367,7 @@ class Vehicle
      * @param Company $company
      * @return $this
      */
-    public function setCompany(\ApiGps\AdministrationBundle\Document\Company $company)
+    public function setCompany( $company)
     {
         $this->company = $company;
         return $this;

@@ -8,6 +8,8 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Date;
+
 class VehicleController extends FOSRestController
 {
     public function indexAction($name)
@@ -17,8 +19,8 @@ class VehicleController extends FOSRestController
 
 
     /**
- * @Rest\Get("/vehicle")
- */
+     * @Rest\Get("/vehicle")
+     */
     public function getVehicleAction()
     {
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
@@ -30,7 +32,7 @@ class VehicleController extends FOSRestController
             $formatted[] = [
                 'reg_number' => $result->getRegNumber(),
                 'imei' => $result->getBox()->getImei(),
-                'type_carburant' => $result->getTypeCarburant(),
+                'type_carburant' => $result->getFuelType(),
                 'reservoir' => $result->getReservoir(),
                 'id' => $result->getId(),
                 'fuel_consumed' => $t[count($t)-1]->getFeelConsumed(),
@@ -38,14 +40,6 @@ class VehicleController extends FOSRestController
                 'speed' => $t[count($t)-1]->getSpeed(),
                 'fuel_lvl' => $t[count($t)-1]->getFeelLvl(),
                 'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),
-                 'engine_work_time' => $t[count($t)-1]->getEngineworktime(),
-                'engine_worktime_counted' => $t[count($t)-1]->getEngineworktimecounted(),
-                'engine_load' => $t[count($t)-1]->getEngineload(),
-                'batterie_lvl' => $t[count($t)-1]->getBatrieLvl(),
-
-                //'id' => $result->getId(),
-               // 'id' => $result->getId(),
-               // 'type_carburant' => $result->getTypeCarburant(),
 
             ];
         }
@@ -54,28 +48,25 @@ class VehicleController extends FOSRestController
     }
 
     /**
-     * @Rest\Post("/vehicle")
+     * @Rest\Post("/vehicle",name="_add")
      * @param Request $request
      * @return string
      */
-        public function postVehicleAction(Request $request)
+    public function postVehicleAction(Request $request)
     {
         $data = new Vehicle();
         $matricule = $request->get('reg_number');
         $type = $request->get('type');
         $reservoir = $request->get('reservoir');
-        //$typeCarburant = $request->get('typeCarburant');
+        $typeCarburant = $request->get('type_carburant');
         $marque = $request->get('mark');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
-        $modele =  $request->get('model');
         $insurance = $request->get('insurance');
         $vignettes = $request->get('vignettes');
         $technical_visit = $request->get('technical_visit');
-        $idcompany = $request->get('company');
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
-        $modele =  $request->get('modele');
+        $modele =  $request->get('model');
         $idCompany= $request->get('company');
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
@@ -96,9 +87,9 @@ class VehicleController extends FOSRestController
         $data->setPuissance($puissance);
         $data->setReservoir($reservoir);
         $data->setRpmMax($rpmMax);
-        $data->setTypeCarburant($typeCarburant);
-        $data->setMarque($marque);
-        $data->setModele($modele);
+        $data->setFuelType($typeCarburant);
+        $data->setMark($marque);
+        $data->setModel($modele);
         $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
@@ -116,7 +107,7 @@ class VehicleController extends FOSRestController
     {
         $matricule = $request->get('reg_number');
         $reservoir = $request->get('reservoir');
-        $typeCarburant = $request->get('typeCarburant');
+        $typeCarburant = $request->get('type_carburant');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $technical_visit = $request->get('technical_visit');
@@ -143,7 +134,7 @@ class VehicleController extends FOSRestController
         $vehicule->setPuissance($puissance);
         $vehicule->setReservoir($reservoir);
         $vehicule->setRpmMax($rpmMax);
-        $vehicule->setTypeCarburant($typeCarburant);
+        $vehicule->setFuelType($typeCarburant);
             $sn->flush();
             return new View("Vehicle Updated Successfully", Response::HTTP_OK);
 /*
@@ -165,15 +156,72 @@ class VehicleController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/vehicle/{idc}")
-     * @param $idc
-     * @return  Vehicle|null|object
+     * @Rest\Post("/vehicledates", name="date")
+     * @param Request $request
+     * @return array
      */
-    public function getVehiculeBetweentwodates($datemin,$datemax)
+    public function getVehicleBetweenTwoDatesAction(Request $request)
     {
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+        //$user = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:User')->findById($userID);
+        //$allvehicle=$user->getCompany()->getVehicles();
+        $datemin=$request->get('datemin');
+        $datemax=$request->get('datemax');
+        $allvehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
 
 
+        $formatted = [];
+        $dates=[];
+        $trames=[];
+        foreach ($allvehicle as $result) {
+            $b = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($result->getBox()->getId());
+            $t = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findByBox($b);
+            foreach ($t as $trame) {
+                $time =$trame->getTimestamp();
+                $d= Date("d-m-Y",$time);
+                $dates[] = [
+                    'date' => $d,
+                ];
+
+            }
+            $datesUnique= array_unique($dates,SORT_REGULAR);
+
+            foreach ($datesUnique as $date){
+                var_dump($date);
+                $tim=date_timestamp_get($date);
+                $ts = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findBy(array('timestamp' => $tim));
+                $trames[]=[
+                    'codecid' => $ts[0]->getCodecid(),
+                ];
+            }
+            return $trames;
+           // return $datesUnique;
+        }
+
+/*
+        $i=0;
+        foreach ($t as $trame) {
+            $time =$trame->getTimestamp();
+
+            if($time == $datemin || $time == $datemax)
+            {
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'imei' => $result->getBox()->getImei(),
+                    'type_carburant' => $result->getFuelType(),
+                    'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'fuel_consumed' => $t[$i]->getFeelConsumed(),
+                    'time_stamp' => $t[$i]->getTimestamp(),
+                    'speed' => $t[$i]->getSpeed(),
+                    'fuel_lvl' => $t[$i]->getFeelLvl(),
+                    'fuel_lvlp' => $t[$i]->getFeelLvlp(),
+                ];
+                $i++;
+            }
+
+        }*/
+
+        //return $formatted;
     }
 
 }
