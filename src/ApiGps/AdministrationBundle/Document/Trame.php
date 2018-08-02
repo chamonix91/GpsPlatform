@@ -134,6 +134,7 @@ class Trame
      * @MongoDB\Field(type="float")
      */
     private $externalvoltage;
+
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box", inversedBy="trame")
      */

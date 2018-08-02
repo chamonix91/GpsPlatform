@@ -77,6 +77,27 @@ class Box
      */
     private $retrait_date;
 
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Vehicle",mappedBy="box")
+     */
+    private $vehicle;
+
+    /**
+     * @return mixed
+     */
+    public function getVehicle()
+    {
+        return $this->vehicle;
+    }
+
+    /**
+     * @param mixed $vehicle
+     */
+    public function setVehicle($vehicle)
+    {
+        $this->vehicle = $vehicle;
+    }
+
 
     /**
      * @MongoDB\ReferenceMany(targetDocument="Trame",mappedBy="box")

@@ -10,8 +10,8 @@ namespace ApiGps\EspaceUserBundle\Document;
 
 use ApiGps\AdministrationBundle\Document\Company;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Timestamp;
 use FOS\UserBundle\Model\User as BaseUser;
-
 
 
 /**
@@ -52,6 +52,10 @@ class User extends BaseUser
     /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="users") */
     private $company;
 
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Reclam",mappedBy="user")
+     */
+    private $reclams;
 
     /**
      * Set firstName
@@ -122,7 +126,7 @@ class User extends BaseUser
     /**
      * Set createdDate
      *
-     * @param \timestamp $createdDate
+     * @param timestamp $createdDate
      * @return $this
      */
     public function setCreatedDate( $createdDate)
@@ -144,7 +148,7 @@ class User extends BaseUser
     /**
      * Set endDate
      *
-     * @param \timestamp $endDate
+     * @param timestamp $endDate
      * @return $this
      */
     public function setEndDate( $endDate)
@@ -184,4 +188,22 @@ class User extends BaseUser
     {
         return $this->company;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReclams()
+    {
+        return $this->reclams;
+    }
+
+    /**
+     * @param mixed $reclams
+     */
+    public function setReclams($reclams)
+    {
+        $this->reclams = $reclams;
+    }
+
+
 }

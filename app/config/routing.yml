@@ -54,6 +54,12 @@ vehicle:
     resource: "@ApiGpsAdministrationBundle/Controller/VehicleController.php"
     prefix:   /api
 
+#Vehicle_rest
+Reclam:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/ReclamController.php"
+    prefix:   /api
+
 #Box_rest
 box:
     type:     rest

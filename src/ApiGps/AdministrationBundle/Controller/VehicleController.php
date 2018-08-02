@@ -37,7 +37,6 @@ class VehicleController extends FOSRestController
                 'id' => $result->getId(),
                 'fuel_consumed' => $t[count($t)-1]->getFeelConsumed(),
                 'time_stamp' => $t[count($t)-1]->getTimestamp(),
-                'speed' => $t[count($t)-1]->getSpeed(),
                 'fuel_lvl' => $t[count($t)-1]->getFeelLvl(),
                 'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),
 
@@ -155,6 +154,7 @@ class VehicleController extends FOSRestController
 
     }
 
+
     /**
      * @Rest\Post("/vehicledates", name="date")
      * @param Request $request
@@ -169,59 +169,39 @@ class VehicleController extends FOSRestController
         $allvehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
 
 
-        $formatted = [];
-        $dates=[];
-        $trames=[];
-        foreach ($allvehicle as $result) {
-            $b = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($result->getBox()->getId());
-            $t = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findByBox($b);
-            foreach ($t as $trame) {
-                $time =$trame->getTimestamp();
-                $d= Date("d-m-Y",$time);
-                $dates[] = [
-                    'date' => $d,
-                ];
-
+        $result= [];
+        $resTrame=array();
+        $c=0;
+        for($i=0;$i<count($allvehicle);$i++){
+            $trames=$allvehicle[$i]->getBox()->getTrame();
+            for ($j=0;$j<count($trames);$j++){
+                //$time= Date("d-m-Y",$trames[$j]->getTimestamp());
+                if(($trames[$j]->getTimestamp() > $datemin) || ($trames[$j]->getTimestamp()< $datemax) ){
+                    $resTrame[$c]=$trames[$j]->getId();
+                    $c++;
+                }
             }
-            $datesUnique= array_unique($dates,SORT_REGULAR);
-
-            foreach ($datesUnique as $date){
-                var_dump($date);
-                $tim=date_timestamp_get($date);
-                $ts = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findBy(array('timestamp' => $tim));
-                $trames[]=[
-                    'codecid' => $ts[0]->getCodecid(),
-                ];
-            }
-            return $trames;
-           // return $datesUnique;
         }
 
-/*
-        $i=0;
-        foreach ($t as $trame) {
-            $time =$trame->getTimestamp();
+        for ($i=0;$i<count($resTrame);$i++){
+            $res =$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findOneById($resTrame[$i]);
+            $result[]=[
+                'reg_number' => $res->getBox()->getVehicle()->getRegNumber(),
+                'imei' => $res->getBox()->getImei(),
+                'type_carburant' => $res->getBox()->getVehicle()->getFuelType(),
+                'reservoir' => $res->getBox()->getVehicle()->getReservoir(),
+                'idVehicle' => $res->getBox()->getVehicle()->getId(),
+                'idTrame' => $res->getId(),
+                'timestamp' => $res->getTimeStamp(),
+                'fuel_consumed' => $res->getFeelConsumed(),
+                'fuel_lvl' => $res->getFeelLvl(),
+                'fuel_lvlp' => $res->getFeelLvlp(),
+            ];
 
-            if($time == $datemin || $time == $datemax)
-            {
-                $formatted[] = [
-                    'reg_number' => $result->getRegNumber(),
-                    'imei' => $result->getBox()->getImei(),
-                    'type_carburant' => $result->getFuelType(),
-                    'reservoir' => $result->getReservoir(),
-                    'id' => $result->getId(),
-                    'fuel_consumed' => $t[$i]->getFeelConsumed(),
-                    'time_stamp' => $t[$i]->getTimestamp(),
-                    'speed' => $t[$i]->getSpeed(),
-                    'fuel_lvl' => $t[$i]->getFeelLvl(),
-                    'fuel_lvlp' => $t[$i]->getFeelLvlp(),
-                ];
-                $i++;
-            }
+        }
 
-        }*/
+        return $result;
 
-        //return $formatted;
     }
 
 }
