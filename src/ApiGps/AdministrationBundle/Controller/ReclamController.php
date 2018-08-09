@@ -17,14 +17,25 @@ class ReclamController extends FOSRestController
     }
 
     /**
-     * @Rest\Get("/reclam")
+     * @Rest\Get("/reclam/{id}")
+     * @param $id
+     * @return Reclam[]|array|View
      */
-    public function getReclamAction()
+    public function getReclamAction($id)
     {
+        $i=0;
 
-        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Reclam')->findAll();
+        $user=$this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
+
+        if ($user->getRoles() == "ROLE_ADMIN"){
+            $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Reclam')->findAll();
+        }else{
+           $result = $user->getReclams();
+        }
+
+        //$result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Reclam')->findAll();
         if ($result === null) {
-            return new View("there are no boxes exist", Response::HTTP_NOT_FOUND);
+            return new View("there are no reclams exist", Response::HTTP_NOT_FOUND);
         }
 
         return $result;
@@ -38,9 +49,10 @@ class ReclamController extends FOSRestController
     public function PostReclamAction (Request $request){
 
         $data = new Reclam();
-        $topic = $request->get('message');
-        $message = $request->get('topic');
+        $topic = $request->get('topic');
+        $message = $request->get('message');
         $email = $request->get('email');
+        $status = $request->get('status');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->findOneByEmail($email);
         //var_dump($user);die();
 
@@ -52,7 +64,7 @@ class ReclamController extends FOSRestController
         $data->setMessage($message);
         $data->setUser($user);
         $data->setTopic($topic);
-        $data->setEtat(false);
+        $data->setEtat($status);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -61,14 +73,14 @@ class ReclamController extends FOSRestController
     }
 
     /**
-     * @Rest\Put("/reclam")
+     * @Rest\Put("/reclam/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
     public function updateReclamAction($id,Request $request)
     {
-        $etat = $request->get('etat');
+        $etat = $request->get('status');
         $reclam = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Reclam')->find($id);
 
         if (empty($reclam)) {
@@ -79,7 +91,7 @@ class ReclamController extends FOSRestController
         $sn = $this->get('doctrine_mongodb')->getManager();
         $sn->flush();
 
-        return new View("Vehicle Updated Successfully", Response::HTTP_OK);
+        return new View("Reclam Updated Successfully", Response::HTTP_OK);
 
     }
 

@@ -130,10 +130,10 @@ class VehicleController extends FOSRestController
             $vehicule->setRegNumber($matricule);
             $vehicule->setBox($boitier);
             $vehicule->setType($type);
-        $vehicule->setPuissance($puissance);
-        $vehicule->setReservoir($reservoir);
-        $vehicule->setRpmMax($rpmMax);
-        $vehicule->setFuelType($typeCarburant);
+            $vehicule->setPuissance($puissance);
+            $vehicule->setReservoir($reservoir);
+            $vehicule->setRpmMax($rpmMax);
+            $vehicule->setFuelType($typeCarburant);
             $sn->flush();
             return new View("Vehicle Updated Successfully", Response::HTTP_OK);
 /*

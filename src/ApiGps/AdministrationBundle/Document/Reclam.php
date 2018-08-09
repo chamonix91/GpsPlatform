@@ -47,7 +47,7 @@ class Reclam
     }
 
     /**
-     * @MongoDB\Field(type="boolean")
+     * @MongoDB\Field(type="string")
      */
     private $etat;
 
