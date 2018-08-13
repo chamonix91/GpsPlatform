@@ -117,9 +117,5 @@ class TrameController extends FOSRestController
         return new View("Trame Added Successfully", Response::HTTP_OK);
     }
 
-    public function getCarburant ()
-    {
 
-
-    }
 }
