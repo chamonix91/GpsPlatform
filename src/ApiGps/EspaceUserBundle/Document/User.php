@@ -27,17 +27,17 @@ class User extends BaseUser
     /**
      * @MongoDB\Field(type="string")
      */
-    private $first_name;
+    private $first_name="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $last_name;
+    private $last_name="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $phone;
+    private $phone="";
 
     /**
      * @MongoDB\Field(type="timestamp")
