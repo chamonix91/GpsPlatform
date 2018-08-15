@@ -33,12 +33,12 @@ class Company
     /**
      * @MongoDB\Field(type="string")
      */
-    private $adress;
+    private $adress="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $phone;
+    private $phone="";
 
     /**
      * @MongoDB\Field(type="timestamp")
@@ -53,22 +53,22 @@ class Company
     /**
      * @MongoDB\Field(type="string")
      */
-    private $cp_name;
+    private $cp_name="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $cp_phone;
+    private $cp_phone="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $cpa_name;
+    private $cpa_name="";
 
     /**
      * @MongoDB\Field(type="string")
      */
-    private $cpa_phone;
+    private $cpa_phone="";
 
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
@@ -79,7 +79,8 @@ class Company
 
     public function __construct()
     {
-        $this->created_date = new \DateTime('now');
+        $date = new \DateTime('now');
+        $this->created_date =$date->getTimestamp();
 
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->vehicles = new \Doctrine\Common\Collections\ArrayCollection();
@@ -220,29 +221,6 @@ class Company
     {
         return $this->phone;
     }
-
-    /**
-     * Set createdDate
-     *
-     * @param timestamp $createdDate
-     * @return $this
-     */
-    public function setCreatedDate( $createdDate)
-    {
-        $this->created_date = $createdDate;
-        return $this;
-    }
-
-    /**
-     * Get createdDate
-     *
-     * @return timestamp $createdDate
-     */
-    public function getCreatedDate()
-    {
-        return $this->created_date;
-    }
-
     /**
      * Set endDate
      *
@@ -351,5 +329,27 @@ class Company
     public function getCpaPhone()
     {
         return $this->cpa_phone;
+    }
+
+    /**
+     * Set createdDate
+     *
+     * @param timestamp $createdDate
+     * @return $this
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->created_date = $createdDate;
+        return $this;
+    }
+
+    /**
+     * Get createdDate
+     *
+     * @return timestamp $createdDate
+     */
+    public function getCreatedDate()
+    {
+        return $this->created_date;
     }
 }

@@ -5,6 +5,7 @@ namespace ApiGps\AdministrationBundle\Controller;
 use ApiGps\AdministrationBundle\Document\Company;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -26,7 +27,24 @@ class CompanyController extends FOSRestController
         if ($companies === null) {
             return new View("there are no companies exist", Response::HTTP_NOT_FOUND);
         }
-        return $companies;
+
+        $formatted = [];
+        foreach ($companies as $company) {
+            $formatted[] = [
+                'id' => $company->getId(),
+                'name'=>$company->getName(),
+                'adress'=>$company->getAdress(),
+                'phone'=>$company->getPhone(),
+                'created_date'=>$company->getCreatedDate(),
+                'end_date'=>strtotime($company->getEndDate()),
+                'cp_name'=>$company->getCpName(),
+                'cp_phone'=>$company->getCpPhone(),
+                'cpa_name'=>$company->getCpaName(),
+                'cpa_phone'=>$company->getCpaPhone(),
+            ];
+        }
+
+        return new JsonResponse($formatted);
     }
 
 
@@ -59,6 +77,9 @@ class CompanyController extends FOSRestController
      */
     public function addCompanyAction(Request $request)
     {
+        //$date = new \DateTime('2008-09-22');
+
+
         $company = new Company();
         $name = $request->get('name');
         $adress = $request->get('adress');
@@ -80,6 +101,7 @@ class CompanyController extends FOSRestController
         $company->setCpaPhone($cp_phone);
         $company->setCpaName($cpa_name);
         $company->setCpaPhone($cpa_phone);
+
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($company);
         $em->flush();
