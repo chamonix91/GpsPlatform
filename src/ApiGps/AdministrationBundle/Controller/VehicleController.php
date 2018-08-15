@@ -167,8 +167,7 @@ class VehicleController extends FOSRestController
         $d= substr($request->get('datemin'),0,24);
         $x= substr($request->get('datemax'),0,24);
 
-        //$datemin = new \DateTime($d);
-        //$datemax = new \DateTime($x);
+       
         $datemin = strtotime($d);
         $datemax =strtotime($x);
 
