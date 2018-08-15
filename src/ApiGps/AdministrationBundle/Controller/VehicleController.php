@@ -17,7 +17,6 @@ class VehicleController extends FOSRestController
         return $this->render('', array('name' => $name));
     }
 
-
     /**
      * @Rest\Get("/vehicle")
      */
@@ -39,7 +38,6 @@ class VehicleController extends FOSRestController
                 'time_stamp' => $t[count($t)-1]->getTimestamp(),
                 'fuel_lvl' => $t[count($t)-1]->getFeelLvl(),
                 'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),
-
             ];
         }
 
@@ -154,7 +152,6 @@ class VehicleController extends FOSRestController
 
     }
 
-
     /**
      * @Rest\Post("/vehicledates", name="date")
      * @param Request $request
@@ -162,12 +159,20 @@ class VehicleController extends FOSRestController
      */
     public function getVehicleBetweenTwoDatesAction(Request $request)
     {
-        //$user = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:User')->findById($userID);
-        //$allvehicle=$user->getCompany()->getVehicles();
-        $datemin=$request->get('datemin');
-        $datemax=$request->get('datemax');
-        $allvehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
+       // $userID=$request->get('id');
+       // $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:User')->findById($userID);
+       // $allvehicle=$user->getCompany()->getVehicles();
+       // var_dump($allvehicle);die();
 
+        $d= substr($request->get('datemin'),0,24);
+        $x= substr($request->get('datemax'),0,24);
+
+        //$datemin = new \DateTime($d);
+        //$datemax = new \DateTime($x);
+        $datemin = strtotime($d);
+        $datemax =strtotime($x);
+
+        $allvehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
 
         $result= [];
         $resTrame=array();
@@ -176,12 +181,14 @@ class VehicleController extends FOSRestController
             $trames=$allvehicle[$i]->getBox()->getTrame();
             for ($j=0;$j<count($trames);$j++){
                 //$time= Date("d-m-Y",$trames[$j]->getTimestamp());
-                if(($trames[$j]->getTimestamp() > $datemin) || ($trames[$j]->getTimestamp()< $datemax) ){
+                if(($trames[$j]->getTimestamp() >= $datemin) || ($trames[$j]->getTimestamp()<= $datemax) ){
                     $resTrame[$c]=$trames[$j]->getId();
                     $c++;
                 }
             }
         }
+
+       // var_dump($resTrame);die();
 
         for ($i=0;$i<count($resTrame);$i++){
             $res =$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findOneById($resTrame[$i]);
@@ -197,11 +204,8 @@ class VehicleController extends FOSRestController
                 'fuel_lvl' => $res->getFeelLvl(),
                 'fuel_lvlp' => $res->getFeelLvlp(),
             ];
-
         }
-
         return $result;
-
     }
 
 }
