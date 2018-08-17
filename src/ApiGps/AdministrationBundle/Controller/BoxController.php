@@ -48,6 +48,7 @@ class BoxController extends  FOSRestController
         }
         return $result;
     }
+
     /////////////////////////////
     ///// Add Box////////// /////
     /// /////////////////////////
@@ -62,15 +63,14 @@ class BoxController extends  FOSRestController
         $IMEI = $request->get('imei');
         $ass_sim = $request->get('ass_sim');
         $client_sim = $request->get('client_sim');
-        $buy_date = $request->get('buy_date');
-        $bond_date = $request->get('bond_date');
-        $endbond_date = $request->get('endbond_date');
+        $buy_date = strtotime(substr($request->get('buy_date'),0,24));
+        $bond_date = strtotime(substr($request->get('bond_date'),0,24));
+        $endbond_date = strtotime(substr($request->get('endbond_date'),0,24));
         $mark = $request->get('mark');
         $model = $request->get('model');
         $type = $request->get('type');
         $active = $request->get('active');
-        $retrait_date = $request->get('retrait_date');
-
+        $retrait_date = strtotime(substr($request->get('retrait_date'),0,24));
 
 
         if( empty($IMEI))

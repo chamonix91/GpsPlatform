@@ -23,7 +23,7 @@ class ReclamController extends FOSRestController
      */
     public function getReclamAction($id)
     {
-        $i=0;
+       //            ->findby(array('client'=> $user));
 
         $user=$this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
 
