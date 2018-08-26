@@ -226,6 +226,23 @@ class VehicleController extends FOSRestController
 
         return $formatted;
     }
+    /**
+     * @Rest\Get("/myflot/{id}",name="hfgfh")
+     * @param Request $request
+     * @return view
+     */
+    public function getmyvehiculeAction(Request $request)
+    {
+        $id = $request->get('id');
+        $dtu1=array();
+        $dtu=array();
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
+            ->find($id);
+
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findBy(array('company' => $user->getCompany()));
+        return $results;
+    }
 
     /**
      * @Rest\Post("/vehicle",name="_add")
@@ -383,6 +400,23 @@ class VehicleController extends FOSRestController
 
         return $result;
 
+    }
+    /**
+     * @Rest\Get("/myvehicle/{id}")
+     * @param Request $request
+     * @return array
+     */
+    public function getVehiclebyAction(Request $request)
+    {
+        $userID=$request->get('id');
+
+        $results = $this->get('doctrine_mongodb')->
+        getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findOneBy(array('reg_number'=>$userID));
+
+
+
+        return $results;
     }
 
 }
