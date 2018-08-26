@@ -88,6 +88,12 @@ class Vehicle
     private $company;
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument="Driver", inversedBy="vehicle")
+     */
+    public $driver;
+
+
+    /**
      * Get id
      *
      * @return id $id
@@ -381,5 +387,27 @@ class Vehicle
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set driver
+     *
+     * @param Driver $driver
+     * @return $this
+     */
+    public function setDriver(Driver $driver)
+    {
+        $this->driver = $driver;
+        return $this;
+    }
+
+    /**
+     * Get driver
+     *
+     * @return Driver $driver
+     */
+    public function getDriver()
+    {
+        return $this->driver;
     }
 }
