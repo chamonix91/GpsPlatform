@@ -89,6 +89,7 @@ class CompanyController extends FOSRestController
         $cp_phone = $request->get('cp_phone');
         $cpa_name = $request->get('cpa_name');
         $cpa_phone = $request->get('cpa_phone');
+        $logo = $request->get('logo');
         if(empty($company))
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
@@ -101,6 +102,7 @@ class CompanyController extends FOSRestController
         $company->setCpaPhone($cp_phone);
         $company->setCpaName($cpa_name);
         $company->setCpaPhone($cpa_phone);
+        $company->setCpaPhone($logo);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($company);
@@ -130,6 +132,7 @@ class CompanyController extends FOSRestController
         $cp_phone = $request->get('cp_phone');
         $cpa_name = $request->get('cpa_name');
         $cpa_phone = $request->get('cpa_phone');
+        $logo = $request->get('logo');
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
@@ -146,6 +149,7 @@ class CompanyController extends FOSRestController
             $company->setCpaPhone($cp_phone);
             $company->setCpaName($cpa_name);
             $company->setCpaPhone($cpa_phone);
+            $company->setCpaPhone($logo);
             $em->flush();
             return new View("company Updated Successfully", Response::HTTP_OK);
         }

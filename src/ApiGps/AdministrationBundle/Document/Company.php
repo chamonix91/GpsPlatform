@@ -70,11 +70,19 @@ class Company
      */
     private $cpa_phone="";
 
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $logo;
+
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Vehicle", mappedBy="company") */
     private $vehicles;
+
+    /** @MongoDB\ReferenceMany(targetDocument="fleet", mappedBy="company") */
+    private $fleets;
 
 
     public function __construct()
@@ -82,8 +90,8 @@ class Company
         $date = new \DateTime('now');
         $this->created_date =$date->getTimestamp();
 
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->vehicles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->vehicles = new ArrayCollection();
     }
     
     /**
@@ -123,7 +131,7 @@ class Company
      *
      * @param User $user
      */
-    public function addUser(\ApiGps\EspaceUserBundle\Document\User $user)
+    public function addUser(User $user)
     {
         $this->users[] = $user;
     }
@@ -133,7 +141,7 @@ class Company
      *
      * @param User $user
      */
-    public function removeUser(\ApiGps\EspaceUserBundle\Document\User $user)
+    public function removeUser(User $user)
     {
         $this->users->removeElement($user);
     }
@@ -351,5 +359,35 @@ class Company
     public function getCreatedDate()
     {
         return $this->created_date;
+    }
+
+    /**
+     * Add fleet
+     *
+     * @param fleet $fleet
+     */
+    public function addFleet(fleet $fleet)
+    {
+        $this->fleets[] = $fleet;
+    }
+
+    /**
+     * Remove fleet
+     *
+     * @param fleet $fleet
+     */
+    public function removeFleet(fleet $fleet)
+    {
+        $this->fleets->removeElement($fleet);
+    }
+
+    /**
+     * Get fleets
+     *
+     * @return \Doctrine\Common\Collections\Collection $fleets
+     */
+    public function getFleets()
+    {
+        return $this->fleets;
     }
 }

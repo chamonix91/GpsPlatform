@@ -76,6 +76,38 @@ class UserController extends FOSRestController
         return $users;
     }
 
+
+    ///////////////////////////////////////
+    /////  Get all Users By Company   /////
+    ///////////////////////////////////////
+
+    /**
+     * @Rest\Get("/myusers/{id}")
+     */
+    public function getUsersByCompanyAction(Request $request)
+    {
+
+        $idcompany = $request->get('id');
+
+        $users = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->findAll();
+        $myusers = array();
+
+        foreach ( $users as $user){
+
+            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+            if ($user->getCompany()== $company){
+                array_push($myusers,$user);
+            }
+
+        }
+        if ($users === null) {
+            return new View("there are no users exist", Response::HTTP_NOT_FOUND);
+        }
+        return $myusers;
+    }
+
+
+
     /////////////////////////////
     /////  Get User By Id   /////
     /////////////////////////////
