@@ -210,9 +210,12 @@ class VehicleController extends FOSRestController
             //$b = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($result->getBox()->getId());
             //$t = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')->findByBox($b);
 
+            $box = $result->getBox();
+            //dump($box);die();
+            if ($box){
             $formatted[] = [
                 'reg_number' => $result->getRegNumber(),
-                'imei' => $result->getBox()->getImei(),
+                'imei' => $box->getImei(),
                 'type_carburant' => $result->getFuelType(),
                 /*'reservoir' => $result->getReservoir(),
                 'id' => $result->getId(),
@@ -222,6 +225,21 @@ class VehicleController extends FOSRestController
                 'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),*/
 
             ];
+            }
+            else{
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'type_carburant' => $result->getFuelType(),
+                    /*'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'fuel_consumed' => $t[count($t)-1]->getFeelConsumed(),
+                    'time_stamp' => $t[count($t)-1]->getTimestamp(),
+                    'fuel_lvl' => $t[count($t)-1]->getFeelLvl(),
+                    'fuel_lvlp' => $t[count($t)-1]->getFeelLvlp(),*/
+
+                ];
+            }
+
         }
 
         return $formatted;

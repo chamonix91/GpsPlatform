@@ -24,8 +24,11 @@ class fleet
      */
     private $name;
 
-    /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="fllets") */
+    /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="fleets") */
     private $comapny;
+
+    /** @MongoDB\ReferenceMany(targetDocument="Vehicle", mappedBy="flot") */
+    private $vehicles;
 
     /**
      * Get id
@@ -79,5 +82,39 @@ class fleet
     public function getComapny()
     {
         return $this->comapny;
+    }
+    public function __construct()
+    {
+        $this->vehicles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add vehicle
+     *
+     * @param ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     */
+    public function addVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    {
+        $this->vehicles[] = $vehicle;
+    }
+
+    /**
+     * Remove vehicle
+     *
+     * @param ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     */
+    public function removeVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    {
+        $this->vehicles->removeElement($vehicle);
+    }
+
+    /**
+     * Get vehicles
+     *
+     * @return \Doctrine\Common\Collections\Collection $vehicles
+     */
+    public function getVehicles()
+    {
+        return $this->vehicles;
     }
 }

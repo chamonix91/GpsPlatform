@@ -88,9 +88,12 @@ class Vehicle
     private $company;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Driver", inversedBy="vehicle")
+     * @MongoDB\ReferenceOne(targetDocument="Driver", mappedBy="vehicle")
      */
     public $driver;
+
+    /** @MongoDB\ReferenceOne(targetDocument="fleet", inversedBy="vehicles") */
+    private $flot;
 
 
     /**
@@ -409,5 +412,27 @@ class Vehicle
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * Set flot
+     *
+     * @param ApiGps\AdministrationBundle\Document\fleet $flot
+     * @return $this
+     */
+    public function setFlot(\ApiGps\AdministrationBundle\Document\fleet $flot)
+    {
+        $this->flot = $flot;
+        return $this;
+    }
+
+    /**
+     * Get flot
+     *
+     * @return ApiGps\AdministrationBundle\Document\fleet $flot
+     */
+    public function getFlot()
+    {
+        return $this->flot;
     }
 }

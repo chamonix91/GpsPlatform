@@ -38,7 +38,7 @@ class Driver
     private $tel;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Vehicle", mappedBy="driver")
+     * @MongoDB\ReferenceOne(targetDocument="Vehicle")
      */
     public $vehicle;
 

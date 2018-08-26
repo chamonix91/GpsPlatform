@@ -390,4 +390,26 @@ class Company
     {
         return $this->fleets;
     }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     * @return $this
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string $logo
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
 }
