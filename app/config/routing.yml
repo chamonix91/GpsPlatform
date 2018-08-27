@@ -71,3 +71,8 @@ trame:
     resource: "@ApiGpsAdministrationBundle/Controller/TrameController.php"
     prefix:   /api
 
+#Driver_rest
+driver:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/DriverController.php"
+    prefix:   /api 
