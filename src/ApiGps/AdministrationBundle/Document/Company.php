@@ -78,11 +78,11 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
-    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Vehicle", mappedBy="company") */
-    private $vehicles;
-
-    /** @MongoDB\ReferenceMany(targetDocument="fleet", mappedBy="company") */
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */
     private $fleets;
+
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Driver", mappedBy="company") */
+    private $drivers;
 
 
     public function __construct()
@@ -354,7 +354,7 @@ class Company
     /**
      * Get createdDate
      *
-     * @return timestamp $createdDate
+     * @return int $createdDate
      */
     public function getCreatedDate()
     {
@@ -411,5 +411,35 @@ class Company
     public function getLogo()
     {
         return $this->logo;
+    }
+
+    /**
+     * Add driver
+     *
+     * @param Driver $driver
+     */
+    public function addDriver(Driver $driver)
+    {
+        $this->drivers[] = $driver;
+    }
+
+    /**
+     * Remove driver
+     *
+     * @param Driver $driver
+     */
+    public function removeDriver(Driver $driver)
+    {
+        $this->drivers->removeElement($driver);
+    }
+
+    /**
+     * Get drivers
+     *
+     * @return \Doctrine\Common\Collections\Collection $drivers
+     */
+    public function getDrivers()
+    {
+        return $this->drivers;
     }
 }
