@@ -22,12 +22,36 @@ class DriverController extends FOSRestController
      */
     public function getDriversAction()
     {
-        $restresult = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
         //dump($restresult);die();
-        if ($restresult === null) {
+        if ($results === null) {
             return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
         }
-        return $restresult;
+
+        foreach ($results as $result) {
+            if (!empty ($result->getVehicle())) {
+
+            $drivers[] = [
+                'firstname' => $result->getFirstname(),
+                'lastname' => $result->getLastname(),
+                'tel' => $result->getTel(),
+                'idvehicle' => $result->getVehicle()->getId(),
+                'reg_number' => $result->getVehicle()->getRegNumber(),
+
+            ];
+            }
+            else{
+                $drivers[] = [
+                    'firstname' => $result->getFirstname(),
+                    'lastname' => $result->getLastname(),
+                    'tel' => $result->getTel(),
+                    'vehicle' => "aucune voiture associée à ce chauffeur",
+
+                ];
+
+            }
+        }
+        return $drivers;
     }
 
     ///////////////////////////////////////
@@ -35,42 +59,41 @@ class DriverController extends FOSRestController
     ///////////////////////////////////////
 
     /**
-     * @Rest\Get("/driver/{id}")
+     * @Rest\Get("/driver/{id}/")
+     * @param Request $request
+     * @return array|View
      */
     public function getDriversByCompanyAction(Request $request)
     {
-        $idcompany = $request->get('id');
+        $id = $request->get('id');
         $drivers = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
+        //dump($drivers);die();
 
-
-
-        $mydrivers = array();
-
-        foreach ( $drivers as $driver){
-
-            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
-
-
-            if (!empty($driver->getVehicle())){
-            if ($driver->getVehicle()->getCompany() == $company ){
-
-                array_push($mydrivers,$driver);
-            }
-            }
-        }
-
-
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')
+            ->findBy(array('company' => $user->getCompany()));
 
         if ($drivers === null) {
             return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
+        }
+
+        foreach ($results as $result) {
+            $mydrivers[] = [
+                'firstname' => $result->getFirstname(),
+                'lastname' => $result->getLastname(),
+                'tel'=> $result->getTel(),
+                'idvehicle'=> $result->getVehicle()->getId(),
+                'reg_number'=> $result->getVehicle()->getRegNumber(),
+
+            ];
         }
         return $mydrivers;
 
     }
 
-    /////////////////////////////
-    /////     Add driver    /////
-    /////////////////////////////
+    ///////////////////////////////////////
+    /////     Add driver SuperAdmin   /////
+    ///////////////////////////////////////
 
     /**
      * @Rest\Post("/driver")
@@ -79,6 +102,56 @@ class DriverController extends FOSRestController
      */
     public function postVehicleAction(Request $request)
     {
+        $data = new Driver();
+        $firstname = $request->get('firstname');
+        $lastname = $request->get('lastname');
+        $tel = $request->get('tel');
+        $idvehicle = $request->get('idvehicle');
+        $idcompany = $request->get('idcompany');
+        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+
+        //var_dump($boitier);die();
+        if(empty($firstname)|| empty($lastname) || empty($tel) || empty($idvehicle))
+        {
+            return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $data -> setFirstname($firstname);
+        $data -> setLastname($lastname);
+        $data->setTel($tel);
+        $data->setVehicle($vehicle);
+        $data->setCompany($company);
+
+        //dump($data);die();
+
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $em->persist($data);
+        $em->flush();
+        return new View("driver added Successfully", Response::HTTP_OK);
+
+
+    }
+
+    //////////////////////////////////////////
+    /////     Add driver OperatorAdmin   /////
+    //////////////////////////////////////////
+
+    /**
+     * @Rest\Post("/driver/{id}")
+     * @param Request $request
+     * @return string
+     */
+    public function postVehicleOperatorAction(Request $request)
+    {
+
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
+        $company = $user->getCompany();
+
+
+
+
         $data = new Driver();
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
@@ -96,8 +169,7 @@ class DriverController extends FOSRestController
         $data -> setLastname($lastname);
         $data->setTel($tel);
         $data->setVehicle($vehicle);
-
-        //dump($data);die();
+        $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -155,5 +227,7 @@ class DriverController extends FOSRestController
         }
         return $singleresult;
     }
+
+
 
 }

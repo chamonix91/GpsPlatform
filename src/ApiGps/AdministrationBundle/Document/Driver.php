@@ -38,9 +38,13 @@ class Driver
     private $tel;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Vehicle")
+     * @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Vehicle")
      */
     public $vehicle;
+
+    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="drivers")
+     */
+    private $company;
 
 
 
@@ -140,5 +144,27 @@ class Driver
     public function getVehicle()
     {
         return $this->vehicle;
+    }
+
+    /**
+     * Set company
+     *
+     * @param Company $company
+     * @return $this
+     */
+    public function setCompany(Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

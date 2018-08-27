@@ -83,9 +83,6 @@ class Vehicle
      */
     public $box;
 
-    /** @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Company", inversedBy="vehicles")
-     */
-    private $company;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Driver", mappedBy="vehicle")
