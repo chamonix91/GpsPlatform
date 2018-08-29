@@ -91,7 +91,6 @@ class Company
         $this->created_date =$date->getTimestamp();
 
         $this->users = new ArrayCollection();
-        $this->vehicles = new ArrayCollection();
     }
     
     /**
@@ -154,36 +153,6 @@ class Company
     public function getUsers()
     {
         return $this->users;
-    }
-
-    /**
-     * Add vehicle
-     *
-     * @param Vehicle $vehicle
-     */
-    public function addVehicle(Vehicle $vehicle)
-    {
-        $this->vehicles[] = $vehicle;
-    }
-
-    /**
-     * Remove vehicle
-     *
-     * @param Vehicle $vehicle
-     */
-    public function removeVehicle(Vehicle $vehicle)
-    {
-        $this->vehicles->removeElement($vehicle);
-    }
-
-    /**
-     * Get vehicles
-     *
-     * @return \Doctrine\Common\Collections\Collection $vehicles
-     */
-    public function getVehicles()
-    {
-        return $this->vehicles;
     }
 
     /**

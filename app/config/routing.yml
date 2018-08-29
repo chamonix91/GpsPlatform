@@ -76,3 +76,9 @@ driver:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/DriverController.php"
     prefix:   /api
+
+#fleet_rest
+fleet:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/FleetController.php"
+    prefix:   /api

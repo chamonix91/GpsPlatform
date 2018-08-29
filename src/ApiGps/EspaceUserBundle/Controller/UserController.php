@@ -85,6 +85,8 @@ class UserController extends FOSRestController
 
     /**
      * @Rest\Get("/myusers/{id}")
+     * @param Request $request
+     * @return array|View
      */
     public function getUsersByCompanyAction(Request $request)
     {

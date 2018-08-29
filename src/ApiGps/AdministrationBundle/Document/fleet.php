@@ -7,6 +7,7 @@
  */
 
 namespace ApiGps\AdministrationBundle\Document;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
@@ -27,7 +28,7 @@ class fleet
     /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="fleets") */
     private $comapny;
 
-    /** @MongoDB\ReferenceMany(targetDocument="Vehicle", mappedBy="flot") */
+    /** @MongoDB\ReferenceMany(targetDocument="Vehicle") */
     private $vehicles;
 
     /**
@@ -85,15 +86,15 @@ class fleet
     }
     public function __construct()
     {
-        $this->vehicles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->vehicles = new ArrayCollection();
     }
     
     /**
      * Add vehicle
      *
-     * @param ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     * @param Vehicle $vehicle
      */
-    public function addVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    public function addVehicle(Vehicle $vehicle)
     {
         $this->vehicles[] = $vehicle;
     }
@@ -101,9 +102,9 @@ class fleet
     /**
      * Remove vehicle
      *
-     * @param ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     * @param Vehicle $vehicle
      */
-    public function removeVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    public function removeVehicle(Vehicle $vehicle)
     {
         $this->vehicles->removeElement($vehicle);
     }

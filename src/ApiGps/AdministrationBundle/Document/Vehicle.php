@@ -367,27 +367,6 @@ class Vehicle
         return $this->box;
     }
 
-    /**
-     * Set company
-     *
-     * @param Company $company
-     * @return $this
-     */
-    public function setCompany( $company)
-    {
-        $this->company = $company;
-        return $this;
-    }
-
-    /**
-     * Get company
-     *
-     * @return Company $company
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
 
     /**
      * Set driver
@@ -414,10 +393,10 @@ class Vehicle
     /**
      * Set flot
      *
-     * @param ApiGps\AdministrationBundle\Document\fleet $flot
+     * @param fleet $flot
      * @return $this
      */
-    public function setFlot(\ApiGps\AdministrationBundle\Document\fleet $flot)
+    public function setFlot(fleet $flot)
     {
         $this->flot = $flot;
         return $this;
@@ -426,7 +405,7 @@ class Vehicle
     /**
      * Get flot
      *
-     * @return ApiGps\AdministrationBundle\Document\fleet $flot
+     * @return ApiGps fleet $flot
      */
     public function getFlot()
     {

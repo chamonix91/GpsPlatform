@@ -110,12 +110,31 @@ class BoxController extends  FOSRestController
     {
         $numTel = $request->get('client_sim');
         $IMEI = $request->get('imei');
+        $ass_sim = $request->get('ass_sim');
+        $client_sim = $request->get('client_sim');
+        $buy_date = strtotime(substr($request->get('buy_date'),0,24));
+        $bond_date = strtotime(substr($request->get('bond_date'),0,24));
+        $endbond_date = strtotime(substr($request->get('endbond_date'),0,24));
+        $mark = $request->get('mark');
+        $model = $request->get('model');
+        $type = $request->get('type');
+        $retrait_date = strtotime(substr($request->get('retrait_date'),0,24));
         $sn = $this->get('doctrine_mongodb')->getManager();
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
         if (empty($boitier)) {
             return new View("box not found", Response::HTTP_NOT_FOUND);
 
         }
+
+        $boitier->setEndbondDate($endbond_date);
+        $boitier->setRetraitDate($retrait_date);
+        $boitier->setModel($model);
+        $boitier->setMark($mark);
+        $boitier->setActive(true);
+        $boitier->setType($type);
+        $boitier->setAssSim($ass_sim);
+        $boitier->setBondDate($bond_date);
+        $boitier->setBuyDate($buy_date);
         $boitier->setClientSim($numTel);
         $boitier->setImei($IMEI);
         $sn->flush();
