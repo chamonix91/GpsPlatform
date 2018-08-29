@@ -25,6 +25,7 @@ class VehicleController extends FOSRestController
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
+        var_dump($user);die();
 
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->findBy(array('company' => $user->getCompany()));

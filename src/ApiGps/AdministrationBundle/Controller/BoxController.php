@@ -69,7 +69,7 @@ class BoxController extends  FOSRestController
         $mark = $request->get('mark');
         $model = $request->get('model');
         $type = $request->get('type');
-        $active = $request->get('active');
+        //$active = $request->get('active');
         $retrait_date = strtotime(substr($request->get('retrait_date'),0,24));
 
 
@@ -82,7 +82,7 @@ class BoxController extends  FOSRestController
         $data->setModel($model);
         $data->setMark($mark);
         $data->setImei($IMEI);
-        $data->setActive($active);
+        $data->setActive(true);
         $data->setType($type);
         $data->setAssSim($ass_sim);
         $data->setBondDate($bond_date);

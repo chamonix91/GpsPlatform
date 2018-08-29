@@ -4,7 +4,10 @@ security:
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_ADMIN
+        ROLE_OPERATEUR:   ROLE_OPERATEUR
         ROLE_CLIENT:      ROLE_CLIENT
+        ROLE_REVENDEUR:   ROLE_REVENDEUR
+        ROLE_CREVENDEUR:  ROLE_CREVENDEUR
 
     providers:
         fos_userbundle:

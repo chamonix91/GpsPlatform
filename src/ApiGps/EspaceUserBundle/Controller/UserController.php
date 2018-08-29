@@ -32,6 +32,7 @@ class UserController extends FOSRestController
         $email = $request->get('email');
         $password = $request->get('password');
         $plainpassword = $request->get('plainpassword');
+        $roles = $request->get('roles');
 
         if(empty($username) || empty($email)|| empty($password))
         {
@@ -44,13 +45,14 @@ class UserController extends FOSRestController
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setEnabled(true);
-        $user->setPassword($password);
-        $user->setPlainPassword($plainpassword);
+        /*$user->setPassword($password);
+        $user->setPlainPassword($plainpassword);*/
 
         $user->setFirstName($first_name);
         $user->setLastName($last_name);
         $user->setPhone($phone);
         $user->setCompany($company);
+        $user->setRoles(array($roles));
 
 
 
@@ -140,71 +142,45 @@ class UserController extends FOSRestController
         $userManager = $this->get('fos_user.user_manager');
 
 
-       /* $first_name = $request->get('first_name');
+        $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
-        $phone = $request->get('phone');*/
-        $idcompany = $request->get('company');
+        $phone = $request->get('phone');
+        $username = $request->get('username');
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $plainpassword = $request->get('plainpassword');
+        $roles = $request->get('roles');
+        $active = $request->get('enabled');
+        //$idcompany = $request->get('company');
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         if (empty($user)) {
             return new View("user not found", Response::HTTP_NOT_FOUND);
         }
+        //$company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+        
+        if($active=="true"){
+                $user->setEnabled(true);
+            }
+            else{
+                $user->setEnabled(false);
+            }
 
-        /*elseif(!empty($first_name) && !empty($last_name)&& !empty($phone)){
             $user->setFirstName($first_name);
             $user->setLastName($last_name);
+
             $user->setPhone($phone);
+            $user->setUsername($username);
+            $user->setEmail($email);
+            $user->setPassword($password);
+            $user->setPlainPassword($plainpassword);
+           // $user->setCompany($company);
+            //$user->setRoles(array($roles));
             $em->flush();
             return new View("User Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(empty($first_name) && empty($last_name) && !empty($phone)){
-            $user->setPhone($phone);
-            $em->flush();
-            return new View("phone number Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(empty($first_name) && !empty($last_name) && empty($phone)){
-            $user->setLastName($last_name);
-            $em->flush();
-            return new View("last name Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(empty($first_name) && !empty($last_name) && !empty($phone)){
-            $user->setLastName($last_name);
-            $user->setPhone($phone);
-            $em->flush();
-            return new View("last name & phone number Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(!empty($first_name) && empty($last_name) && empty($phone)){
-            $user->setFirstName($first_name);
-            $em->flush();
-            return new View("first name Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(!empty($first_name) && empty($last_name) && !empty($phone)){
-            $user->setFirstName($first_name);
-            $user->setPhone($phone);
-            $em->flush();
-            return new View("first name & phone number Updated Successfully", Response::HTTP_OK);
-        }
-        elseif(!empty($first_name) && !empty($last_name) && empty($phone)){
-            $user->setFirstName($first_name);
-            $user->setLastName($last_name);
-            $em->flush();
-            return new View("last name & first name Updated Successfully", Response::HTTP_OK);
-        }*/
-        elseif(!empty($user)){
-
-            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
 
 
-            /*$user->setFirstName($first_name);
-            $user->setLastName($last_name);
-            $user->setPhone($phone);*/
-            $user->setCompany($company);
 
-            $em->flush();
-            return new View("User Updated Successfully", Response::HTTP_OK);
-        }
-
-        else return new View("User cannot be empty", Response::HTTP_NOT_ACCEPTABLE);
     }
 
 

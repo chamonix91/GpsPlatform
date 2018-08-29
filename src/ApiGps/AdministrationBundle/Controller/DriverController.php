@@ -66,14 +66,14 @@ class DriverController extends FOSRestController
     public function getDriversByCompanyAction(Request $request)
     {
         $id = $request->get('id');
-        $drivers = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
+        //$drivers = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
         //dump($drivers);die();
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')
             ->findBy(array('company' => $user->getCompany()));
 
-        if ($drivers === null) {
+        if ($results === null) {
             return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
         }
 
@@ -108,11 +108,16 @@ class DriverController extends FOSRestController
         $tel = $request->get('tel');
         $idvehicle = $request->get('idvehicle');
         $idcompany = $request->get('idcompany');
-        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+        if($idvehicle != null) {
+            $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
+        }else{
+            $vehicle=null;
+        }
+
+            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
 
         //var_dump($boitier);die();
-        if(empty($firstname)|| empty($lastname) || empty($tel) || empty($idvehicle))
+        if(empty($firstname)|| empty($lastname) || empty($tel) )
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
@@ -120,6 +125,7 @@ class DriverController extends FOSRestController
         $data -> setFirstname($firstname);
         $data -> setLastname($lastname);
         $data->setTel($tel);
+        if(!empty($vehicle))
         $data->setVehicle($vehicle);
         $data->setCompany($company);
 
