@@ -32,8 +32,10 @@ class FleetController extends Controller
 
             if (!empty($fleet->getVehicles() && !empty($fleet->getComapny())) ){
             $formatted[] = [
+                'id' => $fleet->getId(),
                 'name' => $fleet->getName(),
                 'companyname' => $fleet->getComapny()->getName(),
+                'taille' => count($fleet->getVehicles()),
                 'vehicles' => $fleet->getVehicles(),
 
             ];
@@ -106,27 +108,27 @@ class FleetController extends Controller
     {
         $data = new fleet();
         $name = $request->get('name');
-        $vehicles = $request->get('vehicles');
+        //$vehicles = $request->get('vehicles');
         $idcompany = $request->get('idcompany');
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
         //dump($company);die();
 
-        if (empty($name) || empty($vehicles) || empty($idcompany) ) {
+        /*if (empty($name) || empty($vehicles) || empty($idcompany) ) {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
-        }
+        }*/
 
         $data->setName($name);
 
-        $a = json_decode(json_encode($vehicles),true);
-        if ($vehicles != 'null' || $vehicles != null || !empty($vehicles)) {
-            $tab_vehicle = (array)new Vehicle();
+        //$a = json_decode(json_encode($vehicles),true);
+        //if ($vehicles != 'null' || $vehicles != null || !empty($vehicles)) {
+            /*$tab_vehicle = (array)new Vehicle();
             for ($c = 0; $c < count($a); $c++) {
                 $tmp = $this->get('doctrine_mongodb')
                     ->getRepository('ApiGpsAdministrationBundle:Vehicle')
                     ->find($a[$c]);
                 array_push($tab_vehicle, $tmp);
                 $data->addVehicle($tmp);
-            }
+            }*/
 
 
             $data->setComapny($company);
@@ -140,6 +142,6 @@ class FleetController extends Controller
 
 
         }
-    }
+    //}
 
 }

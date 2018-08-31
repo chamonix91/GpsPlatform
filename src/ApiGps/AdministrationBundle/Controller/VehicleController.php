@@ -25,7 +25,8 @@ class VehicleController extends FOSRestController
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
-        var_dump($user);die();
+        $fleet = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findBy(array('company' => $user->getCompany()));
 
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->findBy(array('company' => $user->getCompany()));
@@ -279,14 +280,24 @@ class VehicleController extends FOSRestController
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
-        $insurance = $request->get('insurance');
-        $vignettes = $request->get('vignettes');
-        $technical_visit = $request->get('technical_visit');
-        $modele =  $request->get('model');
-        $idCompany= $request->get('company');
-        $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
+        $insurance = strtotime(substr($request->get('insurance'),0,24));
+        $vignettes = strtotime(substr($request->get('vignettes'),0,24));
+        $technical_visit = strtotime(substr($request->get('technical_visit'),0,24));
 
+        $modele =  $request->get('model');
+        //$idCompany= $request->get('company');
+        $idFleet= $request->get('fleet');
+        if($idBoitier != null) {
+            $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
+                ->find($idBoitier);
+        }
+        else{
+            $boitier=null;
+        }
+        //$company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
+        $fleet = $this->get('doctrine_mongodb')->
+        getRepository('ApiGpsAdministrationBundle:fleet')
+            ->find($idFleet);
         //var_dump($boitier);die();
         if(empty($matricule)|| empty($type))
         {
@@ -296,7 +307,6 @@ class VehicleController extends FOSRestController
         $data->setInsurance($insurance);
         $data->setVignettes($vignettes);
         $data->setTechnicalVisit($technical_visit);
-        $data->setCompany($company);
         $data->setRegNumber($matricule);
         $data->setBox($boitier);
         $data->setType($type);
@@ -306,7 +316,7 @@ class VehicleController extends FOSRestController
         $data->setFuelType($typeCarburant);
         $data->setMark($marque);
         $data->setModel($modele);
-        $data->setCompany($company);
+        $data->setFlot($fleet);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
