@@ -25,7 +25,7 @@ class VehicleController extends FOSRestController
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
-        var_dump($user);die();
+        //var_dump($user);die();
 
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->findBy(array('company' => $user->getCompany()));
@@ -275,15 +275,17 @@ class VehicleController extends FOSRestController
         $type = $request->get('type');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
-        $marque = $request->get('mark');
+        $idmark = $request->get('idmark');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
         $insurance = $request->get('insurance');
         $vignettes = $request->get('vignettes');
         $technical_visit = $request->get('technical_visit');
-        $modele =  $request->get('model');
+        $idmodele =  $request->get('idmodel');
         $idCompany= $request->get('company');
+        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
+        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
 
@@ -304,8 +306,8 @@ class VehicleController extends FOSRestController
         $data->setReservoir($reservoir);
         $data->setRpmMax($rpmMax);
         $data->setFuelType($typeCarburant);
-        $data->setMark($marque);
-        $data->setModel($modele);
+        $data->setMark($mark);
+        $data->setModel($model);
         $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
@@ -324,9 +326,13 @@ class VehicleController extends FOSRestController
         $matricule = $request->get('reg_number');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
+        $idmark = $request->get('idmark');
+
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $technical_visit = $request->get('technical_visit');
+        $idmodele =  $request->get('idmodel');
+
         $insurance = $request->get('insurance');
         $vignettes = $request->get('vignettes');
         $idBoitier = $request->get('box');
@@ -334,6 +340,8 @@ class VehicleController extends FOSRestController
         $type = $request->get('type');
         $sn = $this->get('doctrine_mongodb')->getManager();
         $vehicule = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
+        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
+        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
 
         if (empty($vehicule)) {
             return new View("Vehicle not found", Response::HTTP_NOT_ACCEPTABLE);
@@ -351,6 +359,8 @@ class VehicleController extends FOSRestController
             $vehicule->setReservoir($reservoir);
             $vehicule->setRpmMax($rpmMax);
             $vehicule->setFuelType($typeCarburant);
+            $vehicule->setMark($mark);
+            $vehicule->setModel($model);
             $sn->flush();
             return new View("Vehicle Updated Successfully", Response::HTTP_OK);
 /*

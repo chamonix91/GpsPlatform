@@ -92,6 +92,9 @@ class Vehicle
     /** @MongoDB\ReferenceOne(targetDocument="fleet", inversedBy="vehicles") */
     private $flot;
 
+    /** @MongoDB\ReferenceMany(targetDocument="Mark", mappedBy="vehicle") */
+    private $marks;
+
 
     /**
      * Get id
@@ -410,5 +413,39 @@ class Vehicle
     public function getFlot()
     {
         return $this->flot;
+    }
+    public function __construct()
+    {
+        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add mark
+     *
+     * @param Mark $mark
+     */
+    public function addMark(Mark $mark)
+    {
+        $this->marks[] = $mark;
+    }
+
+    /**
+     * Remove mark
+     *
+     * @param Mark $mark
+     */
+    public function removeMark(Mark $mark)
+    {
+        $this->marks->removeElement($mark);
+    }
+
+    /**
+     * Get marks
+     *
+     * @return \Doctrine\Common\Collections\Collection $marks
+     */
+    public function getMarks()
+    {
+        return $this->marks;
     }
 }
