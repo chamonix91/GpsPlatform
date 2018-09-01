@@ -276,6 +276,7 @@ class VehicleController extends FOSRestController
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
         $idmark = $request->get('idmark');
+        $idfleet = $request->get('idfleet');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
@@ -283,11 +284,11 @@ class VehicleController extends FOSRestController
         $vignettes = $request->get('vignettes');
         $technical_visit = $request->get('technical_visit');
         $idmodele =  $request->get('idmodel');
-        $idCompany= $request->get('company');
         $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
         $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idCompany);
+        $fleet = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')->find($idfleet);
+        //dump($fleet);die();
 
         //var_dump($boitier);die();
         if(empty($matricule)|| empty($type))
@@ -298,7 +299,7 @@ class VehicleController extends FOSRestController
         $data->setInsurance($insurance);
         $data->setVignettes($vignettes);
         $data->setTechnicalVisit($technical_visit);
-        $data->setCompany($company);
+        $data->setFlot($fleet);
         $data->setRegNumber($matricule);
         $data->setBox($boitier);
         $data->setType($type);
@@ -308,7 +309,6 @@ class VehicleController extends FOSRestController
         $data->setFuelType($typeCarburant);
         $data->setMark($mark);
         $data->setModel($model);
-        $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -327,15 +327,15 @@ class VehicleController extends FOSRestController
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
         $idmark = $request->get('idmark');
-
+        $idfleet = $request->get('idfleet');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $technical_visit = $request->get('technical_visit');
         $idmodele =  $request->get('idmodel');
-
         $insurance = $request->get('insurance');
         $vignettes = $request->get('vignettes');
         $idBoitier = $request->get('box');
+        $fleet = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')->find($idfleet);
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
         $type = $request->get('type');
         $sn = $this->get('doctrine_mongodb')->getManager();
@@ -361,6 +361,7 @@ class VehicleController extends FOSRestController
             $vehicule->setFuelType($typeCarburant);
             $vehicule->setMark($mark);
             $vehicule->setModel($model);
+            $vehicule->setFlot($fleet);
             $sn->flush();
             return new View("Vehicle Updated Successfully", Response::HTTP_OK);
 /*
