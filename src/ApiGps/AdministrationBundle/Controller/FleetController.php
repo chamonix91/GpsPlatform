@@ -64,7 +64,6 @@ class FleetController extends FOSRestController
     public function getMyFleetsAction(Request $request)
     {
         $id = $request->get('id');
-
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         $mycompany = $user->getCompany();
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')
@@ -77,9 +76,15 @@ class FleetController extends FOSRestController
 
         foreach ($results as $fleet) {
             if ($fleet->getComapny() == $mycompany){
-
+                for($o=0;$o<count($fleet->getVehicles());$o++){
+                    $fleet->getVehicles()[$o]->setInsurance(date('Y-m-d',$fleet->getVehicles()[$o]->getInsurance()->sec));
+                    $fleet->getVehicles()[$o]->setVignettes(date('Y-m-d',$fleet->getVehicles()[$o]->getVignettes()->sec));
+                    $fleet->getVehicles()[$o]->setTechnicalVisit(date('Y-m-d',$fleet->getVehicles()[$o]->getTechnicalVisit()->sec));
+                }
             if (!empty($fleet->getVehicles() && !empty($fleet->getComapny())) ){
                 $formatted[] = [
+                    'id' => $fleet->getId(),
+                    'taille' => count($fleet->getComapny()),
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
                     'vehicles' => $fleet->getVehicles(),
@@ -88,6 +93,8 @@ class FleetController extends FOSRestController
             }
             elseif(empty($fleet->getVehicles())){
                 $formatted[] = [
+                    'id' => $fleet->getId(),
+                    'taille' => count($fleet->getComapny()),
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
                     'vehicles' => "aucune voiture ajoutée à cette flotte",
@@ -309,9 +316,11 @@ class FleetController extends FOSRestController
         }
 
         $formatted[] = [
+            'id' => $fleet->getId(),
             'name' => $fleet->getName(),
             'companyname' => $fleet->getComapny()->getName(),
             'vehicles' => $fleet->getVehicles(),
+            'taille' => count($fleet->getVehicles()),
 
         ];
         return $formatted;
