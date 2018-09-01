@@ -44,12 +44,12 @@ class Box
     private $buy_date;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="timestamp")
      */
     private $bond_date;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="timestamp")
      */
     private $endbond_date;
 
@@ -81,6 +81,9 @@ class Box
      * @MongoDB\ReferenceOne(targetDocument="Vehicle",mappedBy="box")
      */
     private $vehicle;
+
+    /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="boxes") */
+    private $company;
 
     /**
      * @return mixed
@@ -366,7 +369,7 @@ class Box
      *
      * @param Trame $trame
      */
-    public function addTrame(\ApiGps\AdministrationBundle\Document\Trame $trame)
+    public function addTrame(Trame $trame)
     {
         $this->trame[] = $trame;
     }
@@ -389,5 +392,27 @@ class Box
     public function getTrame()
     {
         return $this->trame;
+    }
+
+    /**
+     * Set company
+     *
+     * @param Company $company
+     * @return $this
+     */
+    public function setCompany(Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

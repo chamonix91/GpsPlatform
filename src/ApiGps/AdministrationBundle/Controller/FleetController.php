@@ -120,7 +120,7 @@ class FleetController extends FOSRestController
         $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
         //dump($company);die();
 
-        if (empty($name) || empty($vehicles) || empty($idcompany) ) {
+        if (empty($name) || empty($idcompany) ) {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 

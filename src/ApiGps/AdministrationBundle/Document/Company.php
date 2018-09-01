@@ -84,6 +84,9 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Driver", mappedBy="company") */
     private $drivers;
 
+    /** @MongoDB\ReferenceMany(targetDocument="Box", mappedBy="company") */
+    private $boxes;
+
 
     public function __construct()
     {
@@ -410,5 +413,35 @@ class Company
     public function getDrivers()
     {
         return $this->drivers;
+    }
+
+    /**
+     * Add box
+     *
+     * @param Box $box
+     */
+    public function addBox(Box $box)
+    {
+        $this->boxes[] = $box;
+    }
+
+    /**
+     * Remove box
+     *
+     * @param Box $box
+     */
+    public function removeBox(Box $box)
+    {
+        $this->boxes->removeElement($box);
+    }
+
+    /**
+     * Get boxes
+     *
+     * @return \Doctrine\Common\Collections\Collection $boxes
+     */
+    public function getBoxes()
+    {
+        return $this->boxes;
     }
 }
