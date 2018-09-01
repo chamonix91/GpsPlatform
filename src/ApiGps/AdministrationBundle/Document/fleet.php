@@ -28,7 +28,7 @@ class fleet
     /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="fleets") */
     private $comapny;
 
-    /** @MongoDB\ReferenceMany(targetDocument="Vehicle") */
+    /** @MongoDB\ReferenceMany(targetDocument="Vehicle", mappedBy="flot") */
     private $vehicles;
 
     /**

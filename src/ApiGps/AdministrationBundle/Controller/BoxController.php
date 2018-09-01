@@ -33,6 +33,28 @@ class BoxController extends  FOSRestController
         return $result;
     }
     /////////////////////////////
+    ///// get my Boxes /// /////
+    /// /////////////////////////
+
+    /**
+     * @Rest\Get("/box/{id}")
+     */
+    public function getmyBoxAction(Request $request)
+    {
+        $id = $request->get('id');
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
+            ->findby(array('company'=>$company));
+        //var_dump($result);die();
+        if ($result === null) {
+            return new View("there are no boxes exist", Response::HTTP_NOT_FOUND);
+        }
+
+
+        return $result;
+    }
+    /////////////////////////////
     ///// get Box by id /// /////
     /// /////////////////////////
     /**
