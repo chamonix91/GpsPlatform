@@ -186,7 +186,9 @@ class BoxController extends  FOSRestController
      */
     public function BondBoxAction($id,Request $request)
     {
-        $bond_date = strtotime(substr($request->get('bond_date'),0,24));
+        $a=new \DateTime('now');
+        $b=$a->format('Y-m-d ');
+        $bond_date = strtotime($b);
         $idVehicle = $request->get('idvehicle');
         $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
         $sn = $this->get('doctrine_mongodb')->getManager();
@@ -196,10 +198,11 @@ class BoxController extends  FOSRestController
 
         }
 
-
+        //var_dump($boitier);die();
         $boitier->setBondDate($bond_date);
         $boitier->setVehicle($vehicle);
         $boitier->setEndbondDate(null);
+        $sn->merge($boitier);
         $sn->flush();
         return new View("box Updated Successfully", Response::HTTP_OK);
 
@@ -218,9 +221,10 @@ class BoxController extends  FOSRestController
      */
     public function EndBondBoxAction($id,Request $request)
     {
-        $endbond_date = strtotime(substr($request->get('endbond_date'),0,24));
-        $idVehicle = $request->get('idvehicle');
-        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
+        $a=new \DateTime('now');
+        $b=$a->format('Y-m-d ');
+        $bond_date = strtotime($b);
+        $endbond_date = strtotime($b);
         $sn = $this->get('doctrine_mongodb')->getManager();
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
         if (empty($boitier)) {
@@ -230,8 +234,9 @@ class BoxController extends  FOSRestController
 
 
         $boitier->setEndbondDate($endbond_date);
-        $boitier->setVehicle($vehicle);
+        $boitier->setVehicle(null);
         $boitier->setBondDate(null);
+        $sn->merge($boitier);
         $sn->flush();
         return new View("box Updated Successfully", Response::HTTP_OK);
 

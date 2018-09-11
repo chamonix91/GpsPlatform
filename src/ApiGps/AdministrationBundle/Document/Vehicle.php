@@ -79,7 +79,7 @@ class Vehicle
     private $vignettes;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Box")
+     * @MongoDB\ReferenceOne(targetDocument="Box",mappedBy="vehicle")
      */
     public $box;
 
