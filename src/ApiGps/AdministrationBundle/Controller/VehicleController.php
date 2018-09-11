@@ -25,13 +25,15 @@ class VehicleController extends FOSRestController
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
-        //var_dump($user);die();
-
+        //dump(count($user->getCompany()->getFleets()));die();
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
+            ->findAll();
+            //->findBy(array('company' => $user->getCompany()));
+       // var_dump($results[0]->getComapny()->getName());die();
         foreach ($results as $result) {
             $formatted[] = [
                 'reg_number' => $result->getRegNumber(),
+                'flot' => $result->getFlot(),
                 'type_carburant' => $result->getFuelType(),
                 'reservoir' => $result->getReservoir(),
                 'id' => $result->getId(),
@@ -334,9 +336,9 @@ class VehicleController extends FOSRestController
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idmodele =  $request->get('idmodel');
-        $insurance = date('Y-m-d',$request->get('insurance'));
-        $vignettes = date('Y-m-d',$request->get('vignettes'));
-        $technical_visit = date('Y-m-d',$request->get('technical_visit'));
+        $insurance = strtotime(substr($request->get('insurance'),0,24));
+        $vignettes = strtotime(substr($request->get('vignettes'),0,24));
+        $technical_visit = strtotime(substr($request->get('technical_visit'),0,24));
         $idBoitier = $request->get('box');
         if($idBoitier==null){
             $boitier=null;
@@ -400,26 +402,26 @@ class VehicleController extends FOSRestController
         $userID=$request->get('id');
         $datemin=$request->get('datemin');
         $datemax=$request->get('datemax');
-        //$allvehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->findAll();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($userID);
+
         $allvehicle=$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company'=>$user->getCompany()));;
+            ->findAll();
 
         $result= [];
         $resTrame=array();
         $c=0;
-        for($i=0;$i<count($allvehicle);$i++){
-            $trames=$allvehicle[$i]->getBox()->getTrame();
-            for ($j=0;$j<count($trames);$j++){
+        for($i=0;$i<count($allvehicle);$i++) {
+            if (!empty($allvehicle[$i]->getBox())){
+                $trames = $allvehicle[$i]->getBox()->getTrame();
+            for ($j = 0; $j < count($trames); $j++) {
                 //$time= Date("d-m-Y",$trames[$j]->getTimestamp()); $trames[$j]->getTimestamp()
                 //date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp())
-                if((date('Y-m-d',$trames[$j]->getTimestamp()) > $datemin) &&
-                    (date('Y-m-d',$trames[$j]->getTimestamp())< $datemax) ){
-                    $resTrame[$c]=$trames[$j];
+                if ((date('Y-m-d', $trames[$j]->getTimestamp()) > $datemin) &&
+                    (date('Y-m-d', $trames[$j]->getTimestamp()) < $datemax)) {
+                    $resTrame[$c] = $trames[$j];
                     $c++;
                 }
             }
+        }
         }
 
         for ($i=0;$i<count($resTrame);$i++){

@@ -77,17 +77,18 @@ class DriverController extends FOSRestController
             return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
         }
 
-        foreach ($results as $result) {
+        /*foreach ($results as $result) {
             $mydrivers[] = [
                 'firstname' => $result->getFirstname(),
                 'lastname' => $result->getLastname(),
-                'tel'=> $result->getTel(),
-                'idvehicle'=> $result->getVehicle()->getId(),
-                'reg_number'=> $result->getVehicle()->getRegNumber(),
+                'tel' => $result->getTel(),
+                'idvehicle' => $result->getVehicle()->getId(),
+                'reg_number' => $result->getVehicle()->getRegNumber(),
 
             ];
-        }
-        return $mydrivers;
+
+        }*/
+        return $results;
 
     }
 
@@ -105,7 +106,7 @@ class DriverController extends FOSRestController
         $data = new Driver();
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
-        $tel = $request->get('tel');
+        $tel = $request->get('phone');
         $idvehicle = $request->get('idvehicle');
         $idcompany = $request->get('idcompany');
         if($idvehicle != null) {
@@ -199,8 +200,8 @@ class DriverController extends FOSRestController
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
         $tel = $request->get('tel');
-        $idvehicle = $request->get('idvehicle');
-        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
+        //$idvehicle = $request->get('idvehicle');
+        //$vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
         $sn = $this->get('doctrine_mongodb')->getManager();
         $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
 
@@ -211,7 +212,7 @@ class DriverController extends FOSRestController
         $driver->setFirstname($firstname);
         $driver->setLastname($lastname);
         $driver->setTel($tel);
-        $driver->setVehicle($vehicle);
+        //$driver->setVehicle($vehicle);
         $sn->flush();
         return new View("Vehicle Updated Successfully", Response::HTTP_OK);
     }

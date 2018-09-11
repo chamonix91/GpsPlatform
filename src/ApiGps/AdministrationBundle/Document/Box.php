@@ -78,7 +78,7 @@ class Box
     private $retrait_date;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="Vehicle",mappedBy="box")
+     * @MongoDB\ReferenceOne(targetDocument="Vehicle",inversedBy="box")
      */
     private $vehicle;
 

@@ -279,7 +279,7 @@ class FleetController extends FOSRestController
         }
 
         $fleet->setName($name);
-        if (empty($name) || empty($vehicles)  ) {
+        if (empty($name)   ) {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 

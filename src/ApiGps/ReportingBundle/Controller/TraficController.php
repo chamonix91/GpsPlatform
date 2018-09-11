@@ -38,25 +38,26 @@ class TraficController extends FOSRestController
             ->find($id);
 
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company'=>$user->getCompany()));
-        for($i=0;$i<count($result);$i++){
-            $trame=array();
-            $tramef=array();
-            $tramef1=array();
-            $tramef2=array();
-            $rap=array();
-            $dt=array();
-            $dt1=array();
-            $dt2=array();
-            $indt=array();
-            $indt1=array();
-            $indt2=array();
-            for($j=0;$j<count($result[$i]->getBox()->getTrame());$j++){
-                $s ="https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".$result[$i]->getBox()->getTrame()[$j]->getLatitude()
-                    ."&lon=".$result[$i]->getBox()->getTrame()[$j]->getLongitude()."&accept-language=fr";
+            ->findAll();
+        for($i=0;$i<count($result);$i++) {
+            $trame = array();
+            $tramef = array();
+            $tramef1 = array();
+            $tramef2 = array();
+            $rap = array();
+            $dt = array();
+            $dt1 = array();
+            $dt2 = array();
+            $indt = array();
+            $indt1 = array();
+            $indt2 = array();
+        if(!empty($result[$i]->getBox())){
+            for ($j = 0; $j < count($result[$i]->getBox()->getTrame()); $j++) {
+                $s = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" . $result[$i]->getBox()->getTrame()[$j]->getLatitude()
+                    . "&lon=" . $result[$i]->getBox()->getTrame()[$j]->getLongitude() . "&accept-language=fr";
                 $options = array(
-                    "http"=>array(
-                        "header"=>"User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
+                    "http" => array(
+                        "header" => "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
                     )
                 );
                 $context = stream_context_create($options);
@@ -65,13 +66,14 @@ class TraficController extends FOSRestController
                 $trame[] = [
                     'id' => $result[$i]->getBox()->getTrame()[$j]->getId(),
                     'adress' => $obj->display_name,
-                    'time' => date('Y-m-d H:i:s',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
-                    'date' => date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                    'time' => date('Y-m-d H:i:s', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                    'date' => date('Y-m-d', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
                     'timestamp' => $result[$i]->getBox()->getTrame()[$j]->getTimestamp(),
                     'contact' => $result[$i]->getBox()->getTrame()[$j]->getContact(),
                     'speed' => $result[$i]->getBox()->getTrame()[$j]->getSpeed(),
                 ];
             }
+        }
             $vitesse=0;
             for($c=0;$c<count($trame);$c++){
                 $vitesse=$vitesse+$trame[$c]['speed'];
@@ -237,41 +239,42 @@ class TraficController extends FOSRestController
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company'=>$user->getCompany()));
+            ->findAll();
         for($i=0;$i<count($result);$i++){
             $trame=array();
             $tramef=array();
             $rap=array();
             $dt=array();
             $indt=array();
-            for($j=0;$j<count($result[$i]->getBox()->getTrame());$j++){
-                $s ="https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".$result[$i]->getBox()->getTrame()[$j]->getLatitude()
-                    ."&lon=".$result[$i]->getBox()->getTrame()[$j]->getLongitude()."&accept-language=fr";
+            if(!empty($result[$i]->getBox())) {
+                for ($j = 0; $j < count($result[$i]->getBox()->getTrame()); $j++) {
+                    $s = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" . $result[$i]->getBox()->getTrame()[$j]->getLatitude()
+                        . "&lon=" . $result[$i]->getBox()->getTrame()[$j]->getLongitude() . "&accept-language=fr";
 
-                /* $json = file_get_contents($s);
-                 $obj = json_decode($json);
-                 var_dump($obj);die();*/
+                    /* $json = file_get_contents($s);
+                     $obj = json_decode($json);
+                     var_dump($obj);die();*/
 
-                $options = array(
-                    "http"=>array(
-                        "header"=>"User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
-                    )
-                );
+                    $options = array(
+                        "http" => array(
+                            "header" => "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
+                        )
+                    );
 
-                $context = stream_context_create($options);
-                $resultj = file_get_contents($s, true, $context);
-                $obj = json_decode($resultj);
-                $trame[] = [
-                    'id' => $result[$i]->getBox()->getTrame()[$j]->getId(),
-                    'adress' => $obj->display_name,
-                    'time' => date('Y-m-d H:i:s',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
-                    'date' => date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
-                    'timestamp' => $result[$i]->getBox()->getTrame()[$j]->getTimestamp(),
-                    'contact' => $result[$i]->getBox()->getTrame()[$j]->getContact(),
-                    'speed' => $result[$i]->getBox()->getTrame()[$j]->getSpeed(),
-                ];
-            }
-            //var_dump($trame);die();
+                    $context = stream_context_create($options);
+                    $resultj = file_get_contents($s, true, $context);
+                    $obj = json_decode($resultj);
+                    $trame[] = [
+                        'id' => $result[$i]->getBox()->getTrame()[$j]->getId(),
+                        'adress' => $obj->display_name,
+                        'time' => date('Y-m-d H:i:s', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                        'date' => date('Y-m-d', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                        'timestamp' => $result[$i]->getBox()->getTrame()[$j]->getTimestamp(),
+                        'contact' => $result[$i]->getBox()->getTrame()[$j]->getContact(),
+                        'speed' => $result[$i]->getBox()->getTrame()[$j]->getSpeed(),
+                    ];
+                }
+            }//var_dump($trame);die();
             $vitesse=0;
             for($c=0;$c<count($trame);$c++){
                 $vitesse=$vitesse+$trame[$c]['speed'];
@@ -377,24 +380,25 @@ class TraficController extends FOSRestController
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company'=>$user->getCompany()));
-        for($i=0;$i<count($result);$i++){
-            $trame=array();
-            $tramef=array();
-            $rap=array();
-            $dt=array();
-            $indt=array();
-            for($j=0;$j<count($result[$i]->getBox()->getTrame());$j++){
-                $s ="https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".$result[$i]->getBox()->getTrame()[$j]->getLatitude()
-                    ."&lon=".$result[$i]->getBox()->getTrame()[$j]->getLongitude()."&accept-language=fr";
+            ->findAll();
+        for($i=0;$i<count($result);$i++) {
+            $trame = array();
+            $tramef = array();
+            $rap = array();
+            $dt = array();
+            $indt = array();
+            if(!empty($result[$i]->getBox())){
+            for ($j = 0; $j < count($result[$i]->getBox()->getTrame()); $j++) {
+                $s = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" . $result[$i]->getBox()->getTrame()[$j]->getLatitude()
+                    . "&lon=" . $result[$i]->getBox()->getTrame()[$j]->getLongitude() . "&accept-language=fr";
 
                 /* $json = file_get_contents($s);
                  $obj = json_decode($json);
                  var_dump($obj);die();*/
 
                 $options = array(
-                    "http"=>array(
-                        "header"=>"User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
+                    "http" => array(
+                        "header" => "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
                     )
                 );
 
@@ -404,15 +408,15 @@ class TraficController extends FOSRestController
                 $trame[] = [
                     'id' => $result[$i]->getBox()->getTrame()[$j]->getId(),
                     'adress' => $obj->display_name,
-                    'time' => date('Y-m-d H:i:s',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
-                    'timee' => date('H:i:s',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
-                    'date' => date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                    'time' => date('Y-m-d H:i:s', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                    'timee' => date('H:i:s', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
+                    'date' => date('Y-m-d', $result[$i]->getBox()->getTrame()[$j]->getTimestamp()),
                     'timestamp' => $result[$i]->getBox()->getTrame()[$j]->getTimestamp(),
                     'contact' => $result[$i]->getBox()->getTrame()[$j]->getContact(),
                     'speed' => $result[$i]->getBox()->getTrame()[$j]->getSpeed(),
                 ];
             }
-            //var_dump($trame);die();
+        }//var_dump($trame);die();
             for($c=0;$c<count($trame);$c++){
                 array_push($dt,$trame[$c]['adress']);
             }
