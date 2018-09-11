@@ -2,19 +2,13 @@
 
 namespace ApiGps\ReportingBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use ApiGps\AdministrationBundle\Document\Vehicle;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\HttpFoundation\Response;
+
+
 class TraficController extends FOSRestController
 {
-    public function indexAction($name)
-    {
-        return $this->render('', array('name' => $name));
-    }
     public function firstocurencedate($tab,$d){
         for($i=0;$i<count($tab);$i++){
             if($tab[$i]['date']==$d && $tab[$i]['contact']==1 ){
@@ -35,7 +29,7 @@ class TraficController extends FOSRestController
     /**
      * @Rest\Get("/traf/{id}",name="hfgfh")
      * @param Request $request
-     * @return view
+     * @return array
      */
     public function getmyVehicleTraficAction(Request $request)
     {
@@ -230,10 +224,11 @@ class TraficController extends FOSRestController
         // returns the time already formatted
         return sprintf('%02d:%02d', $hours, $minutes);
     }
+
     /**
      * @Rest\Get("/streeton/{id}",name="hfgfh")
      * @param Request $request
-     * @return view
+     * @return array
      */
     public function getmyVehicleStreetTraficAction(Request $request)
     {
@@ -369,10 +364,11 @@ class TraficController extends FOSRestController
         }
         return $ind;
     }
+
     /**
      * @Rest\Get("/streetoff/{id}",name="hfgfh")
      * @param Request $request
-     * @return view
+     * @return array
      */
     public function getmyVehicleStreetTraficoffAction(Request $request)
     {
