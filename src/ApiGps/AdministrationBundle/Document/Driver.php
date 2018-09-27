@@ -38,7 +38,17 @@ class Driver
     private $tel;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Vehicle")
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $bond_date;
+
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $endbond_date;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Vehicle", inversedBy="driver")
      */
     public $vehicle;
 
@@ -166,5 +176,49 @@ class Driver
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set bondDate
+     *
+     * @param string $bondDate
+     * @return $this
+     */
+    public function setBondDate($bondDate)
+    {
+        $this->bond_date = $bondDate;
+        return $this;
+    }
+
+    /**
+     * Get bondDate
+     *
+     * @return string $bondDate
+     */
+    public function getBondDate()
+    {
+        return $this->bond_date;
+    }
+
+    /**
+     * Set endbondDate
+     *
+     * @param string $endbondDate
+     * @return $this
+     */
+    public function setEndbondDate($endbondDate)
+    {
+        $this->endbond_date = $endbondDate;
+        return $this;
+    }
+
+    /**
+     * Get endbondDate
+     *
+     * @return string $endbondDate
+     */
+    public function getEndbondDate()
+    {
+        return $this->endbond_date;
     }
 }

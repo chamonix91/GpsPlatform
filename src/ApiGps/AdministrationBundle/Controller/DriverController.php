@@ -3,6 +3,7 @@
 namespace ApiGps\AdministrationBundle\Controller;
 
 use ApiGps\AdministrationBundle\Document\Driver;
+use ApiGps\AdministrationBundle\Document\Vehicle;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -233,6 +234,76 @@ class DriverController extends FOSRestController
             return new View("driver not found", Response::HTTP_NOT_FOUND);
         }
         return $singleresult;
+    }
+
+    //////////////////////////////
+    ////////  Bound  Driver  /////
+    //////////////////////////////
+
+    /**
+     * @Rest\Put("/bonddriver/{id}")
+     * @param $id
+     * @param Request $request
+     * @return string
+     */
+    public function BondDriverAction($id,Request $request)
+    {
+        $a=new \DateTime('now');
+        $b=$a->format('Y-m-d ');
+        $bond_date = strtotime($b);
+        $idVehicle = $request->get('idvehicle');
+        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
+        $sn = $this->get('doctrine_mongodb')->getManager();
+        $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
+        if (empty($driver)) {
+            return new View("driver not found", Response::HTTP_NOT_FOUND);
+
+        }
+
+        $driver->setBondDate($bond_date);
+        $driver->setVehicle($vehicle);
+        $driver->setEndbondDate(null);
+        $sn->merge($driver);
+        $sn->flush();
+        return new View("driver Updated Successfully", Response::HTTP_OK);
+
+
+    }
+
+    //////////////////////////////
+    ////////  UnBond Driver //////
+    //////////////////////////////
+
+    /**
+     * @Rest\Put("/unbonddriver/{id}")
+     * @param $id
+     * @param Request $request
+     * @return string
+     */
+    public function EndBondDriverAction($id,Request $request)
+    {
+        $a=new \DateTime('now');
+        $b=$a->format('Y-m-d ');
+        $bond_date = strtotime($b);
+        $endbond_date = strtotime($b);
+        $sn = $this->get('doctrine_mongodb')->getManager();
+        $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
+
+
+        if (empty($driver)) {
+            return new View("driver not found", Response::HTTP_NOT_FOUND);
+
+        }
+
+
+        $driver->setEndbondDate($endbond_date);
+        $driver->setVehicle(null);
+        $driver->setBondDate(null);
+        $sn->merge($driver);
+        $sn->flush();
+        return new View("driver Updated Successfully", Response::HTTP_OK);
+
+
     }
 
 
