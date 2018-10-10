@@ -44,14 +44,14 @@ class MarkController extends  FOSRestController
     {
         $data = new Mark();
         $name = $request->get('name');
-        $idVehicle = $request->get('idvehicle');
-        $Vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
+        //$idVehicle = $request->get('idvehicle');
+        //$Vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
         if(empty($name))
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
         $data->setName($name);
-        $data->setVehicle($Vehicle);
+        //$data->setVehicle($Vehicle);
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
         $em->flush();

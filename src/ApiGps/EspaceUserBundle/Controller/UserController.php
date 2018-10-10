@@ -184,6 +184,36 @@ class UserController extends FOSRestController
 
 
     }
+    /**
+     * @Rest\Put("/affect/{id}" , name="zeze")
+     * @param $id
+     * @param Request $request
+     * @return View
+     */
+    public function affectAction($id,Request $request)
+    {
+        //var_dump('eeee');die();
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $userManager = $this->get('fos_user.user_manager');
+
+        $idcompany = $request->get('company');
+        $idd = $request->get('id');
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($idd);
+        if (empty($user)) {
+            return new View("user not found", Response::HTTP_NOT_FOUND);
+        }
+        //$company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+
+
+         $user->setCompany($company);
+        //$user->setRoles(array($roles));
+        $em->flush();
+        return new View("User Updated Successfully", Response::HTTP_OK);
+
+
+
+    }
 
 
 
