@@ -62,6 +62,70 @@ class UserController extends FOSRestController
         return new View("User Added Successfully", Response::HTTP_OK);
  }
 
+
+    //////////////////////////////////
+    /////    Create installeur    ////
+    //////////////////////////////////
+
+    /**
+     * @Rest\Post("/installateur/{id}")
+     * @param Request $request
+     * @return View
+     */
+    public function addFitterAction(Request $request, $id)
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        $first_name = $request->get('first_name');
+        $last_name = $request->get('last_name');
+        $phone = $request->get('phone');
+        $cin = $request->get('cin');
+        $diploma = $request->get('diploma');
+        $contract_type = $request->get('contract_type');
+
+        //date d'embauche
+        $hiring_date = strtotime(substr($request->get('hiring_date'),0,24));
+
+        $endcontract_date = strtotime(substr($request->get('endcontract_date'),0,24));
+
+        $username = $request->get('username');
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $plainpassword = $request->get('plainpassword');
+        $roles = $request->get('roles');
+
+        if(empty($username) || empty($email)|| empty($password))
+        {
+            return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $user = $userManager->createUser();
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setEnabled(true);
+        /*$user->setPassword($password);
+        $user->setPlainPassword($plainpassword);*/
+
+        $user->setFirstName($first_name);
+        $user->setLastName($last_name);
+        $user->setPhone($phone);
+        $user->setCin($cin);
+        $user->setHiringDate($hiring_date);
+        $user->setEndcontractDate($endcontract_date);
+        $user->setContractType($contract_type);
+        $user->setDiploma($diploma);
+        $user->setCompany($company);
+        $user->setRoles(array($roles));
+
+
+
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $em->persist($user);
+        $em->flush();
+        return new View("User Added Successfully", Response::HTTP_OK);
+    }
+
     /////////////////////////////
     /////  Get all Users   /////
     /////////////////////////////

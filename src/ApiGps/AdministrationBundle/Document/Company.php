@@ -87,6 +87,11 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="Box", mappedBy="company") */
     private $boxes;
 
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Subscription",mappedBy="company")
+     */
+    public $subscription;
+
 
     public function __construct()
     {
@@ -443,5 +448,27 @@ class Company
     public function getBoxes()
     {
         return $this->boxes;
+    }
+
+    /**
+     * Set subscription
+     *
+     * @param ApiGps\AdministrationBundle\Document\Subscription $subscription
+     * @return $this
+     */
+    public function setSubscription(\ApiGps\AdministrationBundle\Document\Subscription $subscription)
+    {
+        $this->subscription = $subscription;
+        return $this;
+    }
+
+    /**
+     * Get subscription
+     *
+     * @return ApiGps\AdministrationBundle\Document\Subscription $subscription
+     */
+    public function getSubscription()
+    {
+        return $this->subscription;
     }
 }

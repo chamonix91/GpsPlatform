@@ -94,3 +94,9 @@ model:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/ModelController.php"
     prefix:   /api
+
+#Subscription
+subscription:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/SubscriptionController.php"
+    prefix:   /api

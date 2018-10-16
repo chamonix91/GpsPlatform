@@ -40,6 +40,31 @@ class User extends BaseUser
     private $phone="";
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $cin="";
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $diploma = "";
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $contract_type ;
+
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $hiring_date;
+
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $endcontract_date;
+
+    /**
      * @MongoDB\Field(type="timestamp")
      */
     private $created_date;
@@ -56,6 +81,9 @@ class User extends BaseUser
      * @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Reclam",mappedBy="user")
      */
     private $reclams;
+
+
+
 
     /**
      * Set firstName
@@ -206,4 +234,134 @@ class User extends BaseUser
     }
 
 
+
+    /**
+     * Set cin
+     *
+     * @param string $cin
+     * @return $this
+     */
+    public function setCin($cin)
+    {
+        $this->cin = $cin;
+        return $this;
+    }
+
+    /**
+     * Get cin
+     *
+     * @return string $cin
+     */
+    public function getCin()
+    {
+        return $this->cin;
+    }
+
+    /**
+     * Set diploma
+     *
+     * @param string $diploma
+     * @return $this
+     */
+    public function setDiploma($diploma)
+    {
+        $this->diploma = $diploma;
+        return $this;
+    }
+
+    /**
+     * Get diploma
+     *
+     * @return string $diploma
+     */
+    public function getDiploma()
+    {
+        return $this->diploma;
+    }
+
+    /**
+     * Set contractType
+     *
+     * @param string $contractType
+     * @return $this
+     */
+    public function setContractType($contractType)
+    {
+        $this->contract_type = $contractType;
+        return $this;
+    }
+
+    /**
+     * Get contractType
+     *
+     * @return string $contractType
+     */
+    public function getContractType()
+    {
+        return $this->contract_type;
+    }
+
+    /**
+     * Set hiringDate
+     *
+     * @param timestamp $hiringDate
+     * @return $this
+     */
+    public function setHiringDate($hiringDate)
+    {
+        $this->hiring_date = $hiringDate;
+        return $this;
+    }
+
+    /**
+     * Get hiringDate
+     *
+     * @return timestamp $hiringDate
+     */
+    public function getHiringDate()
+    {
+        return $this->hiring_date;
+    }
+
+    /**
+     * Set endcontractDate
+     *
+     * @param timestamp $endcontractDate
+     * @return $this
+     */
+    public function setEndcontractDate($endcontractDate)
+    {
+        $this->endcontract_date = $endcontractDate;
+        return $this;
+    }
+
+    /**
+     * Get endcontractDate
+     *
+     * @return timestamp $endcontractDate
+     */
+    public function getEndcontractDate()
+    {
+        return $this->endcontract_date;
+    }
+
+    /**
+     * Add reclam
+     *
+     * @param ApiGps\AdministrationBundle\Document\Reclam $reclam
+     */
+    public function addReclam(\ApiGps\AdministrationBundle\Document\Reclam $reclam)
+    {
+        $this->reclams[] = $reclam;
+    }
+
+    /**
+     * Remove reclam
+     *
+     * @param ApiGps\AdministrationBundle\Document\Reclam $reclam
+     */
+    public function removeReclam(\ApiGps\AdministrationBundle\Document\Reclam $reclam)
+    {
+        $this->reclams->removeElement($reclam);
+    }
 }

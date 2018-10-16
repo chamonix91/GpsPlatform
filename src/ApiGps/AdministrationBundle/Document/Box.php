@@ -86,6 +86,11 @@ class Box
     private $company;
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument="Subscription",mappedBy="box")
+     */
+    public $subscription;
+
+    /**
      * @return mixed
      */
     public function getVehicle()
@@ -414,5 +419,27 @@ class Box
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set subscription
+     *
+     * @param ApiGps\AdministrationBundle\Document\Subscription $subscription
+     * @return $this
+     */
+    public function setSubscription(\ApiGps\AdministrationBundle\Document\Subscription $subscription)
+    {
+        $this->subscription = $subscription;
+        return $this;
+    }
+
+    /**
+     * Get subscription
+     *
+     * @return ApiGps\AdministrationBundle\Document\Subscription $subscription
+     */
+    public function getSubscription()
+    {
+        return $this->subscription;
     }
 }
