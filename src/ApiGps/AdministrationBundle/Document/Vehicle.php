@@ -89,6 +89,11 @@ class Vehicle
      */
     public $driver;
 
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="installation", mappedBy="vehicle")
+     */
+    public $installation;
+
     /** @MongoDB\ReferenceOne(targetDocument="fleet", inversedBy="vehicles") */
     private $flot;
 
@@ -447,5 +452,27 @@ class Vehicle
     public function getMarks()
     {
         return $this->marks;
+    }
+
+    /**
+     * Set installation
+     *
+     * @param ApiGps\AdministrationBundle\Document\installation $installation
+     * @return $this
+     */
+    public function setInstallation(\ApiGps\AdministrationBundle\Document\installation $installation)
+    {
+        $this->installation = $installation;
+        return $this;
+    }
+
+    /**
+     * Get installation
+     *
+     * @return ApiGps\AdministrationBundle\Document\installation $installation
+     */
+    public function getInstallation()
+    {
+        return $this->installation;
     }
 }

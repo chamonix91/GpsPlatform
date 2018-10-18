@@ -100,3 +100,9 @@ subscription:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/SubscriptionController.php"
     prefix:   /api
+
+#Subscription
+installation:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/InstallationController.php"
+    prefix:   /api
