@@ -91,6 +91,11 @@ class Box
     public $subscription;
 
     /**
+     * @MongoDB\ReferenceOne(targetDocument="installation",mappedBy="box")
+     */
+    public $installation;
+
+    /**
      * @return mixed
      */
     public function getVehicle()
@@ -441,5 +446,27 @@ class Box
     public function getSubscription()
     {
         return $this->subscription;
+    }
+
+    /**
+     * Set installation
+     *
+     * @param ApiGps\AdministrationBundle\Document\installation $installation
+     * @return $this
+     */
+    public function setInstallation(\ApiGps\AdministrationBundle\Document\installation $installation)
+    {
+        $this->installation = $installation;
+        return $this;
+    }
+
+    /**
+     * Get installation
+     *
+     * @return ApiGps\AdministrationBundle\Document\installation $installation
+     */
+    public function getInstallation()
+    {
+        return $this->installation;
     }
 }

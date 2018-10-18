@@ -82,6 +82,11 @@ class User extends BaseUser
      */
     private $reclams;
 
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="ApiGps\AdministrationBundle\Document\Installation", mappedBy="installateur")
+     */
+    public $installation;
+
 
 
 
@@ -363,5 +368,27 @@ class User extends BaseUser
     public function removeReclam(\ApiGps\AdministrationBundle\Document\Reclam $reclam)
     {
         $this->reclams->removeElement($reclam);
+    }
+
+    /**
+     * Set installation
+     *
+     * @param ApiGps\AdministrationBundle\Document\Installation $installation
+     * @return $this
+     */
+    public function setInstallation(\ApiGps\AdministrationBundle\Document\Installation $installation)
+    {
+        $this->installation = $installation;
+        return $this;
+    }
+
+    /**
+     * Get installation
+     *
+     * @return ApiGps\AdministrationBundle\Document\Installation $installation
+     */
+    public function getInstallation()
+    {
+        return $this->installation;
     }
 }
