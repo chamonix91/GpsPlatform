@@ -388,7 +388,74 @@ class VehicleController extends FOSRestController
             return new View("reg_number or Box cannot be empty", Response::HTTP_NOT_ACCEPTABLE);*/
 
     }
+    /**
+     * @Rest\Put("/assignf/{id}",)
+     * @param $id
+     * @param Request $request
+     * @return string
+     */
+    public function assigntoflotteAction($id,Request $request)
+    {
+        $matricule = $request->get('reg_number');
+        $reservoir = $request->get('reservoir');
+        $typeCarburant = $request->get('type_carburant');
+        $idmark = $request->get('idmark');
 
+        $puissance = $request->get('puissance');
+        $rpmMax = $request->get('rpmMax');
+        $idmodele =  $request->get('idmodel');
+        $insurance = strtotime(substr($request->get('insurance'),0,24));
+        $vignettes = strtotime(substr($request->get('vignettes'),0,24));
+        $technical_visit = strtotime(substr($request->get('technical_visit'),0,24));
+        $idBoitier = $request->get('box');
+        if($idBoitier==null){
+            $boitier=null;
+        }else {
+            $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idBoitier);
+        }
+        $type = $request->get('type');
+        $sn = $this->get('doctrine_mongodb')->getManager();
+        $vehicule = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
+        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
+        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
+
+        if (empty($vehicule)) {
+            return new View("Vehicle not found", Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+
+        // elseif(!empty($matricule) && !empty($idBoitier)&& !empty($type)){
+        $vehicule->setTechnicalVisit($technical_visit);
+        $vehicule->setVignettes($vignettes);
+        $vehicule->setInsurance($insurance);
+        $vehicule->setRegNumber($matricule);
+        $vehicule->setBox($boitier);
+        $vehicule->setType($type);
+        $vehicule->setPuissance($puissance);
+        $vehicule->setReservoir($reservoir);
+        $vehicule->setRpmMax($rpmMax);
+        $vehicule->setFuelType($typeCarburant);
+        $vehicule->setMark($mark);
+        $vehicule->setModel($model);
+        $sn->flush();
+        return new View("Vehicle Updated Successfully", Response::HTTP_OK);
+        /*
+                }
+                elseif(empty($matricule) && !empty($idBoitier)){
+                    $vehicule->setIdBoitier($idBoitier);
+                    $sn->flush();
+                    return new View("ID Box Updated Successfully", Response::HTTP_OK);
+                }
+                elseif(!empty($matricule) && empty($idBoitier)){
+                    $vehicule->setMatricule($matricule);
+                    $sn->flush();
+                    return new View("reg_number Updated Successfully", Response::HTTP_OK);
+
+                }
+                else
+                    return new View("reg_number or Box cannot be empty", Response::HTTP_NOT_ACCEPTABLE);*/
+
+    }
 
     /**
      * @Rest\Get("/vehicledates/{id}/{datemin}/{datemax}", name="date")

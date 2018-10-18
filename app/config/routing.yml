@@ -82,6 +82,11 @@ fleet:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/FleetController.php"
     prefix:   /api
+#fleet_rest
+dashboard:
+    type:     rest
+    resource: "@ApiGpsReportingBundle/Controller/DashbordController.php"
+    prefix:   /api
 
 #Vehicle_Mark_rest
 mark:
