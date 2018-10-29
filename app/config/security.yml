@@ -8,6 +8,7 @@ security:
         ROLE_CLIENT:      ROLE_CLIENT
         ROLE_REVENDEUR:   ROLE_REVENDEUR
         ROLE_CREVENDEUR:  ROLE_CREVENDEUR
+        ROLE_INSTALATEUR:  ROLE_INSTALATEUR
 
     providers:
         fos_userbundle:

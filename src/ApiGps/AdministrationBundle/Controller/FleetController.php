@@ -31,15 +31,15 @@ class FleetController extends FOSRestController
 
         foreach ($fleets as $fleet) {
 
-            if (!empty($fleet->getVehicles() && !empty($fleet->getComapny())) ){
+            if ($fleet->getVehicles()>0 && !empty($fleet->getComapny()) ){
             $formatted[] = [
                 'name' => $fleet->getName(),
                 'companyname' => $fleet->getComapny()->getName(),
-                'vehicles' => $fleet->getVehicles(),
+                'vehicles' => count($fleet->getVehicles()),
 
             ];
         }
-            elseif(empty($fleet->getVehicles())){
+            elseif(count($fleet->getVehicles())==0){
                 $formatted[] = [
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
@@ -64,18 +64,19 @@ class FleetController extends FOSRestController
     public function getMyFleetsAction(Request $request)
     {
         $id = $request->get('id');
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);;
         $mycompany = $user->getCompany();
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')
             ->findAll();
-        //dump($results);die();
 
         if ($results === null) {
             return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
         }
 
+
         foreach ($results as $fleet) {
             if ($fleet->getComapny() == $mycompany){
+
                 for($o=0;$o<count($fleet->getVehicles());$o++){
                     $fleet->getVehicles()[$o]->setInsurance(date('Y-m-d',$fleet->getVehicles()[$o]->getInsurance()->sec));
                     $fleet->getVehicles()[$o]->setVignettes(date('Y-m-d',$fleet->getVehicles()[$o]->getVignettes()->sec));
@@ -84,17 +85,17 @@ class FleetController extends FOSRestController
             if (!empty($fleet->getVehicles() && !empty($fleet->getComapny())) ){
                 $formatted[] = [
                     'id' => $fleet->getId(),
-                    'taille' => count($fleet->getComapny()),
+                    'taille' => $fleet->getComapny(),
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
-                    'vehicles' => $fleet->getVehicles(),
+                    'vehicles' => count($fleet->getVehicles()),
 
                 ];
             }
             elseif(empty($fleet->getVehicles())){
                 $formatted[] = [
                     'id' => $fleet->getId(),
-                    'taille' => count($fleet->getComapny()),
+                    'taille' => $fleet->getComapny(),
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
                     'vehicles' => "aucune voiture ajoutée à cette flotte",
@@ -108,7 +109,32 @@ class FleetController extends FOSRestController
         }
         return $formatted;
     }
+    /**
+     * @Rest\Get("/nbrfleet/{id}")
+     */
+    public function getnbrFleetsAction(Request $request)
+    {
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);;
+        $mycompany = $user->getCompany();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')
+            ->findAll();
 
+        if ($results === null) {
+            return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
+        }
+
+        $x=0;
+        foreach ($results as $fleet) {
+            if ($fleet->getComapny() == $mycompany) {
+
+                $x++;
+
+            }
+
+        }
+        return $x;
+    }
     ///////////////////////////////////////
     /////     Add fleet SuperAdmin    /////
     ///////////////////////////////////////

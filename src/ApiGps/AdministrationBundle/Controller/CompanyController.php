@@ -69,7 +69,18 @@ class CompanyController extends FOSRestController
     /////////////////////////////
     /////  Create company   /////
     /////////////////////////////
-
+    /**
+     * @Rest\Post("/up")
+     * @param Request $request
+     * @Rest\View()
+     */
+    public function upAction(Request $request){
+        $file = $request->files->get('File');
+        //$a = new FileUploader($this->getParameter('brochures_directory'));
+        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+        $file->move($this->getParameter('brochures_directory'), $fileName);
+        return $fileName;
+    }
     /**
      * @Rest\Post("/company")
      * @param Request $request
@@ -81,28 +92,23 @@ class CompanyController extends FOSRestController
 
 
         $company = new Company();
-        $name = $request->get('name');
         $adress = $request->get('adress');
-        $phone = $request->get('phone');
-        $end_date = $request->get('end_date');
         $cp_name = $request->get('cp_name');
         $cp_phone = $request->get('cp_phone');
         $cpa_name = $request->get('cpa_name');
         $cpa_phone = $request->get('cpa_phone');
-        $logo = $request->get('logo');
+        //$logo = $request->get('logo');
         if(empty($company))
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
-        $company->setName($name);
         $company->setAdress($adress);
-        $company->setPhone($phone);
-        $company->setEndDate($end_date);
-        $company->setCpaName($cp_name);
-        $company->setCpaPhone($cp_phone);
+        $company->setCpName($cp_name);
+        $company->setCpPhone($cp_phone);
         $company->setCpaName($cpa_name);
         $company->setCpaPhone($cpa_phone);
-        $company->setCpaPhone($logo);
+        $company->setAdress($adress);
+        //$company->setCpaPhone($logo);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($company);

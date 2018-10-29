@@ -25,180 +25,43 @@ class VehicleController extends FOSRestController
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
-        //dump(count($user->getCompany()->getFleets()));die();
+        //var_dump($user->getCompany()->getId());die();
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->findAll();
-            //->findBy(array('company' => $user->getCompany()));
-       // var_dump($results[0]->getComapny()->getName());die();
+
+        if(count($results)==0){
+            $a=array();
+            return($a);
+        }
         foreach ($results as $result) {
-            $formatted[] = [
-                'reg_number' => $result->getRegNumber(),
-                'flot' => $result->getFlot(),
-                'type_carburant' => $result->getFuelType(),
-                'reservoir' => $result->getReservoir(),
-                'id' => $result->getId(),
-                'type' => $result->getType(),
-                'mark' => $result->getMark(),
-                'model' => $result->getModel(),
-                'fuel_type' => $result->getFuelType(),
-                'puissance' => $result->getPuissance(),
-                'rpmMax' => $result->getRpmMax(),
-                'technical_visit' => date('Y-m-d',$result->getTechnicalVisit()->sec),
-                'insurance' => date('Y-m-d',$result->getInsurance()->sec),
-                'vignettes' => date('Y-m-d',$result->getVignettes()->sec),
-            ];
+            if($result->getFlot()->getComapny()->getId()==$user->getCompany()->getId()) {
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'flot' => $result->getFlot(),
+                    'libele' => $result->getLibele(),
+                    'adress' => $result->getAdress(),
+                    'type_carburant' => $result->getFuelType(),
+                    'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'type' => $result->getType(),
+                    'mark' => $result->getMark(),
+                    'model' => $result->getModel(),
+                    'fuel_type' => $result->getFuelType(),
+                    'puissance' => $result->getPuissance(),
+                    'rpmMax' => $result->getRpmMax(),
+                    'videngekm' => $result->getVidengekm(),
+                    'videngetime' => $result->getVidengetime(),
+                    'nom' => $result->getNom(),
+                    'prenom' => $result->getPrenom(),
+                    'positionx' => $result->getPositionx(),
+                    'positiony' => $result->getPositiony(),
+                    'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
+                    'insurance' => date('Y-m-d', $result->getInsurance()->sec),
+                    'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
+                ];
+            }
         }
-        return $formatted;
-    }
-    /**
-     * @Rest\Get("/myunicrpm/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmyrpmunicAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-                array_push($dtu1,  $results[$c]->getRpmMax());
-
-        }
-       // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
-    }
-    /**
-     * @Rest\Get("/myunicmark/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmymarkAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-            array_push($dtu1,  $results[$c]->getMark());
-
-        }
-        // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
-    }
-    /**
-     * @Rest\Get("/myunicmodel/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmymodelAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-            array_push($dtu1,  $results[$c]->getModel());
-
-        }
-        // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
-    }
-    /**
-     * @Rest\Get("/myunitype/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmytypeAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-            array_push($dtu1,  $results[$c]->getType());
-
-        }
-        // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
-    }
-    /**
-     * @Rest\Get("/myunicpuissance/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmypuissanceAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-            array_push($dtu1,  $results[$c]->getPuissance());
-
-        }
-        // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
-    }
-    /**
-     * @Rest\Get("/myunicreservoir/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmyreservoirAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
-
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        for ( $c=0;$c< count($results);$c++) {
-
-            array_push($dtu1,  $results[$c]->getReservoir());
-
-        }
-        // var_dump($dtu1);die();
-        $dtu=array_unique($dtu1);
-        $ss=array_merge($dtu);
-        return $ss;
+        return ($formatted);
     }
 
     /**
@@ -247,23 +110,7 @@ class VehicleController extends FOSRestController
 
         return $formatted;
     }
-    /**
-     * @Rest\Get("/myflot/{id}",name="hfgfh")
-     * @param Request $request
-     * @return view
-     */
-    public function getmyvehiculeAction(Request $request)
-    {
-        $id = $request->get('id');
-        $dtu1=array();
-        $dtu=array();
-        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
-            ->find($id);
 
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findBy(array('company' => $user->getCompany()));
-        return $results;
-    }
 
     /**
      * @Rest\Post("/vehicle",name="_add")
@@ -273,21 +120,27 @@ class VehicleController extends FOSRestController
     public function postVehicleAction(Request $request)
     {
         $data = new Vehicle();
+        $libele = $request->get('libele');
+        $adress = $request->get('adress');
+        $videngekm = $request->get('videngekm');
+        $videngetime = $request->get('videngetime');
+        $nom = $request->get('nom');
+        $prenom = $request->get('prenom');
+        $positionx = $request->get('positionx');
+        $positiony = $request->get('positiony');
         $matricule = $request->get('reg_number');
         $type = $request->get('type');
         $reservoir = $request->get('reservoir');
-        $typeCarburant = $request->get('type_carburant');
-        $idmark = $request->get('idmark');
+        $typeCarburant = $request->get('fuel_type');
+        $idmark = $request->get('mark');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
         $idBoitier = $request->get('box');
         $insurance = strtotime(substr($request->get('insurance'),0,24));
         $vignettes = strtotime(substr($request->get('vignettes'),0,24));
         $technical_visit = strtotime(substr($request->get('technical_visit'),0,24));
-        $idmodele =  $request->get('idmodel');
+        $idmodele =  $request->get('model');
         $idflot =  $request->get('fleet');
-        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
-        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
         if($idBoitier==null) {
             $boitier = null;
         }else {
@@ -296,14 +149,21 @@ class VehicleController extends FOSRestController
         $fleet = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')->find($idflot);
 
         //var_dump($boitier);die();
-        if(empty($matricule)|| empty($type))
-        {
-            return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
-        }
 
+
+        $data->setLibele($libele);
+        $data->setAdress($adress);
+        $data->setNom($nom);
+        $data->setPrenom($prenom);
+        $data->setPositionx($positionx);
+        $data->setPositiony($positiony);
         $data->setInsurance($insurance);
         $data->setVignettes($vignettes);
-        $data->setFlot($fleet);
+        if(!empty($fleet)) {
+            $data->setFlot($fleet);
+        }
+        $data->setVidengekm($videngekm);
+        $data->setVidengetime($videngetime);
         $data->setTechnicalVisit($technical_visit);
         $data->setRegNumber($matricule);
         $data->setBox($boitier);
@@ -312,8 +172,8 @@ class VehicleController extends FOSRestController
         $data->setReservoir($reservoir);
         $data->setRpmMax($rpmMax);
         $data->setFuelType($typeCarburant);
-        $data->setMark($mark);
-        $data->setModel($model);
+        $data->setMark($idmark);
+        $data->setModel($idmodele);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -328,6 +188,8 @@ class VehicleController extends FOSRestController
      */
     public function updateVehicleAction($id,Request $request)
     {
+        $videngekm = $request->get('videngekm');
+        $videngetime = $request->get('videngetime');
         $matricule = $request->get('reg_number');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
@@ -363,6 +225,8 @@ class VehicleController extends FOSRestController
             $vehicule->setRegNumber($matricule);
             $vehicule->setBox($boitier);
             $vehicule->setType($type);
+            $vehicule->setVidengetime($videngetime);
+            $vehicule->setVidengekm($videngekm);
             $vehicule->setPuissance($puissance);
             $vehicule->setReservoir($reservoir);
             $vehicule->setRpmMax($rpmMax);
@@ -504,6 +368,125 @@ class VehicleController extends FOSRestController
 
         return $result;
 
+    }
+    /**
+     * @Rest\Get("/allvehicle")
+     * @param Request $request
+     * @return array
+     */
+    public function getAllVehiclebyAction(Request $request)
+    {
+
+
+        $results = $this->get('doctrine_mongodb')->
+        getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();
+
+
+
+        return $results;
+    }
+    /**
+     * @Rest\Get("/allnotboundvehicle")
+     * @param Request $request
+     * @return array
+     */
+    public function getAllVehiclenotboundAction(Request $request)
+    {
+
+
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
+            ->find($id);
+        //var_dump($user->getCompany()->getId());die();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();
+
+        if(count($results)==0){
+            $a=array();
+            return($a);
+        }
+        foreach ($results as $result) {
+            if(
+             empty($result->getBox())) {
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'flot' => $result->getFlot(),
+                    'type_carburant' => $result->getFuelType(),
+                    'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'libele' => $result->getLibele(),
+                    'adress' => $result->getAdress(),
+                    'type' => $result->getType(),
+                    'mark' => $result->getMark(),
+                    'model' => $result->getModel(),
+                    'fuel_type' => $result->getFuelType(),
+                    'puissance' => $result->getPuissance(),
+                    'rpmMax' => $result->getRpmMax(),
+                    'videngekm' => $result->getVidengekm(),
+                    'videngetime' => $result->getVidengetime(),
+                    'nom' => $result->getNom(),
+                    'prenom' => $result->getPrenom(),
+                    'positionx' => $result->getPositionx(),
+                    'positiony' => $result->getPositiony(),
+                    'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
+                    'insurance' => date('Y-m-d', $result->getInsurance()->sec),
+                    'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
+                ];
+            }
+        }
+        return ($formatted);
+    }
+    /**
+     * @Rest\Get("/allboundvehicle")
+     * @param Request $request
+     * @return array
+     */
+    public function getAllVehicleboundAction(Request $request)
+    {
+
+
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
+            ->find($id);
+        //var_dump($user->getCompany()->getId());die();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();
+
+        if(count($results)==0){
+            $a=array();
+            return($a);
+        }
+        foreach ($results as $result) {
+            if(
+            !empty($result->getBox())) {
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'flot' => $result->getFlot(),
+                    'type_carburant' => $result->getFuelType(),
+                    'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'libele' => $result->getLibele(),
+                    'adress' => $result->getAdress(),
+                    'type' => $result->getType(),
+                    'mark' => $result->getMark(),
+                    'model' => $result->getModel(),
+                    'fuel_type' => $result->getFuelType(),
+                    'puissance' => $result->getPuissance(),
+                    'rpmMax' => $result->getRpmMax(),
+                    'videngekm' => $result->getVidengekm(),
+                    'videngetime' => $result->getVidengetime(),
+                    'nom' => $result->getNom(),
+                    'prenom' => $result->getPrenom(),
+                    'positionx' => $result->getPositionx(),
+                    'positiony' => $result->getPositiony(),
+                    'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
+                    'insurance' => date('Y-m-d', $result->getInsurance()->sec),
+                    'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
+                ];
+            }
+        }
+        return ($formatted);
     }
     /**
      * @Rest\Get("/myvehicle/{id}")

@@ -81,6 +81,9 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */
     private $fleets;
 
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */
+    private $alerts;
+
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Driver", mappedBy="company") */
     private $drivers;
 
@@ -327,6 +330,23 @@ class Company
         $this->created_date = $createdDate;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAlerts()
+    {
+        return $this->alerts;
+    }
+
+    /**
+     * @param mixed $alerts
+     */
+    public function setAlerts($alerts)
+    {
+        $this->alerts = $alerts;
+    }
+
 
     /**
      * Get createdDate

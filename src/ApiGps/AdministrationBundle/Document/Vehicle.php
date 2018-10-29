@@ -29,6 +29,30 @@ class Vehicle
      */
     private $reg_number;
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $nom;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $prenom;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $libele;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $adress;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $positionx;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $positiony;
+    /**
      * @MongoDB\Field(type="float")
      */
     private $reservoir;
@@ -64,6 +88,17 @@ class Vehicle
     private $rpmMax;
 
     /**
+     * @MongoDB\Field(type="int")
+     */
+    private $videngekm;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    private $videngetime;
+
+
+    /**
      * @MongoDB\Field(type="timestamp")
      */
     private $technical_visit;
@@ -77,6 +112,28 @@ class Vehicle
      * @MongoDB\Field(type="timestamp")
      */
     private $vignettes;
+
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="Alert",mappedBy="vehicle")
+     */
+    private $alters;
+
+    /**
+     * @return mixed
+     */
+    public function getAlters()
+    {
+        return $this->alters;
+    }
+
+    /**
+     * @param mixed $alters
+     */
+    public function setAlters($alters)
+    {
+        $this->alters = $alters;
+    }
+
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box",mappedBy="vehicle")
@@ -93,6 +150,10 @@ class Vehicle
      * @MongoDB\ReferenceOne(targetDocument="installation", mappedBy="vehicle")
      */
     public $installation;
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="installation", mappedBy="vehicle2")
+     */
+    public $installation2;
 
     /** @MongoDB\ReferenceOne(targetDocument="fleet", inversedBy="vehicles") */
     private $flot;
@@ -143,6 +204,22 @@ class Vehicle
     {
         $this->reservoir = $reservoir;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstallation2()
+    {
+        return $this->installation2;
+    }
+
+    /**
+     * @param mixed $installation2
+     */
+    public function setInstallation2($installation2)
+    {
+        $this->installation2 = $installation2;
     }
 
     /**
@@ -212,6 +289,22 @@ class Vehicle
     }
 
     /**
+     * @return mixed
+     */
+    public function getLibele()
+    {
+        return $this->libele;
+    }
+
+    /**
+     * @param mixed $libele
+     */
+    public function setLibele($libele)
+    {
+        $this->libele = $libele;
+    }
+
+    /**
      * Get model
      *
      * @return string $model
@@ -220,6 +313,39 @@ class Vehicle
     {
         return $this->model;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVidengekm()
+    {
+        return $this->videngekm;
+    }
+
+    /**
+     * @param mixed $videngekm
+     */
+    public function setVidengekm($videngekm)
+    {
+        $this->videngekm = $videngekm;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVidengetime()
+    {
+        return $this->videngetime;
+    }
+
+    /**
+     * @param mixed $videngetime
+     */
+    public function setVidengetime($videngetime)
+    {
+        $this->videngetime = $videngetime;
+    }
+
 
     /**
      * Set fuelType
@@ -264,6 +390,91 @@ class Vehicle
     {
         return $this->puissance;
     }
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getAdress()
+    {
+        return $this->adress;
+    }
+
+    /**
+     * @param mixed $adress
+     */
+    public function setAdress($adress)
+    {
+        $this->adress = $adress;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * @param mixed $nom
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * @param mixed $prenom
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPositionx()
+    {
+        return $this->positionx;
+    }
+
+    /**
+     * @param mixed $positionx
+     */
+    public function setPositionx($positionx)
+    {
+        $this->positionx = $positionx;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPositiony()
+    {
+        return $this->positiony;
+    }
+
+    /**
+     * @param mixed $positiony
+     */
+    public function setPositiony($positiony)
+    {
+        $this->positiony = $positiony;
+    }
+
 
     /**
      * Set rpmMax

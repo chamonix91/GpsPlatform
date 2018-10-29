@@ -82,6 +82,12 @@ fleet:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/FleetController.php"
     prefix:   /api
+
+#alert_rest
+alert:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/AlertController.php"
+    prefix:   /api
 #fleet_rest
 dashboard:
     type:     rest

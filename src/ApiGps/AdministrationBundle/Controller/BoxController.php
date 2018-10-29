@@ -20,7 +20,7 @@ class BoxController extends  FOSRestController
     /// /////////////////////////
 
     /**
-     * @Rest\Get("/box")
+     * @Rest\Get("/allbox")
      */
     public function getBoxAction()
     {
@@ -29,8 +29,49 @@ class BoxController extends  FOSRestController
             return new View("there are no boxes exist", Response::HTTP_NOT_FOUND);
         }
 
+        foreach ($result as $fleet) {
+            $formatted[] = [
+                'imei' => $fleet->getId(),
+                'mark' => $fleet->getMark(),
+                'model' => $fleet->getModel(),
+                'type' => $fleet->getType(),
+                'ass_sim' => $fleet->getAssSim(),
+                'client_sim' => $fleet->getClientSim(),
+                'active' => $fleet->getActive(),
 
+            ];
+
+        }
         return $result;
+    }
+    /**
+     * @Rest\Get("/allunboundedbox")
+     */
+    public function getunboundedBoxAction()
+    {
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->findAll();
+        if ($result === null) {
+            return new View("there are no boxes exist", Response::HTTP_NOT_FOUND);
+        }
+
+        foreach ($result as $fleet) {
+            if (empty($fleet->getVehicle())) {
+                $formatted[] = [
+                    'id' => $fleet->getId(),
+                    'imei' => $fleet->getImei(),
+                    'mark' => $fleet->getMark(),
+                    'model' => $fleet->getModel(),
+                    'type' => $fleet->getType(),
+                    'ass_sim' => $fleet->getAssSim(),
+                    'client_sim' => $fleet->getClientSim(),
+                    'active' => $fleet->getActive(),
+                    'company' => $fleet->getCompany(),
+
+                ];
+
+            }
+        }
+        return $formatted;
     }
     /////////////////////////////
     ///// get Box by id /// /////
@@ -64,8 +105,6 @@ class BoxController extends  FOSRestController
         $ass_sim = $request->get('ass_sim');
         $client_sim = $request->get('client_sim');
         $buy_date = strtotime(substr($request->get('buy_date'),0,24));
-        $bond_date = strtotime(substr($request->get('bond_date'),0,24));
-        $endbond_date = strtotime(substr($request->get('endbond_date'),0,24));
         $mark = $request->get('mark');
         $model = $request->get('model');
         $type = $request->get('type');
@@ -80,7 +119,6 @@ class BoxController extends  FOSRestController
         {
             return "NULL VALUES ARE NOT ALLOWED";
         }
-        $data->setEndbondDate($endbond_date);
         $data->setRetraitDate($retrait_date);
         $data->setModel($model);
         $data->setMark($mark);
@@ -88,9 +126,9 @@ class BoxController extends  FOSRestController
         $data->setActive(true);
         $data->setType($type);
         $data->setAssSim($ass_sim);
-        $data->setBondDate($bond_date);
         $data->setClientSim($client_sim);
         $data->setBuyDate($buy_date);
+        if(!empty($company) || $company != null)
         $data->setCompany($company);
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -103,7 +141,26 @@ class BoxController extends  FOSRestController
     ///// Update Box ////////////
     /// /////////////////////////
 
-
+    /**
+     * @Rest\Put("/affectbox/{id}")
+     * @param $id
+     * @param Request $request
+     * @return string
+     */
+    public function affectBoxtoclientAction($id,Request $request)
+    {
+        $id = $request->get('id');
+        $iccompany = $request->get('company');
+        $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
+            ->find($id);
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')
+            ->find($iccompany);
+        $boitier->setCompany($company);
+        $sn = $this->get('doctrine_mongodb')->getManager();
+        $sn->merge($boitier);
+        $sn->flush();
+        return new View("box Updated Successfully", Response::HTTP_OK);
+    }
     /**
      * @Rest\Put("/box/{id}")
      * @param $id
@@ -120,9 +177,11 @@ class BoxController extends  FOSRestController
         $mark = $request->get('mark');
         $model = $request->get('model');
         $type = $request->get('type');
+        $active = $request->get('active');
         $retrait_date = strtotime(substr($request->get('retrait_date'),0,24));
-        $idcompany = $request->get('idcompany');
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+        /*$idcompany = $request->get('company');
+        var_dump(json_decode($idcompany));die();*/
+        //$company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
         $sn = $this->get('doctrine_mongodb')->getManager();
         $boitier = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
         if (empty($boitier)) {
@@ -133,13 +192,16 @@ class BoxController extends  FOSRestController
         $boitier->setRetraitDate($retrait_date);
         $boitier->setModel($model);
         $boitier->setMark($mark);
-        $boitier->setActive(true);
+        if($active="true")
+            $boitier->setActive(true);
+        else
+            $boitier->setActive(false);
         $boitier->setType($type);
+        //var_dump($active);die();
         $boitier->setAssSim($ass_sim);
         $boitier->setBuyDate($buy_date);
         $boitier->setClientSim($numTel);
         $boitier->setImei($IMEI);
-        $boitier->setCompany($company);
         $sn->flush();
         return new View("box Updated Successfully", Response::HTTP_OK);
 

@@ -25,11 +25,23 @@ class Installation
      * @MongoDB\Field(type="timestamp")
      */
     private $affectation_date;
+    /**
+     * @MongoDB\Field(type="timestamp")
+     */
+    private $creation_date;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $type;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Vehicle",inversedBy="installation")
      */
     private $vehicle;
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Vehicle",inversedBy="installation2")
+     */
+    private $vehicle2;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box",mappedBy="installation")
@@ -58,6 +70,40 @@ class Installation
     {
         return $this->id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    /**
+     * @param mixed $creation_date
+     */
+    public function setCreationDate($creation_date)
+    {
+        $this->creation_date = $creation_date;
+    }
+
 
     /**
      * Set vehicle
@@ -145,6 +191,22 @@ class Installation
     public function getAffectationDate()
     {
         return $this->affectation_date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehicle2()
+    {
+        return $this->vehicle2;
+    }
+
+    /**
+     * @param mixed $vehicle2
+     */
+    public function setVehicle2($vehicle2)
+    {
+        $this->vehicle2 = $vehicle2;
     }
 
     /**

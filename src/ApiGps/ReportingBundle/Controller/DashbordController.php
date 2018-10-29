@@ -80,7 +80,8 @@ class DashbordController extends FOSRestController
         $x1=array();
         for($c=0;$c<count($result1);$c++){
             for($j=0;$j<count($result1[$c]->getVehicles());$j++){
-                array_push($x,$result1[$c]->getVehicles()[$j]);
+                if($result1[$c]->getVehicles()[$j]->getType() != "personne" && $result1[$c]->getVehicles()[$j]->getType() != "depot")
+                    array_push($x,$result1[$c]->getVehicles()[$j]);
             }
         }
         $dx=new \DateTime('now');
@@ -106,6 +107,7 @@ class DashbordController extends FOSRestController
                 array_push($x1,$formatted);
             }
         }
+
         return $x1;
     }
     /**
@@ -123,7 +125,8 @@ class DashbordController extends FOSRestController
         $x1=array();
         for($c=0;$c<count($result1);$c++){
             for($j=0;$j<count($result1[$c]->getVehicles());$j++){
-                array_push($x,$result1[$c]->getVehicles()[$j]);
+                if($result1[$c]->getVehicles()[$j]->getType() != "personne" && $result1[$c]->getVehicles()[$j]->getType() != "depot")
+                    array_push($x,$result1[$c]->getVehicles()[$j]);
             }
         }
 
@@ -167,7 +170,8 @@ class DashbordController extends FOSRestController
         $x1=array();
         for($c=0;$c<count($result1);$c++){
             for($j=0;$j<count($result1[$c]->getVehicles());$j++){
-                array_push($x,$result1[$c]->getVehicles()[$j]);
+                if($result1[$c]->getVehicles()[$j]->getType() != "personne" && $result1[$c]->getVehicles()[$j]->getType() != "depot")
+                    array_push($x,$result1[$c]->getVehicles()[$j]);
             }
         }
         $dx=new \DateTime('now');
@@ -195,7 +199,93 @@ class DashbordController extends FOSRestController
         }
         return $x1;
     }
+    /**
+     * @Rest\Get("/vidange/{id}")
+     * @param Request $request
+     */
+    public function getvidangeAction(Request $request)
+    {
+        $id = $request->get('id');
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')
+            ->find($id);
+        $result1 = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')
+            ->findBycomapny($company);
+        $x=array();
+        $x1=array();
+        for($c=0;$c<count($result1);$c++){
+            for($j=0;$j<count($result1[$c]->getVehicles());$j++){
+                if($result1[$c]->getVehicles()[$j]->getType() != "personne" &&
+                    $result1[$c]->getVehicles()[$j]->getType() != "depot"
+                    && !empty($result1[$c]->getVehicles()[$j]->getBox())
+                    && !empty($result1[$c]->getVehicles()[$j]->getBox()->getTrame())
+                )
+                    array_push($x,$result1[$c]->getVehicles()[$j]);
+            }
+        }
 
+
+
+        for($c=0;$c<count($x);$c++){
+            //var_dump($x[$c]->getBox()->getTrame()[(count($x[$c]->getBox()->getTrame()))-1]->getTotalMileage());die();
+            if($x[$c]->getVidengetime() >0
+            && $x[$c]->getVidengekm() ==0){
+                $k=$x[$c]->getBox()->getTrame()[(count($x[$c]->getBox()->getTrame()))-1]->getTotalMileage();
+                if($k % 50 ==0 || $x[$c]->getVidengetime() -($k % $x[$c]->getVidengetime() )<=50){
+                    $formatted = [
+                        'reg_number' => $x[$c]->getRegNumber(),
+                        'id' => $x[$c]->getId(),
+                        'type' => $x[$c]->getType(),
+                        'mark' => $x[$c]->getMark(),
+                        'model' => $x[$c]->getModel(),
+                        'msg' => "Videnge immédiatement",
+                    ];
+                    array_push($x1,$formatted);
+                }
+                elseif($k % 50 ==0 || $x[$c]->getVidengetime() -($k % $x[$c]->getVidengetime() )<=50){
+                    $ass=$x[$c]->getVidengetime() -($k % $x[$c]->getVidengetime()  );
+                    $formatted = [
+                        'reg_number' => $x[$c]->getRegNumber(),
+                        'id' => $x[$c]->getId(),
+                        'type' => $x[$c]->getType(),
+                        'mark' => $x[$c]->getMark(),
+                        'model' => $x[$c]->getModel(),
+                        'msg' => "Vidange dans ".$ass." Heurs",
+                    ];
+                    array_push($x1,$formatted);
+                }
+
+            }
+            elseif ($x[$c]->getVidengekm() >0
+                && $x[$c]->getVidengetime() ==0){
+                $k=$x[$c]->getBox()->getTrame()[(count($x[$c]->getBox()->getTrame()))-1]->getTotalMileage();
+                if($k % 5000 ==0 ){
+                    $formatted = [
+                        'reg_number' => $x[$c]->getRegNumber(),
+                        'id' => $x[$c]->getId(),
+                        'type' => $x[$c]->getType(),
+                        'mark' => $x[$c]->getMark(),
+                        'model' => $x[$c]->getModel(),
+                        'msg' => "Videnge immédiatement",
+                    ];
+                    array_push($x1,$formatted);
+                }
+                elseif ( $x[$c]->getVidengekm() -($k % $x[$c]->getVidengekm() )<=1000){
+                    $ass=$x[$c]->getVidengekm() -($k % $x[$c]->getVidengekm()  );
+                    $formatted = [
+                        'reg_number' => $x[$c]->getRegNumber(),
+                        'id' => $x[$c]->getId(),
+                        'type' => $x[$c]->getType(),
+                        'mark' => $x[$c]->getMark(),
+                        'model' => $x[$c]->getModel(),
+                        'msg' => "Vidange dans ".$ass." KM",
+                    ];
+                    array_push($x1,$formatted);
+                }
+            }
+
+        }
+        return $x1;
+    }
     /**
      * @Rest\Get("/pannebox/{id}")
      * @param Request $request
@@ -213,6 +303,7 @@ class DashbordController extends FOSRestController
                 array_push($x,$result[$c]);
             }
         }
+
         $d1=new \DateTime('now');
         $d2=date('Y.m.d',strtotime("-2 days"));
 
@@ -226,8 +317,6 @@ class DashbordController extends FOSRestController
                     //date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp())
                     if ((date('Y-m-d', $trames[$j]->getTimestamp()) >= $d2) &&
                         (date('Y-m-d', $trames[$j]->getTimestamp()) <= $d1)) {
-                        var_dump((date('Y-m-d', $trames[$j]->getTimestamp()) ));
-                        var_dump((date('Y-m-d', $trames[$j]->getTimestamp()) >= $d2 ));
                         //var_dump((date('Y-m-d', $trames[$j]->getTimestamp()) ));
 
                         $resTrame[$c] = $trames[$j];

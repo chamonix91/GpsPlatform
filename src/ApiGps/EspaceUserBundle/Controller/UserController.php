@@ -2,6 +2,7 @@
 
 namespace ApiGps\EspaceUserBundle\Controller;
 
+use ApiGps\AdministrationBundle\Document\Company;
 use ApiGps\EspaceUserBundle\Document\User;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -17,22 +18,26 @@ class UserController extends FOSRestController
     /////////////////////////////
 
     /**
-     * @Rest\Post("/user/{id}")
+     * @Rest\Post("/user/")
      * @param Request $request
      * @return View
      */
-    public function addUserAction(Request $request, $id)
+    public function addUserAction(Request $request)
     {
         $userManager = $this->get('fos_user.user_manager');
         $first_name = $request->get('first_name');
         $last_name = $request->get('last_name');
         $phone = $request->get('phone');
+        //$idcompany = $request->get('company');
 
         $username = $request->get('username');
         $email = $request->get('email');
         $password = $request->get('password');
         $plainpassword = $request->get('plainpassword');
         $roles = $request->get('roles');
+        $idcompany = $request->get('company');
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+
 
         if(empty($username) || empty($email)|| empty($password))
         {
@@ -40,18 +45,19 @@ class UserController extends FOSRestController
         }
 
         $user = $userManager->createUser();
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
 
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setEnabled(true);
-        /*$user->setPassword($password);
-        $user->setPlainPassword($plainpassword);*/
+        $user->setPassword($password);
+        $user->setPlainPassword($password);
 
         $user->setFirstName($first_name);
         $user->setLastName($last_name);
         $user->setPhone($phone);
-        $user->setCompany($company);
+        if(!empty($company) || $company != null) {
+            $user->setCompany($company);
+        }
         $user->setRoles(array($roles));
 
 
@@ -99,7 +105,8 @@ class UserController extends FOSRestController
         }
 
         $user = $userManager->createUser();
-        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
+        $company = $this->get('doctrine_mongodb')->getRepository
+        ('ApiGpsAdministrationBundle:Company')->find($id);
 
         $user->setUsername($username);
         $user->setEmail($email);
@@ -191,6 +198,26 @@ class UserController extends FOSRestController
         }
         return $user;
     }
+    /**
+     * @Rest\Get("/instalateur")
+     */
+    public function getinstalateurAction()
+    {
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->findAll();
+        if ($user === null) {
+            return new View("user not found", Response::HTTP_NOT_FOUND);
+        }
+        $a=count($user);
+        $pro=array();
+
+        for($i=0;$i<$a;$i++){
+            // if($userid[$i]->getRoles()==array('ROLE_PROSPECT')){
+            if($user[$i]->getRoles()[0]=='ROLE_INSTALATEUR'){
+                array_push($pro,$user[$i]);
+            }
+        }
+        return $pro;
+    }
 
     /////////////////////////////
     /////    Update User    /////
@@ -204,6 +231,7 @@ class UserController extends FOSRestController
      */
     public function updateAction($id,Request $request)
     {
+
         $em = $this->get('doctrine_mongodb')->getManager();
         $userManager = $this->get('fos_user.user_manager');
 
@@ -217,14 +245,12 @@ class UserController extends FOSRestController
         $plainpassword = $request->get('plainpassword');
         $roles = $request->get('roles');
         $active = $request->get('enabled');
-        //$idcompany = $request->get('company');
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         if (empty($user)) {
             return new View("user not found", Response::HTTP_NOT_FOUND);
         }
-        //$company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($id);
-        
+
         if($active=="true"){
                 $user->setEnabled(true);
             }
@@ -240,7 +266,8 @@ class UserController extends FOSRestController
             $user->setEmail($email);
             $user->setPassword($password);
             $user->setPlainPassword($plainpassword);
-           // $user->setCompany($company);
+
+
             //$user->setRoles(array($roles));
             $em->flush();
             return new View("User Updated Successfully", Response::HTTP_OK);
