@@ -12,8 +12,38 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 
-class InstallationController extends  FOSRestController
+class InstallationController extends FOSRestController
 {
+
+    /**
+     * @Rest\Post("/api/up")
+     * @param Request $request
+     * @Rest\View()
+     * @return string
+     */
+    public function upAction(Request $request){
+        $file = $request->files->get('File');
+        //$a = new FileUploader($this->getParameter('brochures_directory'));
+        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+        $file->move($this->getParameter('brochures_directory'), $fileName);
+        return $fileName;
+    }
+
+    /////////////////////////////
+    ///// Get installations /////
+    /////////////////////////////
+
+    /**
+     * @Rest\Get("/installation")
+     */
+    public function getInstallationAction()
+    {
+        $restresult = $this->getDoctrine()->getRepository('ApiGpsAdministrationBundle:Installation')->findAll();
+        if ($restresult === null) {
+            return new View("there are no installations exist", Response::HTTP_NOT_FOUND);
+        }
+        return $restresult;
+    }
 
     /////////////////////////////
     ///// Add installation  /////
@@ -30,11 +60,13 @@ class InstallationController extends  FOSRestController
         $idbox = $request->get('idbox');
         $idvehicle = $request->get('idvehicle');
         $idinstallateur = $request->get('idinstallateur');
+        $note = $request->get('note');
 
 
         $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idbox);
         $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
         $installateur = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($idinstallateur);
+
 
 
         if( empty($idbox) || empty($idvehicle) || empty($idinstallateur))
@@ -49,6 +81,8 @@ class InstallationController extends  FOSRestController
         $b=$a->format('Y-m-d ');
         $bond_date = strtotime($b);
         $data->setCreationDate($bond_date);
+        $data->setNote($note);
+        $data->setStatus('ouvert');
         $box->setVehicle($vehicle);
         $vehicle->setBox($box);
         $this->updatebox($box);
@@ -61,6 +95,12 @@ class InstallationController extends  FOSRestController
 
         return new View("installation Added Successfully", Response::HTTP_OK);
     }
+
+    ///////////////////////////////////////
+    ///// intervention installation  //////
+    ///////////////////////////////////////
+
+
     /**
      * @Rest\Post("/intervention")
      * @param Request $request
@@ -282,6 +322,50 @@ class InstallationController extends  FOSRestController
         $em->flush();
 
         return new View("installation updated Successfully", Response::HTTP_OK);
+    }
+
+    /////////////////////////////
+    ///// Modify installation  /////
+    /////////////////////////////
+
+    /**
+     * @Rest\Put("/finalizeIns/{id}")
+     * @param Request $request
+     * @return string
+     */
+    public function finalizeInstallationAction($id, Request $request)
+    {
+        $data = new Installation();
+
+
+
+        $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
+
+        $image1 = $request->get('image1');
+        $image2 = $request->get('image2');
+        $image3 = $request->get('image3');
+        $image4 = $request->get('image4');
+
+
+
+        if( empty($data))
+        {
+            return "NULL VALUES ARE NOT ALLOWED";
+        }
+
+
+
+        $data->setImage1($image1);
+        $data->setImage2($image2);
+        $data->setImage3($image3);
+        $data->setImage4($image4);
+        $data->setStatus('ferme');
+
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $em->persist($data);
+        $em->flush();
+
+        return new View("installation finalized Successfully", Response::HTTP_OK);
     }
 
 }

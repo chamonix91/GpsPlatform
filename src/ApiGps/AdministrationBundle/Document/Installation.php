@@ -45,6 +45,29 @@ class Installation
     private $status;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $image1;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $image2;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $image3;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $image4;
+
+
+
+
+    /**
      * @MongoDB\ReferenceOne(targetDocument="Vehicle",inversedBy="installation")
      */
     private $vehicle;
@@ -283,5 +306,93 @@ class Installation
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set image1
+     *
+     * @param string $image1
+     * @return $this
+     */
+    public function setImage1($image1)
+    {
+        $this->image1 = $image1;
+        return $this;
+    }
+
+    /**
+     * Get image1
+     *
+     * @return string $image1
+     */
+    public function getImage1()
+    {
+        return $this->image1;
+    }
+
+    /**
+     * Set image2
+     *
+     * @param string $image2
+     * @return $this
+     */
+    public function setImage2($image2)
+    {
+        $this->image2 = $image2;
+        return $this;
+    }
+
+    /**
+     * Get image2
+     *
+     * @return string $image2
+     */
+    public function getImage2()
+    {
+        return $this->image2;
+    }
+
+    /**
+     * Set image3
+     *
+     * @param string $image3
+     * @return $this
+     */
+    public function setImage3($image3)
+    {
+        $this->image3 = $image3;
+        return $this;
+    }
+
+    /**
+     * Get image3
+     *
+     * @return string $image3
+     */
+    public function getImage3()
+    {
+        return $this->image3;
+    }
+
+    /**
+     * Set image4
+     *
+     * @param string $image4
+     * @return $this
+     */
+    public function setImage4($image4)
+    {
+        $this->image4 = $image4;
+        return $this;
+    }
+
+    /**
+     * Get image4
+     *
+     * @return string $image4
+     */
+    public function getImage4()
+    {
+        return $this->image4;
     }
 }
