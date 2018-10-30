@@ -75,6 +75,11 @@ class Company
      */
     private $logo;
 
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
+    private $active;
+
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
@@ -490,5 +495,47 @@ class Company
     public function getSubscription()
     {
         return $this->subscription;
+    }
+
+    /**
+     * Add alert
+     *
+     * @param ApiGps\AdministrationBundle\Document\fleet $alert
+     */
+    public function addAlert(\ApiGps\AdministrationBundle\Document\fleet $alert)
+    {
+        $this->alerts[] = $alert;
+    }
+
+    /**
+     * Remove alert
+     *
+     * @param ApiGps\AdministrationBundle\Document\fleet $alert
+     */
+    public function removeAlert(\ApiGps\AdministrationBundle\Document\fleet $alert)
+    {
+        $this->alerts->removeElement($alert);
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean $active
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

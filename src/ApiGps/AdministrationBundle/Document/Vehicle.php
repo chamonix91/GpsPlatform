@@ -114,6 +114,11 @@ class Vehicle
     private $vignettes;
 
     /**
+     * @MongoDB\Field(type="boolean")
+     */
+    private $active;
+
+    /**
      * @MongoDB\ReferenceMany(targetDocument="Alert",mappedBy="vehicle")
      */
     private $alters;
@@ -685,5 +690,47 @@ class Vehicle
     public function getInstallation()
     {
         return $this->installation;
+    }
+
+    /**
+     * Add alter
+     *
+     * @param ApiGps\AdministrationBundle\Document\Alert $alter
+     */
+    public function addAlter(\ApiGps\AdministrationBundle\Document\Alert $alter)
+    {
+        $this->alters[] = $alter;
+    }
+
+    /**
+     * Remove alter
+     *
+     * @param ApiGps\AdministrationBundle\Document\Alert $alter
+     */
+    public function removeAlter(\ApiGps\AdministrationBundle\Document\Alert $alter)
+    {
+        $this->alters->removeElement($alter);
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean $active
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

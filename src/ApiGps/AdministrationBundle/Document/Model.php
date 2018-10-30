@@ -26,6 +26,11 @@ class Model
      */
     private $name;
 
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
+    private $active;
+
     /** @MongoDB\ReferenceOne(targetDocument="Mark", inversedBy="models") */
     private $mark;
 
@@ -85,5 +90,27 @@ class Model
     public function getMark()
     {
         return $this->mark;
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean $active
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

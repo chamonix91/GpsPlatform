@@ -57,8 +57,6 @@ class AlertController extends FOSRestController
     public function getAlertsByCompanyAction(Request $request)
     {
         $id = $request->get('id');
-        //$drivers = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
-        //dump($drivers);die();
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')

@@ -35,6 +35,16 @@ class Installation
     private $type;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $note;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $status;
+
+    /**
      * @MongoDB\ReferenceOne(targetDocument="Vehicle",inversedBy="installation")
      */
     private $vehicle;
@@ -229,5 +239,49 @@ class Installation
     public function getInstallateur()
     {
         return $this->installateur;
+    }
+
+    /**
+     * Set note
+     *
+     * @param string $note
+     * @return $this
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+        return $this;
+    }
+
+    /**
+     * Get note
+     *
+     * @return string $note
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string $status
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

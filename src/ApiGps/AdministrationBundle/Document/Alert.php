@@ -26,7 +26,7 @@ class Alert
     /**
      * @MongoDB\Field(type="string")
      */
-    private $libele;
+    private $libelle;
 
     /**
      * @MongoDB\Field(type="string")
@@ -36,6 +36,16 @@ class Alert
      * @MongoDB\Field(type="float")
      */
     private $valeur;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $description;
+
+
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
+    private $active;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Vehicle", inversedBy="alters")
@@ -43,28 +53,13 @@ class Alert
     private $vehicle;
 
     /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="alerts") */
-    private $comapny;
+    private $company;
 
+    
     /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-
-
-    /**
-     * @return mixed
+     * Get id
+     *
+     * @return id $id
      */
     public function getId()
     {
@@ -72,81 +67,65 @@ class Alert
     }
 
     /**
-     * @param mixed $id
+     * Set libelle
+     *
+     * @param string $libelle
+     * @return $this
      */
-    public function setId($id)
+    public function setLibelle($libelle)
     {
-        $this->id = $id;
+        $this->libelle = $libelle;
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get libelle
+     *
+     * @return string $libelle
      */
-    public function getComapny()
+    public function getLibelle()
     {
-        return $this->comapny;
+        return $this->libelle;
     }
 
     /**
-     * @param mixed $comapny
+     * Set type
+     *
+     * @param string $type
+     * @return $this
      */
-    public function setComapny($comapny)
+    public function setType($type)
     {
-        $this->comapny = $comapny;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getVehicle()
-    {
-        return $this->vehicle;
+        $this->type = $type;
+        return $this;
     }
 
     /**
-     * @param mixed $vehicle
+     * Get type
+     *
+     * @return string $type
      */
-    public function setVehicle($vehicle)
+    public function getType()
     {
-        $this->vehicle = $vehicle;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getLibele()
-    {
-        return $this->libele;
+        return $this->type;
     }
 
     /**
-     * @param mixed $libele
+     * Set valeur
+     *
+     * @param float $valeur
+     * @return $this
      */
-    public function setLibele($libele)
+    public function setValeur($valeur)
     {
-        $this->libele = $libele;
+        $this->valeur = $valeur;
+        return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
+     * Get valeur
+     *
+     * @return float $valeur
      */
     public function getValeur()
     {
@@ -154,13 +133,90 @@ class Alert
     }
 
     /**
-     * @param mixed $valeur
+     * Set active
+     *
+     * @param boolean $active
+     * @return $this
      */
-    public function setValeur($valeur)
+    public function setActive($active)
     {
-        $this->valeur = $valeur;
+        $this->active = $active;
+        return $this;
     }
 
+    /**
+     * Get active
+     *
+     * @return boolean $active
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
 
+    /**
+     * Set vehicle
+     *
+     * @param Vehicle $vehicle
+     * @return $this
+     */
+    public function setVehicle(Vehicle $vehicle)
+    {
+        $this->vehicle = $vehicle;
+        return $this;
+    }
 
+    /**
+     * Get vehicle
+     *
+     * @return Vehicle $vehicle
+     */
+    public function getVehicle()
+    {
+        return $this->vehicle;
+    }
+
+    /**
+     * Set company
+     *
+     * @param Company $company
+     * @return $this
+     */
+    public function setCompany(Company $company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company $company
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string $description
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 }

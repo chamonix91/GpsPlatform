@@ -25,6 +25,11 @@ class fleet
      */
     private $name;
 
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
+    private $active;
+
     /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="fleets") */
     private $comapny;
 
@@ -117,5 +122,27 @@ class fleet
     public function getVehicles()
     {
         return $this->vehicles;
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean $active
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }
