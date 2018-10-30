@@ -2,6 +2,8 @@
 
 namespace ApiGps\AdministrationBundle\Controller;
 
+use ApiGps\AdministrationBundle\Document\Alert;
+use ApiGps\AdministrationBundle\Document\Driver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use ApiGps\AdministrationBundle\Document\Vehicle;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -13,7 +15,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class AlertController extends FOSRestController
 {
     /////////////////////////////
-    /////  Get all alert  /////
+    /////  Get all alerts   /////
     /////////////////////////////
 
     /**
@@ -24,17 +26,19 @@ class AlertController extends FOSRestController
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->findAll();
         //dump($restresult);die();
         if ($results === null) {
-            return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
+            return new View("there are no alert exist", Response::HTTP_NOT_FOUND);
         }
 
         foreach ($results as $result) {
 
                 $drivers[] = [
                     'id' => $result->getId(),
-                    'libele' => $result->getLibele(),
+                    'libele' => $result->getLibelle(),
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
+                    'company' => $result->getCompany(),
+                    'active' => $result->getActive(),
                 ];
 
         }
@@ -50,7 +54,7 @@ class AlertController extends FOSRestController
      * @param Request $request
      * @return array|View
      */
-    public function getDriversByCompanyAction(Request $request)
+    public function getAlertsByCompanyAction(Request $request)
     {
         $id = $request->get('id');
         //$drivers = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->findAll();
@@ -61,7 +65,7 @@ class AlertController extends FOSRestController
             ->findBy(array('company' => $user->getCompany()));
 
         if ($results === null) {
-            return new View("there are no drivers exist", Response::HTTP_NOT_FOUND);
+            return new View("there are no alerts exist", Response::HTTP_NOT_FOUND);
         }
 
         /*foreach ($results as $result) {
@@ -80,7 +84,7 @@ class AlertController extends FOSRestController
     }
 
     ///////////////////////////////////////
-    /////     Add driver SuperAdmin   /////
+    /////     Add Alert SuperAdmin   /////
     ///////////////////////////////////////
 
     /**
@@ -88,9 +92,9 @@ class AlertController extends FOSRestController
      * @param Request $request
      * @return string
      */
-    public function postVehicleAction(Request $request)
+    public function postAlertAction(Request $request)
     {
-        $data = new Driver();
+        $data = new Alert();
         /*
          *  $drivers[] = [
                     'id' => $result->getId(),
@@ -99,7 +103,7 @@ class AlertController extends FOSRestController
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
                 ];*/
-        $libele = $request->get('libele');
+        $libelle = $request->get('libelle');
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
@@ -113,22 +117,21 @@ class AlertController extends FOSRestController
 
 
         //var_dump($boitier);die();
-        if(empty($libele)|| empty($type) || empty($valeur) )
+        if(empty($libelle)|| empty($type) || empty($valeur) )
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        $data ->setLibele($libele);
+        $data ->setLibelle($libelle);
+        $data ->setActive(true);
         $data ->setType($type);
         $data->setValeur($valeur);
         $data->setDescription($description);
 
-        //dump($data);die();
-
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
         $em->flush();
-        return new View("driver added Successfully", Response::HTTP_OK);
+        return new View("Alert added Successfully", Response::HTTP_OK);
 
 
     }
@@ -142,19 +145,12 @@ class AlertController extends FOSRestController
      * @param Request $request
      * @return string
      */
-    public function postVehicleOperatorAction(Request $request)
+    public function postAlertOperatorAction(Request $request)
     {
 
-        $data = new Driver();
-        /*
-         *  $drivers[] = [
-                    'id' => $result->getId(),
-                    'libele' => $result->getLibele(),
-                    'type' => $result->getType(),
-                    'description' => $result->getDescription(),
-                    'valeur' => $result->getValeur(),
-                ];*/
-        $libele = $request->get('libele');
+        $data = new Alert();
+
+        $libelle = $request->get('libelle');
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
@@ -163,24 +159,22 @@ class AlertController extends FOSRestController
             $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
 
 
-        //var_dump($boitier);die();
-        if(empty($libele)|| empty($type) || empty($valeur) )
+        if(empty($libelle)|| empty($type) || empty($valeur) )
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        $data ->setLibele($libele);
+        $data ->setLibelle($libelle);
         $data ->setType($type);
         $data->setValeur($valeur);
-        $data->setDescription($description);
+        $data->setActive(true);
         $data->setDescription($description);
         $data->setCompany($company);
-        //dump($data);die();
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
         $em->flush();
-        return new View("driver added Successfully", Response::HTTP_OK);
+        return new View("Alert added Successfully", Response::HTTP_OK);
 
 
     }
@@ -195,116 +189,109 @@ class AlertController extends FOSRestController
      * @param Request $request
      * @return string
      */
-    public function updatedriverAction($id,Request $request)
+    public function updateAlertAction($id,Request $request)
     {
-        $libele = $request->get('libele');
+        $libelle = $request->get('libelle');
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
         $id = $request->get('id');
 
         $sn = $this->get('doctrine_mongodb')->getManager();
-        $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
 
-        if (empty($driver)) {
+        if (empty($alert)) {
             return new View("Vehicle not found", Response::HTTP_NOT_ACCEPTABLE);
         }
 
-       /* $driver->setFirstname($firstname);
-        $driver->setLastname($lastname);
-        $driver->setTel($tel);*/
+        $alert->setLibelle($libelle);
+        $alert->setType($type);
+        $alert->setDescription($description);
+        $alert->setValeur($valeur);
         //$driver->setVehicle($vehicle);
         $sn->flush();
-        return new View("Vehicle Updated Successfully", Response::HTTP_OK);
+        return new View("Alert Updated Successfully", Response::HTTP_OK);
     }
 
 
     ///////////////////////////////////////
-    /////       Get driver By Id      /////
+    /////       Get Alert  By Id      /////
     ///////////////////////////////////////
 
 
     /**
-     * @Rest\Get("/driver/{id}")
+     * @Rest\Get("/alert/{id}")
      */
-    public function GetDriverByIdAction($id)
+    public function GetAlertByIdAction($id)
     {
-        $singleresult = $this->getDoctrine()->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
+        $singleresult = $this->getDoctrine()->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
         if ($singleresult === null) {
-            return new View("driver not found", Response::HTTP_NOT_FOUND);
+            return new View("Alert not found", Response::HTTP_NOT_FOUND);
         }
         return $singleresult;
     }
 
     //////////////////////////////
-    ////////  Bound  Driver  /////
+    ////////  Activate  Alert  /////
     //////////////////////////////
 
     /**
-     * @Rest\Put("/bonddriver/{id}")
+     * @Rest\Put("/activateAlert/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
-    public function BondDriverAction($id,Request $request)
+    public function ActivateAlertAction($id,Request $request)
     {
-        $a=new \DateTime('now');
-        $b=$a->format('Y-m-d ');
-        $bond_date = strtotime($b);
-        $idVehicle = $request->get('idvehicle');
-        $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
+
+
+
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
         $sn = $this->get('doctrine_mongodb')->getManager();
-        $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
-        if (empty($driver)) {
-            return new View("driver not found", Response::HTTP_NOT_FOUND);
+
+        if (empty($alert)) {
+            return new View("alert not found", Response::HTTP_NOT_FOUND);
 
         }
 
-        $driver->setBondDate($bond_date);
-        $driver->setVehicle($vehicle);
-        $driver->setEndbondDate(null);
-        $sn->merge($driver);
+        $alert->setActive(true);
+        $sn->merge($alert);
         $sn->flush();
-        return new View("driver Updated Successfully", Response::HTTP_OK);
+        return new View("alert activated Successfully", Response::HTTP_OK);
 
 
     }
-
-    //////////////////////////////
-    ////////  UnBond Driver //////
-    //////////////////////////////
+    ///////////////////////////////////
+    ////////  Desactivate  Alert  /////
+    ///////////////////////////////////
 
     /**
-     * @Rest\Put("/unbonddriver/{id}")
+     * @Rest\Put("/desactivateAlert/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
-    public function EndBondDriverAction($id,Request $request)
+    public function DesactivateAlertAction($id,Request $request)
     {
-        $a=new \DateTime('now');
-        $b=$a->format('Y-m-d ');
-        $bond_date = strtotime($b);
-        $endbond_date = strtotime($b);
+
+
+
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
         $sn = $this->get('doctrine_mongodb')->getManager();
-        $driver = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Driver')->find($id);
 
-
-        if (empty($driver)) {
-            return new View("driver not found", Response::HTTP_NOT_FOUND);
+        if (empty($alert)) {
+            return new View("alert not found", Response::HTTP_NOT_FOUND);
 
         }
 
-
-        $driver->setEndbondDate($endbond_date);
-        $driver->setVehicle(null);
-        $driver->setBondDate(null);
-        $sn->merge($driver);
+        $alert->setActive(false);
+        $sn->merge($alert);
         $sn->flush();
-        return new View("driver Updated Successfully", Response::HTTP_OK);
+        return new View("alert desactivated Successfully", Response::HTTP_OK);
 
 
     }
+
 
 
 
