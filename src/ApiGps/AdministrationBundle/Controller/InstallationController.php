@@ -49,7 +49,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -70,7 +70,7 @@ class InstallationController extends FOSRestController
                 } elseif ($install->getVehicle()->getType() == "personne") {
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -95,7 +95,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -124,7 +124,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -135,7 +135,7 @@ class InstallationController extends FOSRestController
                         'image4' => $install->getImage4(),
                         'positionx' => $install->getVehicle()->getPositionx(),
                         'positiony' => $install->getVehicle()->getPositiony(),
-                        'imei' => $install->getBox()->getImei(),
+                        //'imei' => $install->getBox()->getImei(),
                         'installateur' => $install->getInstallateur(),
 
 
@@ -143,7 +143,7 @@ class InstallationController extends FOSRestController
                 } elseif ($install->getVehicle()->getType() == "personne") {
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -155,7 +155,7 @@ class InstallationController extends FOSRestController
                         'image4' => $install->getImage4(),
                         'nom' => $install->getVehicle()->getNom(),
                         'prenom' => $install->getVehicle()->getPrenom(),
-                        'imei' => $install->getBox()->getImei(),
+                        //'imei' => $install->getBox()->getImei(),
                         'installateur' => $install->getInstallateur(),
 
 
@@ -165,7 +165,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -177,7 +177,7 @@ class InstallationController extends FOSRestController
                         'reg_number' => $install->getVehicle()->getRegNumber(),
                         'mark' => $install->getVehicle()->getMark(),
                         'model' => $install->getVehicle()->getModel(),
-                        'imei' => $install->getBox()->getImei(),
+                        //'imei' => $install->getBox()->getImei(),
                         'installateur' => $install->getInstallateur(),
 
 
@@ -218,7 +218,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -239,7 +239,7 @@ class InstallationController extends FOSRestController
                 } elseif ($install->getVehicle()->getType() == "personne") {
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -264,7 +264,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -293,7 +293,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -312,7 +312,7 @@ class InstallationController extends FOSRestController
                 } elseif ($install->getVehicle()->getType() == "personne") {
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -334,7 +334,7 @@ class InstallationController extends FOSRestController
 
                     $formatted[] = [
                         'id' => $install->getId(),
-                        'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
                         'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
                         'type' => $install->getType(),
                         'note' => $install->getNote(),
@@ -677,7 +677,7 @@ class InstallationController extends FOSRestController
 
         $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
 
-        $note = $request->get('note');
+        //$note = $request->get('note');
         $image1 = $request->get('image1');
         $image2 = $request->get('image2');
         $image3 = $request->get('image3');
@@ -721,7 +721,7 @@ class InstallationController extends FOSRestController
 
         $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
 
-        $note = $request->get('note');
+        //$note = $request->get('note');
 
 
 
@@ -730,7 +730,7 @@ class InstallationController extends FOSRestController
         {
             return "NULL VALUES ARE NOT ALLOWED";
         }
-        $data->setNote($note);
+        //$data->setNote($note);
         $data->setStatus(false);
 
         $em = $this->get('doctrine_mongodb')->getManager();

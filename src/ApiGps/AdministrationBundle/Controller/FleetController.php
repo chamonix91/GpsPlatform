@@ -29,27 +29,7 @@ class FleetController extends FOSRestController
             return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
         }
 
-        foreach ($fleets as $fleet) {
-
-            if (  $fleet->getComapny()==null ){
-            $formatted[] = [
-                'name' => $fleet->getName(),
-                'companyname' => $fleet->getComapny()->getName(),
-
-            ];
-        }
-            else{
-                $formatted[] = [
-                    'name' => $fleet->getName(),
-                    'companyname' => "non affecter",
-
-                ];
-
-            }
-
-
-        }
-        return $formatted;
+        return $fleets;
     }
 
 
