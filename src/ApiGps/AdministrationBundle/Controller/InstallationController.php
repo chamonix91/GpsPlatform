@@ -63,7 +63,7 @@ class InstallationController extends FOSRestController
                         'position2x' => $install->getVehicle2()->getPositionx(),
                         'position2y' => $install->getVehicle2()->getPositiony(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -86,7 +86,7 @@ class InstallationController extends FOSRestController
                         'nom2' => $install->getVehicle2()->getNom(),
                         'prenom2' => $install->getVehicle2()->getPrenom(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -111,7 +111,7 @@ class InstallationController extends FOSRestController
                         'mark2' => $install->getVehicle2()->getMark(),
                         'model2' => $install->getVehicle2()->getModel(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -136,7 +136,7 @@ class InstallationController extends FOSRestController
                         'positionx' => $install->getVehicle()->getPositionx(),
                         'positiony' => $install->getVehicle()->getPositiony(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -156,7 +156,7 @@ class InstallationController extends FOSRestController
                         'nom' => $install->getVehicle()->getNom(),
                         'prenom' => $install->getVehicle()->getPrenom(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -178,7 +178,7 @@ class InstallationController extends FOSRestController
                         'mark' => $install->getVehicle()->getMark(),
                         'model' => $install->getVehicle()->getModel(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -232,7 +232,7 @@ class InstallationController extends FOSRestController
                         'position2x' => $install->getVehicle2()->getPositionx(),
                         'position2y' => $install->getVehicle2()->getPositiony(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -255,7 +255,7 @@ class InstallationController extends FOSRestController
                         'nom2' => $install->getVehicle2()->getNom(),
                         'prenom2' => $install->getVehicle2()->getPrenom(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -280,7 +280,7 @@ class InstallationController extends FOSRestController
                         'mark2' => $install->getVehicle2()->getMark(),
                         'model2' => $install->getVehicle2()->getModel(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -305,7 +305,7 @@ class InstallationController extends FOSRestController
                         'positionx' => $install->getVehicle()->getPositionx(),
                         'positiony' => $install->getVehicle()->getPositiony(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -325,7 +325,7 @@ class InstallationController extends FOSRestController
                         'nom' => $install->getVehicle()->getNom(),
                         'prenom' => $install->getVehicle()->getPrenom(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -347,7 +347,7 @@ class InstallationController extends FOSRestController
                         'mark' => $install->getVehicle()->getMark(),
                         'model' => $install->getVehicle()->getModel(),
                         'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
