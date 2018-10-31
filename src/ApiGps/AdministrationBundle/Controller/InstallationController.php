@@ -9,7 +9,6 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class InstallationController extends FOSRestController
@@ -36,14 +35,36 @@ class InstallationController extends FOSRestController
     /**
      * @Rest\Get("/installation")
      */
-    public function getInstallationAction()
+    public function getInstallationsAction()
     {
-        $restresult = $this->getDoctrine()->getRepository('ApiGpsAdministrationBundle:Installation')->findAll();
+        $restresult = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->findAll();
         if ($restresult === null) {
             return new View("there are no installations exist", Response::HTTP_NOT_FOUND);
         }
         return $restresult;
     }
+
+    /////////////////////////////////////////
+    ////////// Get My Installations   ///////
+    /////////////////////////////////////////
+
+    /**
+     * @Rest\Get("/Myinstallation/{id}")
+     */
+    public function getMyInstallationsAction(Request $request)
+    {
+
+        $id = $request->get('id');
+
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
+
+        $restresult = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->findBy(array('installateur'=>$user));
+        if ($restresult === null) {
+            return new View("there are no installations exist", Response::HTTP_NOT_FOUND);
+        }
+        return $restresult;
+    }
+
 
     /////////////////////////////
     ///// Add installation  /////
@@ -144,6 +165,12 @@ class InstallationController extends FOSRestController
 
         return new View("installation Added Successfully", Response::HTTP_OK);
     }
+
+    ///////////////////////////////////////
+    ///////// uninstallation  /////////////
+    ///////////////////////////////////////
+
+
     /**
      * @Rest\Post("/desinstallation")
      * @param Request $request
@@ -188,6 +215,12 @@ class InstallationController extends FOSRestController
 
         return new View("installation Added Successfully", Response::HTTP_OK);
     }
+
+    ///////////////////////////////////////
+    /////////    transfert    /////////////
+    ///////////////////////////////////////
+
+
     /**
      * @Rest\Post("/transfere")
      * @param Request $request
@@ -259,9 +292,9 @@ class InstallationController extends FOSRestController
         $em->flush();
     }
 
-    /////////////////////////////
+    ////////////////////////////////
     ///// Modify installation  /////
-    /////////////////////////////
+    ////////////////////////////////
 
     /**
      * @Rest\Put("/installation/{id}")
@@ -324,9 +357,9 @@ class InstallationController extends FOSRestController
         return new View("installation updated Successfully", Response::HTTP_OK);
     }
 
-    /////////////////////////////
-    ///// Modify installation  /////
-    /////////////////////////////
+    //////////////////////////////////
+    ///// finalize installation  /////
+    //////////////////////////////////
 
     /**
      * @Rest\Put("/finalizeIns/{id}")
