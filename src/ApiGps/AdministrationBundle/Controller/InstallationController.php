@@ -134,6 +134,7 @@ class InstallationController extends FOSRestController
         $idbox = $request->get('idbox');
         $idvehicle = $request->get('idvehicle');
         $idinstallateur = $request->get('idinstallateur');
+        $note = $request->get('note');
 
 
         $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idbox);
@@ -149,6 +150,8 @@ class InstallationController extends FOSRestController
         $data->setType("Intervention");
         $data->setVehicle($vehicle);
         $data->setInstallateur($installateur);
+        $data->setNote($note);
+        $data->setStatus('ouvert');
         $a=new \DateTime('now');
         $b=$a->format('Y-m-d ');
         $bond_date = strtotime($b);
@@ -182,6 +185,7 @@ class InstallationController extends FOSRestController
 
         $idvehicle = $request->get('idvehicle');
         $idinstallateur = $request->get('idinstallateur');
+        $note = $request->get('note');
 
         $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
         $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
@@ -205,6 +209,8 @@ class InstallationController extends FOSRestController
         $data->setType("Désinstalation");
         $box->setVehicle(null);
         $vehicle->setBox(null);
+        $data->setNote($note);
+        $data->setStatus('ouvert');
         $this->desbox($box);
         $this->desbox($vehicle);
 
@@ -233,6 +239,7 @@ class InstallationController extends FOSRestController
         $idvehicle = $request->get('idvehicle');
         $idvehicle2 = $request->get('idvehicle2');
         $idinstallateur = $request->get('idinstallateur');
+        $note = $request->get('note');
 
         $vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle);
         $vehicle2 = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idvehicle2);
@@ -259,6 +266,8 @@ class InstallationController extends FOSRestController
         $box->setVehicle($vehicle2);
         $vehicle->setBox(null);
         $vehicle2->setBox($box);
+        $data->setNote($note);
+        $data->setStatus('ouvert');
         $this->desbox($box);
         $this->desbox($vehicle);
         $this->updatebox($box);
@@ -303,11 +312,14 @@ class InstallationController extends FOSRestController
      */
     public function modifyInstallationAction(Request $request)
     {
-        $data = new Installation();
+        //$data = new Installation();
+
+        $id = $request->get('id');
 
         $idbox = $request->get('idbox');
         $idvehicle = $request->get('idvehicle');
         $idinstallateur = $request->get('idinstallateur');
+        $note = $request->get('note');
 
 
         $box = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($idbox);
@@ -326,6 +338,8 @@ class InstallationController extends FOSRestController
         if ($data->getVehicle() == $vehicle){
 
             $vehicle->setBox($box);
+            $data->setNote($note);
+            $data->setStatus('ouvert');
 
             $em = $this->get('doctrine_mongodb')->getManager();
             $em->persist($vehicle);
@@ -366,14 +380,15 @@ class InstallationController extends FOSRestController
      * @param Request $request
      * @return string
      */
-    public function finalizeInstallationAction($id, Request $request)
+    public function finalizeInstallationAction(Request $request)
     {
         $data = new Installation();
 
-
+        $id = $request->get('id');
 
         $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
 
+        $note = $request->get('note');
         $image1 = $request->get('image1');
         $image2 = $request->get('image2');
         $image3 = $request->get('image3');
@@ -392,6 +407,41 @@ class InstallationController extends FOSRestController
         $data->setImage2($image2);
         $data->setImage3($image3);
         $data->setImage4($image4);
+        $data->setStatus('ferme');
+
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $em->persist($data);
+        $em->flush();
+
+        return new View("installation finalized Successfully", Response::HTTP_OK);
+    }
+
+    ////////////////////////////////////////////
+    ///// finalize installation SuperAdmin /////
+    ////////////////////////////////////////////
+
+    /**
+     * @Rest\Put("/finalizeInsSa/{id}")
+     * @param Request $request
+     * @return string
+     */
+    public function finalizeInstallationSaAction($id, Request $request)
+    {
+        $data = new Installation();
+        $id = $request->get('id');
+
+        $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
+
+        $note = $request->get('note');
+
+
+
+
+        if( empty($data))
+        {
+            return "NULL VALUES ARE NOT ALLOWED";
+        }
+        $data->setNote($note);
         $data->setStatus('ferme');
 
         $em = $this->get('doctrine_mongodb')->getManager();

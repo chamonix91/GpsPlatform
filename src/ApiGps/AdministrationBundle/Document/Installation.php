@@ -9,6 +9,8 @@
 namespace ApiGps\AdministrationBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\Id;
+
 
 
 /**
@@ -141,10 +143,10 @@ class Installation
     /**
      * Set vehicle
      *
-     * @param ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     * @param Vehicle $vehicle
      * @return $this
      */
-    public function setVehicle(\ApiGps\AdministrationBundle\Document\Vehicle $vehicle)
+    public function setVehicle(Vehicle $vehicle)
     {
         $this->vehicle = $vehicle;
         return $this;
@@ -153,7 +155,7 @@ class Installation
     /**
      * Get vehicle
      *
-     * @return ApiGps\AdministrationBundle\Document\Vehicle $vehicle
+     * @return Vehicle $vehicle
      */
     public function getVehicle()
     {
@@ -163,10 +165,10 @@ class Installation
     /**
      * Set box
      *
-     * @param ApiGps\AdministrationBundle\Document\Box $box
+     * @param Box $box
      * @return $this
      */
-    public function setBox(\ApiGps\AdministrationBundle\Document\Box $box)
+    public function setBox(Box $box)
     {
         $this->box = $box;
         return $this;
@@ -175,33 +177,11 @@ class Installation
     /**
      * Get box
      *
-     * @return ApiGps\AdministrationBundle\Document\Box $box
+     * @return Box $box
      */
     public function getBox()
     {
         return $this->box;
-    }
-
-    /**
-     * Set installation
-     *
-     * @param ApiGps\EspaceUserBundle\Document\User $installation
-     * @return $this
-     */
-    public function setInstallation(\ApiGps\EspaceUserBundle\Document\User $installation)
-    {
-        $this->installation = $installation;
-        return $this;
-    }
-
-    /**
-     * Get installation
-     *
-     * @return ApiGps\EspaceUserBundle\Document\User $installation
-     */
-    public function getInstallation()
-    {
-        return $this->installation;
     }
 
     /**
