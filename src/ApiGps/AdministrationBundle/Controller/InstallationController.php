@@ -15,7 +15,7 @@ class InstallationController extends FOSRestController
 {
 
     /**
-     * @Rest\Post("/api/up")
+     * @Rest\Post("/up")
      * @param Request $request
      * @Rest\View()
      * @return string
@@ -43,78 +43,204 @@ class InstallationController extends FOSRestController
         }
         foreach ($result as $install) {
 
-            if ($install->getType() == "Transfere") {
-
+            if ($install->getType() == "Tranfere") {
                 if ($install->getVehicle()->getType() == "depot") {
-
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'positionx' => $install->getVehicle()->getPositionx(),
-                        'positiony' => $install->getVehicle()->getPositiony(),
-                        'position2x' => $install->getVehicle2()->getPositionx(),
-                        'position2y' => $install->getVehicle2()->getPositiony(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                    if($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getNom().' '.$install->getVehicle2()->getPrenom(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
-                } elseif ($install->getVehicle()->getType() == "personne") {
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'nom' => $install->getVehicle()->getNom(),
-                        'prenom' => $install->getVehicle()->getPrenom(),
-
-                        'nom2' => $install->getVehicle2()->getNom(),
-                        'prenom2' => $install->getVehicle2()->getPrenom(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="depot"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
-
-                } else {
-
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'reg_number' => $install->getVehicle()->getRegNumber(),
-                        'mark' => $install->getVehicle()->getMark(),
-                        'model' => $install->getVehicle()->getModel(),
-                        'reg_number2' => $install->getVehicle2()->getRegNumber(),
-                        'mark2' => $install->getVehicle2()->getMark(),
-                        'model2' => $install->getVehicle2()->getModel(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getRegNumber().' '.$install->getVehicle2()->getMark().' '.$install->getVehicle2()->getModel(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
+                        ];
+                    }
+
+                }
+                elseif ($install->getVehicle()->getType() == "personne") {
+                    if ($install->getVehicle()->getType() == "depot") {
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getRegNumber().' '.$install->getVehicle2()->getMark().' '.$install->getVehicle2()->getModel(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+
+
+                }
+                else {
+                    if ($install->getVehicle()->getType() == "depot") {
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'object2' => $install->getVehicle2()->getNom().' '.$install->getVehicle2()->getPrenom(),
+                            //'object2' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            //'object2' => $install->getVehicle(),
+                            'object2' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+
                 }
             }
 
@@ -133,10 +259,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'positionx' => $install->getVehicle()->getPositionx(),
-                        'positiony' => $install->getVehicle()->getPositiony(),
+                        'object' => $install->getVehicle()->getLibele(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -153,10 +278,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'nom' => $install->getVehicle()->getNom(),
-                        'prenom' => $install->getVehicle()->getPrenom(),
+                        'object' => $install->getVehicle()->getNom().' '.$install->getVehicle()->getPrenom(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -174,11 +298,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'reg_number' => $install->getVehicle()->getRegNumber(),
-                        'mark' => $install->getVehicle()->getMark(),
-                        'model' => $install->getVehicle()->getModel(),
+                        'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
                         //'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -212,78 +334,204 @@ class InstallationController extends FOSRestController
 
         foreach ($result as $install) {
 
-            if ($install->getType() == "Transfere") {
-
+            if ($install->getType() == "Tranfere") {
                 if ($install->getVehicle()->getType() == "depot") {
-
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'positionx' => $install->getVehicle()->getPositionx(),
-                        'positiony' => $install->getVehicle()->getPositiony(),
-                        'position2x' => $install->getVehicle2()->getPositionx(),
-                        'position2y' => $install->getVehicle2()->getPositiony(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                    if($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getNom().' '.$install->getVehicle2()->getPrenom(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
-                } elseif ($install->getVehicle()->getType() == "personne") {
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'nom' => $install->getVehicle()->getNom(),
-                        'prenom' => $install->getVehicle()->getPrenom(),
-
-                        'nom2' => $install->getVehicle2()->getNom(),
-                        'prenom2' => $install->getVehicle2()->getPrenom(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="depot"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
-
-                } else {
-
-                    $formatted[] = [
-                        'id' => $install->getId(),
-                        //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
-                        'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
-                        'type' => $install->getType(),
-                        'note' => $install->getNote(),
-                        'status' => $install->getStatus(),
-                        'image1' => $install->getImage1(),
-                        'image2' => $install->getImage2(),
-                        'image3' => $install->getImage3(),
-                        'image4' => $install->getImage4(),
-                        'reg_number' => $install->getVehicle()->getRegNumber(),
-                        'mark' => $install->getVehicle()->getMark(),
-                        'model' => $install->getVehicle()->getModel(),
-                        'reg_number2' => $install->getVehicle2()->getRegNumber(),
-                        'mark2' => $install->getVehicle2()->getMark(),
-                        'model2' => $install->getVehicle2()->getModel(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'object' => $install->getVehicle()->getLibele(),
+                            'object2' => $install->getVehicle2()->getRegNumber().' '.$install->getVehicle2()->getMark().' '.$install->getVehicle2()->getModel(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
 
 
-                    ];
+                        ];
+                    }
+
+                }
+                elseif ($install->getVehicle()->getType() == "personne") {
+                    if ($install->getVehicle()->getType() == "depot") {
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getPrenom().' '.$install->getVehicle()->getNom(),
+                            'object2' => $install->getVehicle2(),
+                            'object2' => $install->getVehicle2()->getRegNumber().' '.$install->getVehicle2()->getMark().' '.$install->getVehicle2()->getModel(),
+                            'imei' => $install->getVehicle2()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+
+
+                }
+                else {
+                    if ($install->getVehicle()->getType() == "depot") {
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'object2' => $install->getVehicle2()->getLibele(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    elseif ($install->getVehicle2()->getType()=="personne"){
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'object2' => $install->getVehicle2()->getNom().' '.$install->getVehicle2()->getPrenom(),
+                            //'object2' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+                    else{
+                        $formatted[] = [
+                            'id' => $install->getId(),
+                            //'affectation_date' => date('Y-m-d', $install->getAffectationDate()->sec),
+                            'creation_date' => date('Y-m-d', $install->getCreationDate()->sec),
+                            'type' => $install->getType(),
+                            'note' => $install->getNote(),
+                            'status' => $install->getStatus(),
+                            'image1' => $install->getImage1(),
+                            'image2' => $install->getImage2(),
+                            'image3' => $install->getImage3(),
+                            'image4' => $install->getImage4(),
+                            'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            //'object2' => $install->getVehicle(),
+                            'object2' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                            'imei' => $install->getVehicle2()->getBox()->getImei(),
+                            'installateur' => $install->getInstallateur()->getUsername(),
+
+
+                        ];
+                    }
+
                 }
             }
 
@@ -302,10 +550,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'positionx' => $install->getVehicle()->getPositionx(),
-                        'positiony' => $install->getVehicle()->getPositiony(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'object' => $install->getVehicle()->getLibele(),
+                        //'imei' => $install->getBox()->getImei(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -322,10 +569,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'nom' => $install->getVehicle()->getNom(),
-                        'prenom' => $install->getVehicle()->getPrenom(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'object' => $install->getVehicle()->getNom().' '.$install->getVehicle()->getPrenom(),
+                        //'imei' => $install->getBox()->getImei(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -343,11 +589,9 @@ class InstallationController extends FOSRestController
                         'image2' => $install->getImage2(),
                         'image3' => $install->getImage3(),
                         'image4' => $install->getImage4(),
-                        'reg_number' => $install->getVehicle()->getRegNumber(),
-                        'mark' => $install->getVehicle()->getMark(),
-                        'model' => $install->getVehicle()->getModel(),
-                        'imei' => $install->getBox()->getImei(),
-                        'installateur' => $install->getInstallateur(),
+                        'object' => $install->getVehicle()->getRegNumber().' '.$install->getVehicle()->getMark().' '.$install->getVehicle()->getModel(),
+                        //'imei' => $install->getBox()->getImei(),
+                        'installateur' => $install->getInstallateur()->getUsername(),
 
 
                     ];
@@ -718,6 +962,7 @@ class InstallationController extends FOSRestController
     {
         $data = new Installation();
         $id = $request->get('id');
+        $statue = $request->get('status');
 
         $data = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Installation')->find($id);
 
@@ -731,7 +976,10 @@ class InstallationController extends FOSRestController
             return "NULL VALUES ARE NOT ALLOWED";
         }
         //$data->setNote($note);
-        $data->setStatus(false);
+        if($statue=="false")
+            $data->setStatus(false);
+        else
+            $data->setStatus(true);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);

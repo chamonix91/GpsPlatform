@@ -42,7 +42,7 @@ class Installation
     private $note;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="boolean")
      */
     private $status;
 
@@ -267,26 +267,22 @@ class Installation
     }
 
     /**
-     * Set status
-     *
-     * @param string $status
-     * @return $this
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return string $status
+     * @return mixed
      */
     public function getStatus()
     {
         return $this->status;
     }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+
 
     /**
      * Set image1

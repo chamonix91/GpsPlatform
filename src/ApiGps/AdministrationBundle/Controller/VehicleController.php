@@ -65,6 +65,60 @@ class VehicleController extends FOSRestController
     }
 
     /**
+     * @Rest\Get("/mybflot/{id}",name="hfgealfh")
+     * @param Request $request
+     * @return view
+     */
+    public function getmyrealVehicleAction(Request $request)
+    {
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
+            ->find($id);
+        //var_dump($user->getCompany()->getId());die();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();
+
+        if(count($results)==0){
+            $a=array();
+            return($a);
+        }
+        $formatted=[];
+        foreach ($results as $result) {
+            if($result->getFlot()->getComapny()->getId()==$user->getCompany()->getId() &&
+                (!empty($result->getBox()) || $result->getBox() != null)
+                && $result->getType()!="personne" && $result->getType()!="depot"
+                ) {
+                $formatted[] = [
+                    'reg_number' => $result->getRegNumber(),
+                    'flot' => $result->getFlot()->getId(),
+                    'box' => $result->getBox()->getImei(),
+                    //'libele' => $result->getLibele(),
+                    //'adress' => $result->getAdress(),
+                    'type_carburant' => $result->getFuelType(),
+                    'reservoir' => $result->getReservoir(),
+                    'id' => $result->getId(),
+                    'type' => $result->getType(),
+                    'mark' => $result->getMark(),
+                    'model' => $result->getModel(),
+                    'fuel_type' => $result->getFuelType(),
+                    'puissance' => $result->getPuissance(),
+                    'rpmMax' => $result->getRpmMax(),
+                    'videngekm' => $result->getVidengekm(),
+                    'videngetime' => $result->getVidengetime(),
+                    'nom' => $result->getNom(),
+                    'prenom' => $result->getPrenom(),
+                    'positionx' => $result->getPositionx(),
+                    'positiony' => $result->getPositiony(),
+                    'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
+                    'insurance' => date('Y-m-d', $result->getInsurance()->sec),
+                    'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
+                ];
+            }
+        }
+        return ($formatted);
+    }
+
+    /**
      * @Rest\Get("/vehicle")
      */
     public function getVehicleAction()
