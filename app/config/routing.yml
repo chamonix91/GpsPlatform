@@ -117,3 +117,10 @@ installation:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/InstallationController.php"
     prefix:   /api
+
+#historic
+historic:
+    type:     rest
+    resource: "@ApiGpsReportingBundle/Controller/HistoricController.php"
+    prefix:   /api
+

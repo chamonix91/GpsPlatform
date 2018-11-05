@@ -382,8 +382,7 @@ class VehicleController extends FOSRestController
      */
     public function getVehicleBetweenTwoDatesAction(Request $request)
     {
-        //$user = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:User')->findById($userID);
-        //$allvehicle=$user->getCompany()->getVehicles();
+
         $userID=$request->get('id');
         $datemin=$request->get('datemin');
         $datemax=$request->get('datemax');
@@ -398,8 +397,7 @@ class VehicleController extends FOSRestController
             if (!empty($allvehicle[$i]->getBox())){
                 $trames = $allvehicle[$i]->getBox()->getTrame();
             for ($j = 0; $j < count($trames); $j++) {
-                //$time= Date("d-m-Y",$trames[$j]->getTimestamp()); $trames[$j]->getTimestamp()
-                //date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp())
+
                 if ((date('Y-m-d', $trames[$j]->getTimestamp()) > $datemin) &&
                     (date('Y-m-d', $trames[$j]->getTimestamp()) < $datemax)) {
                     $resTrame[$c] = $trames[$j];
