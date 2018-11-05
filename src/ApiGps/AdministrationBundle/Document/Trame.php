@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(collection="trames")
  */
 class Trame
 {
