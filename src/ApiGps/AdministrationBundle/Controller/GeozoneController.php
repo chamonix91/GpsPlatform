@@ -2,28 +2,25 @@
 
 namespace ApiGps\AdministrationBundle\Controller;
 
-use ApiGps\AdministrationBundle\Document\Alert;
-use ApiGps\AdministrationBundle\Document\Driver;
+use ApiGps\AdministrationBundle\Document\Geozone;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use ApiGps\AdministrationBundle\Document\Vehicle;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
 
-class AlertController extends FOSRestController
+class GeozoneController extends Controller
 {
+    public function indexAction($name)
+    {
+        return $this->render('', array('name' => $name));
+    }
     /////////////////////////////
-    /////  Get all alerts   /////
+    /////  Get all geozone   /////
     /////////////////////////////
 
     /**
-     * @Rest\Get("/alert")
+     * @Rest\Get("/geozone")
      */
-    public function getAlertsAction()
+    public function getGeozoneAction()
     {
-        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->findAll();
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Geozone')->findAll();
         //dump($restresult);die();
         if ($results === null) {
             return new View("there are no alert exist", Response::HTTP_NOT_FOUND);
@@ -64,24 +61,25 @@ class AlertController extends FOSRestController
             }
             if (!empty($result->getCompany()) || $result->getCompany() != null)
             {  $formatted = [
-                    'id' => $result->getCompany()->getId(),
-                    'name' => $result->getCompany()->getName(),
-                    'adress' => $result->getCompany()->getAdress(),
-                    'phone' => $result->getCompany()->getPhone(),
-                    'created_date' => $result->getCompany()->getCreatedDate(),
-                    'end_date' => strtotime($result->getCompany()->getEndDate()),
-                    'cp_name' => $result->getCompany()->getCpName(),
-                    'cp_phone' => $result->getCompany()->getCpPhone(),
-                    'cpa_name' => $result->getCompany()->getCpaName(),
-                    'cpa_phone' => $result->getCompany()->getCpaPhone(),
-                ];
+                'id' => $result->getCompany()->getId(),
+                'name' => $result->getCompany()->getName(),
+                'adress' => $result->getCompany()->getAdress(),
+                'phone' => $result->getCompany()->getPhone(),
+                'created_date' => $result->getCompany()->getCreatedDate(),
+                'end_date' => strtotime($result->getCompany()->getEndDate()),
+                'cp_name' => $result->getCompany()->getCpName(),
+                'cp_phone' => $result->getCompany()->getCpPhone(),
+                'cpa_name' => $result->getCompany()->getCpaName(),
+                'cpa_phone' => $result->getCompany()->getCpaPhone(),
+            ];
 
                 $drivers[] = [
                     'id' => $result->getId(),
                     'libele' => $result->getLibelle(),
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
-                    'valeur' => $result->getValeur(),
+                    'longitude' => $result->getLongitude(),
+                    'latitude' => $result->getLatitude(),
                     'company' => $formatted,
                     'active' => $result->getActive(),
                     'object' => $formatted1,
@@ -94,7 +92,8 @@ class AlertController extends FOSRestController
                     'libele' => $result->getLibelle(),
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
-                    'valeur' => $result->getValeur(),
+                    'longitude' => $result->getLongitude(),
+                    'latitude' => $result->getLatitude(),
                     'active' => $result->getActive(),
                     'object' => $formatted1,
                     'objectc' => count($result->getVehicle()),
@@ -107,15 +106,15 @@ class AlertController extends FOSRestController
     }
 
     ///////////////////////////////////////
-    /////   Get alert By Company    /////
+    /////   Get alert By Geozone    /////
     ///////////////////////////////////////
 
     /**
-     * @Rest\Get("/alert/{id}/")
+     * @Rest\Get("/geozone/{id}/")
      * @param Request $request
      * @return array|View
      */
-    public function getAlertsByCompanyAction(Request $request)
+    public function getGeozoneByCompanyAction(Request $request)
     {
         $id = $request->get('id');
 
@@ -178,7 +177,8 @@ class AlertController extends FOSRestController
                     'libele' => $result->getLibelle(),
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
-                    'valeur' => $result->getValeur(),
+                    'longitude' => $result->getLongitude(),
+                    'latitude' => $result->getLatitude(),
                     'company' => $formatted,
                     'active' => $result->getActive(),
                     'object' => $formatted1,
@@ -192,7 +192,8 @@ class AlertController extends FOSRestController
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
-                    'active' => $result->getActive(),
+                    'longitude' => $result->getLongitude(),
+                    'latitude' => $result->getLatitude(),
                     'object' => $formatted1,
                     'objectc' => count($result->getVehicle()),
                     'objectc1' => count($formatted1),
@@ -211,25 +212,19 @@ class AlertController extends FOSRestController
     ///////////////////////////////////////
 
     /**
-     * @Rest\Post("/alert")
+     * @Rest\Post("/geozone")
      * @param Request $request
      * @return string
      */
     public function postAlertAction(Request $request)
     {
-        $data = new Alert();
-        /*
-         *  $drivers[] = [
-                    'id' => $result->getId(),
-                    'libele' => $result->getLibele(),
-                    'type' => $result->getType(),
-                    'description' => $result->getDescription(),
-                    'valeur' => $result->getValeur(),
-                ];*/
+        $data = new Geozone();
+
         $libelle = $request->get('libelle');
         $type = $request->get('type');
         $description = $request->get('description');
-        $valeur = $request->get('valeur');
+        $longitude = $request->get('longitude');
+        $latitude = $request->get('latitude');
         $idcompany = $request->get('idcompany');
         if($idcompany != null) {
             $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
@@ -248,7 +243,8 @@ class AlertController extends FOSRestController
         $data ->setLibelle($libelle);
         $data ->setActive(true);
         $data ->setType($type);
-        $data->setValeur($valeur);
+        $data->setLatitude($latitude);
+        $data->setLongitude($longitude);
         $data->setDescription($description);
 
         $em = $this->get('doctrine_mongodb')->getManager();
@@ -264,11 +260,11 @@ class AlertController extends FOSRestController
     //////////////////////////////////////////
 
     /**
-     * @Rest\Post("/alert/{id}")
+     * @Rest\Post("/geozone/{id}")
      * @param Request $request
      * @return string
      */
-    public function postAlertOperatorAction(Request $request)
+    public function postGeozoneOperatorAction(Request $request)
     {
 
         $data = new Alert();
@@ -279,7 +275,7 @@ class AlertController extends FOSRestController
         $valeur = $request->get('valeur');
         $idcompany = $request->get('id');
 
-            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
 
 
         if(empty($libelle)|| empty($type) || empty($valeur) )
@@ -307,12 +303,12 @@ class AlertController extends FOSRestController
     /////////////////////////////
 
     /**
-     * @Rest\Put("/alert/{id}")
+     * @Rest\Put("/geozone/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
-    public function updateAlertAction($id,Request $request)
+    public function updateGeozoneAction($id,Request $request)
     {
         $libelle = $request->get('libelle');
         $type = $request->get('type');
@@ -321,7 +317,7 @@ class AlertController extends FOSRestController
         $id = $request->get('id');
 
         $sn = $this->get('doctrine_mongodb')->getManager();
-        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Geozone')->find($id);
 
         if (empty($alert)) {
             return new View("Vehicle not found", Response::HTTP_NOT_ACCEPTABLE);
@@ -338,12 +334,12 @@ class AlertController extends FOSRestController
 
 
     ///////////////////////////////////////
-    /////       Get Alert  By Id      /////
+    /////       Get Geozone  By Id      /////
     ///////////////////////////////////////
 
 
     /**
-     * @Rest\Get("/alert/{id}")
+     * @Rest\Get("/geozone/{id}")
      */
     public function GetAlertByIdAction($id)
     {
@@ -355,7 +351,7 @@ class AlertController extends FOSRestController
     }
 
     //////////////////////////////
-    ////////  Activate  Alert  /////
+    ////////  Activate  Geozone  /////
     //////////////////////////////
 
     /**
@@ -416,17 +412,17 @@ class AlertController extends FOSRestController
     }
 
     /**
-     * @Rest\Put("/affectAlerttoclient/{id}")
+     * @Rest\Put("/affectgeozonetoclient/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
-    public function AffecttoclientAlertAction($id,Request $request)
+    public function AffecttoclientgeozoneAction($id,Request $request)
     {
 
 
 
-        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Geozone')->find($id);
         $idclient = $request->get('idclient');
         $client = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')
             ->find($idclient);
@@ -446,17 +442,17 @@ class AlertController extends FOSRestController
 
     }
     /**
-     * @Rest\Put("/affectAlerttoobject/{id}")
+     * @Rest\Put("/affectgeozonetoobject/{id}")
      * @param $id
      * @param Request $request
      * @return string
      */
-    public function AffecttoojectAlertAction($id,Request $request)
+    public function AffecttoojectgeozoneAction($id,Request $request)
     {
 
 
 
-        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Geozone')->find($id);
         $idobject = $request->get('idobject');
         $object = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->find($idobject);
@@ -480,7 +476,7 @@ class AlertController extends FOSRestController
 
     }
     /**
-     * @Rest\Put("/affectAlerttoobjectclient/{id}")
+     * @Rest\Put("/affectgeozonetoobjectclient/{id}")
      * @param $id
      * @param Request $request
      * @return string
@@ -490,7 +486,7 @@ class AlertController extends FOSRestController
 
 
 
-        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Alert')->find($id);
+        $alert = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Geozone')->find($id);
         $idobject = $request->get('idobject');
         $object = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->find($idobject);
@@ -510,8 +506,4 @@ class AlertController extends FOSRestController
 
 
     }
-
-
-
-
 }

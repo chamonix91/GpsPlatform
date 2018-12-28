@@ -27,7 +27,14 @@ class ModelController extends  FOSRestController
         if ($models === null) {
             return new View("there are no models exist", Response::HTTP_NOT_FOUND);
         }
-        return $models;
+        foreach ($models as $company) {
+            $formatted[] = [
+                'id' => $company->getId(),
+                'name'=>$company->getName(),
+                'mark'=>$company->getMark()->getName(),
+            ];
+        }
+        return $formatted;
     }
 
     //////////////////////////

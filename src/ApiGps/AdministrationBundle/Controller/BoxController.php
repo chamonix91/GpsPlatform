@@ -31,19 +31,53 @@ class BoxController extends  FOSRestController
         }
 
         foreach ($result as $fleet) {
+            $trams=$this->idBoxtrames($fleet);
             $formatted[] = [
-                'imei' => $fleet->getId(),
+                'id' => $fleet->getId(),
+                'imei' => $fleet->getImei(),
                 'mark' => $fleet->getMark(),
                 'model' => $fleet->getModel(),
                 'type' => $fleet->getType(),
                 'ass_sim' => $fleet->getAssSim(),
                 'client_sim' => $fleet->getClientSim(),
                 'active' => $fleet->getActive(),
+                'trame' => $trams,
 
             ];
 
         }
-        return $result;
+        if(count($formatted)==0)
+            return null;
+        else
+            return $formatted;
+    }
+    public function idBoxtrames($id)
+    {
+
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')
+            ->findBy(array('box'=>$id));
+        if ($result === null) {
+            return null;
+        }
+        foreach ($result as $user) {
+            $formatted[] = [
+                'id' => $user->getId(),
+                'timestamp' => $user->getTimestamp(),
+                //'street' => $user->getStreet(),
+                'longitude' => $user->getLongitude(),
+                'latitude' => $user->getLatitude(),
+                'angle' => $user->getAngle(),
+                'speed' => $user->getSpeed(),
+                'contact' => $user->getContact(),
+                'box' => $user->getBox()->getImei(),
+
+            ];
+        }
+
+        if(count($result)==0)
+            return null;
+        else
+            return $formatted;
     }
     /**
      * @Rest\Get("/allunboundedbox")
@@ -56,7 +90,7 @@ class BoxController extends  FOSRestController
         }
 
         foreach ($result as $fleet) {
-            if (empty($fleet->getVehicle())) {
+            if (empty($fleet->getVehicle()) || $fleet->getVehicle()==null) {
                 $formatted[] = [
                     'id' => $fleet->getId(),
                     'imei' => $fleet->getImei(),
@@ -66,7 +100,7 @@ class BoxController extends  FOSRestController
                     'ass_sim' => $fleet->getAssSim(),
                     'client_sim' => $fleet->getClientSim(),
                     'active' => $fleet->getActive(),
-                    'company' => $fleet->getCompany(),
+                    'company' => $fleet->getCompany()->getId(),
 
                 ];
 
@@ -78,18 +112,43 @@ class BoxController extends  FOSRestController
     ///// get Box by id /// /////
     /// /////////////////////////
     /**
-     * @Rest\Get("/box/{id}")
+     * @Rest\Get("/box/{id}" ,name="byid")
      * @param $id
      * @return View|null|object
      */
     public function idBoxAction($id)
     {
+        //var_dump($id);die();
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
         if ($result === null) {
-            return new View("box not found", Response::HTTP_NOT_FOUND);
+            return null;
         }
+
+
         return $result;
     }
+    /////////////////////////////
+    ///// get Box by id /// /////
+    /// /////////////////////////
+    /**
+     * @Rest\Get("/boximei/{id}" ,name="byimei")
+     * @param $id
+     * @return View|null|object
+     */
+    public function BoxbyimeiAction($id)
+    {
+        var_dump($id);die();
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
+            ->findOneBy(array("imei"=>$id));
+        if ($result === null) {
+            return null;
+        }
+
+
+
+        return $result->getCompany()->getId();
+    }
+
 
     /////////////////////////////
     ///// Add Box////////// /////
@@ -219,7 +278,7 @@ class BoxController extends  FOSRestController
      * @return Box[]|array|View
      */
     public function getMyBoxesAction(Request $request)
-    {
+    { //aaaaaa
         $id = $request->get('id');
 
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->find($id);
@@ -233,8 +292,24 @@ class BoxController extends  FOSRestController
             return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
         }
 
+        foreach ($results as $fleet) {
+           // if (empty($fleet->getVehicle())) {
+                $formatted[] = [
+                    'id' => $fleet->getId(),
+                    'imei' => $fleet->getImei(),
+                    'mark' => $fleet->getMark(),
+                    'model' => $fleet->getModel(),
+                    'type' => $fleet->getType(),
+                    'ass_sim' => $fleet->getAssSim(),
+                    'client_sim' => $fleet->getClientSim(),
+                    'active' => $fleet->getActive(),
+                    'company' => $fleet->getCompany()->getId(),
 
-        return $results;
+                ];
+
+            }
+       // }
+        return $formatted;
     }
 
     //////////////////////////////

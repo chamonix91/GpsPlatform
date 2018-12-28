@@ -64,6 +64,11 @@ class Trame
      * @MongoDB\Field(type="string")
      */
     private $speed;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $street;
+
 
     /**
      * @MongoDB\Field(type="float")
@@ -134,6 +139,48 @@ class Trame
      * @MongoDB\Field(type="float")
      */
     private $externalvoltage;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $ain1;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $ain2;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $din1;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $din2;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $din3;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $din4;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $dallas0;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $dallas1;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $dallas2;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $dallas3;
+
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="Box", inversedBy="trame")
@@ -144,6 +191,168 @@ class Trame
     {
         $this->speed = new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAin1()
+    {
+        return $this->ain1;
+    }
+
+    /**
+     * @param mixed $ain1
+     */
+    public function setAin1($ain1)
+    {
+        $this->ain1 = $ain1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAin2()
+    {
+        return $this->ain2;
+    }
+
+    /**
+     * @param mixed $ain2
+     */
+    public function setAin2($ain2)
+    {
+        $this->ain2 = $ain2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDin1()
+    {
+        return $this->din1;
+    }
+
+    /**
+     * @param mixed $din1
+     */
+    public function setDin1($din1)
+    {
+        $this->din1 = $din1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDin2()
+    {
+        return $this->din2;
+    }
+
+    /**
+     * @param mixed $din2
+     */
+    public function setDin2($din2)
+    {
+        $this->din2 = $din2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDin3()
+    {
+        return $this->din3;
+    }
+
+    /**
+     * @param mixed $din3
+     */
+    public function setDin3($din3)
+    {
+        $this->din3 = $din3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDin4()
+    {
+        return $this->din4;
+    }
+
+    /**
+     * @param mixed $din4
+     */
+    public function setDin4($din4)
+    {
+        $this->din4 = $din4;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDallas0()
+    {
+        return $this->dallas0;
+    }
+
+    /**
+     * @param mixed $dallas0
+     */
+    public function setDallas0($dallas0)
+    {
+        $this->dallas0 = $dallas0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDallas1()
+    {
+        return $this->dallas1;
+    }
+
+    /**
+     * @param mixed $dallas1
+     */
+    public function setDallas1($dallas1)
+    {
+        $this->dallas1 = $dallas1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDallas2()
+    {
+        return $this->dallas2;
+    }
+
+    /**
+     * @param mixed $dallas2
+     */
+    public function setDallas2($dallas2)
+    {
+        $this->dallas2 = $dallas2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDallas3()
+    {
+        return $this->dallas3;
+    }
+
+    /**
+     * @param mixed $dallas3
+     */
+    public function setDallas3($dallas3)
+    {
+        $this->dallas3 = $dallas3;
+    }
+
+
 
     /**
      * @return mixed
@@ -304,6 +513,23 @@ class Trame
     {
         $this->angle = $angle;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * @param mixed $street
+     */
+    public function setStreet($street)
+    {
+        $this->street = $street;
+    }
+
 
     /**
      * @return mixed

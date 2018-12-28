@@ -136,7 +136,7 @@ class Vehicle
      */
     public function setAlters($alters)
     {
-        $this->alters = $alters;
+        $this->alters[] = $alters;
     }
 
 
@@ -165,6 +165,11 @@ class Vehicle
 
     /** @MongoDB\ReferenceMany(targetDocument="Mark", mappedBy="vehicle") */
     private $marks;
+
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="Capteur", mappedBy="objets")
+     */
+    private $capteurs;
 
 
     /**
@@ -198,6 +203,24 @@ class Vehicle
     {
         return $this->reg_number;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCapteurs()
+    {
+        return $this->capteurs;
+    }
+
+    /**
+     * @param mixed $capteurs
+     */
+    public function setCapteurs($capteurs)
+    {
+        $this->capteurs[] = $capteurs;
+    }
+
+
 
     /**
      * Set reservoir

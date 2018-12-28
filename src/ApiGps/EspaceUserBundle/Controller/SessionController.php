@@ -26,7 +26,42 @@ class SessionController extends FOSRestController
         $user = $this->get('doctrine_mongodb')
             ->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($result->getUser()->getId());
-        return $user;
+        if (!empty($user->getCompany()) || $user->getCompany() != null){
+            $company = [
+                'id' => $user->getCompany()->getId(),
+                'cp_name' => $user->getCompany()->getCpName(),
+                ];
+            $formatted = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'last_name' => $user->getLastName(),
+                'first_name' => $user->getFirstName(),
+                'phone' => $user->getPhone(),
+                'enabled' => $user->isEnabled(),
+                'company' => $company,
+                'roles' => $user->getRoles()[0],
+
+            ];
+        }
+        else{
+            $formatted = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'last_name' => $user->getLastName(),
+                'first_name' => $user->getFirstName(),
+                'phone' => $user->getPhone(),
+                'enabled' => $user->isEnabled(),
+                'roles' => $user->getRoles()[0],
+
+            ];
+        }
+        if($user===null)
+            return null;
+        else
+            //var_dump('hh');die();
+            return $formatted;
         //return $user->getId();
     }
     /**

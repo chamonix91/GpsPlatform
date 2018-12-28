@@ -48,10 +48,20 @@ traffic:
     type:     rest
     resource: "@ApiGpsReportingBundle/Controller/TraficController.php"
     prefix:   /api
+#sonde_rest
+sonde:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/SondeController.php"
+    prefix:   /
 #Vehicle_rest
 vehicle:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/VehicleController.php"
+    prefix:   /api
+#Capteur_rest
+Capteur:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/CapteurController.php"
     prefix:   /api
 
 #Vehicle_rest
@@ -65,11 +75,21 @@ box:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/BoxController.php"
     prefix:   /api
+#io_rest
+io:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/IoelementController.php"
+    prefix:   /api
 #Trame_rest
 trame:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/TrameController.php"
     prefix:   /api
+#SUTrame_rest
+sutrame:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/SubtrameController.php"
+    prefix:   /
 
 #Driver_rest
 driver:

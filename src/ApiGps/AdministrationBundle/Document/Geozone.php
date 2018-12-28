@@ -16,7 +16,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations\Timestamp;
 /**
  * @MongoDB\Document
  */
-class Alert
+class Geozone
 {
     /**
      * @MongoDB\Id
@@ -28,14 +28,17 @@ class Alert
      */
     private $libelle;
 
-    /**
-     * @MongoDB\Field(type="string")
-     */
-    private $type;
+
     /**
      * @MongoDB\Field(type="float")
      */
-    private $valeur;
+    private $longitude;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    private $latitude;
+
     /**
      * @MongoDB\Field(type="string")
      */
@@ -56,7 +59,7 @@ class Alert
     /** @MongoDB\ReferenceOne(targetDocument="Company", inversedBy="alerts") */
     private $company;
 
-    
+
     /**
      * Get id
      *
@@ -90,26 +93,38 @@ class Alert
     }
 
     /**
-     * Set type
-     *
-     * @param string $type
-     * @return $this
+     * @return mixed
      */
-    public function setType($type)
+    public function getLongitude()
     {
-        $this->type = $type;
-        return $this;
+        return $this->longitude;
     }
 
     /**
-     * Get type
-     *
-     * @return string $type
+     * @param mixed $longitude
      */
-    public function getType()
+    public function setLongitude($longitude)
     {
-        return $this->type;
+        $this->longitude = $longitude;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * @param mixed $latitude
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
+
+
 
     /**
      * Set valeur

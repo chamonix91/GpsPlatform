@@ -146,7 +146,36 @@ class UserController extends FOSRestController
         if ($users === null) {
             return new View("there are no users exist", Response::HTTP_NOT_FOUND);
         }
-        return $users;
+        foreach ($users as $user) {
+            if (!empty($user->getCompany()) || $user->getCompany() != null){
+                $formatted[] = [
+                    'id' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'email' => $user->getEmail(),
+                    'last_name' => $user->getLastName(),
+                    'first_name' => $user->getFirstName(),
+                    'phone' => $user->getPhone(),
+                    'enabled' => $user->isEnabled(),
+                    'company' => $user->getCompany()->getCpName(),
+
+                ];
+        }
+        else{
+            $formatted[] = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'last_name' => $user->getLastName(),
+                'first_name' => $user->getFirstName(),
+                'phone' => $user->getPhone(),
+                'enabled' => $user->isEnabled(),
+
+            ];
+        }
+
+        }
+        //array_push($myusers,$formatted);
+        return $formatted;
     }
 
 
@@ -164,21 +193,36 @@ class UserController extends FOSRestController
 
         $idcompany = $request->get('id');
 
-        $users = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->findAll();
+
+        $users = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')->
+        //findby(array('company'=>$company));
+        findall();
+       // var_dump($users);die();
         $myusers = array();
 
-        foreach ( $users as $user){
+        foreach ($users as $user) {
+            if($user->getRoles()[0]=="ROLE_CLIENT"
+                || $user->getRoles()[0]=="ROLE_OPERATEUR")
+            if($user->getCompany()->getId()==$idcompany) {
 
-            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
-            if ($user->getCompany()== $company){
-                array_push($myusers,$user);
+                    $formatted[] = [
+                        'id' => $user->getId(),
+                        'username' => $user->getUsername(),
+                        'email' => $user->getEmail(),
+                        'last_name' => $user->getLastName(),
+                        'first_name' => $user->getFirstName(),
+                        'phone' => $user->getPhone(),
+                        'enabled' => $user->isEnabled(),
+                        //'company' => $user->getCompany()->getCpName(),
+
+                    ];
+
             }
-
         }
         if ($users === null) {
-            return new View("there are no users exist", Response::HTTP_NOT_FOUND);
+            return $users;
         }
-        return $myusers;
+        return $formatted;
     }
 
 
@@ -213,7 +257,18 @@ class UserController extends FOSRestController
         for($i=0;$i<$a;$i++){
             // if($userid[$i]->getRoles()==array('ROLE_PROSPECT')){
             if($user[$i]->getRoles()[0]=='ROLE_INSTALATEUR'){
-                array_push($pro,$user[$i]);
+                $formatted = [
+                    'id' => $user[$i]->getId(),
+                    'username' => $user[$i]->getUsername(),
+                    'email' => $user[$i]->getEmail(),
+                    'last_name' => $user[$i]->getLastName(),
+                    'first_name' => $user[$i]->getFirstName(),
+                    'phone' => $user[$i]->getPhone(),
+                    'enabled' => $user[$i]->isEnabled(),
+                    //'company' => $user->getCompany()->getCpName(),
+
+                ];
+                array_push($pro,$formatted);
             }
         }
         return $pro;

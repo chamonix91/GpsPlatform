@@ -55,6 +55,10 @@ class FleetController extends FOSRestController
 
         foreach ($results as $fleet) {
             if ($fleet->getComapny() == $mycompany){
+                $company = [
+                    'id' => $user->getCompany()->getId(),
+                    'cp_name' => $user->getCompany()->getCpName(),
+                ];
 
                 for($o=0;$o<count($fleet->getVehicles());$o++){
                     $fleet->getVehicles()[$o]->setInsurance(date('Y-m-d',$fleet->getVehicles()[$o]->getInsurance()->sec));
@@ -64,7 +68,7 @@ class FleetController extends FOSRestController
             if (!empty($fleet->getVehicles() && !empty($fleet->getComapny())) ){
                 $formatted[] = [
                     'id' => $fleet->getId(),
-                    'taille' => $fleet->getComapny(),
+                    'taille' => $company,
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
                     'vehicles' => count($fleet->getVehicles()),
@@ -74,7 +78,7 @@ class FleetController extends FOSRestController
             elseif(empty($fleet->getVehicles())){
                 $formatted[] = [
                     'id' => $fleet->getId(),
-                    'taille' => $fleet->getComapny(),
+                    'taille' => $company,
                     'name' => $fleet->getName(),
                     'companyname' => $fleet->getComapny()->getName(),
                     'vehicles' => "aucune voiture ajoutée à cette flotte",
@@ -316,11 +320,148 @@ class FleetController extends FOSRestController
         if ($fleet === null) {
             return new View("fleet not found", Response::HTTP_NOT_FOUND);
         }
-
-
+        /*foreach ($fleet as $user) {
+            var_dump($user->getVehicles()->getBox()->getTrame());die();
+            $user->getVehicles()->getBox()->setTrame(null);
+            $user->getComapny()->setBoxes(null);
+        }
+        var_dump($fleet[0]);die();*/
         return $fleet;
     }
+    public function idBoxval($id,$a)
+    {
 
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')->find($id);
+        if ($result === null) {
+            return null;
+        }
+
+        $formatted = [
+            'imei' => $result->getId(),
+            'mark' => $result->getMark(),
+            'model' => $result->getModel(),
+            'type' => $result->getType(),
+            'ass_sim' => $result->getAssSim(),
+            'client_sim' => $result->getClientSim(),
+            'active' => $result->getActive(),
+            //'trame' => $a,
+
+        ];
+
+        return $formatted;
+    }
+    public function idBoxtrames($id)
+    {
+
+        $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Trame')
+            ->findBy(array('box'=>$id));
+        if ($result === null) {
+            return null;
+        }
+        foreach ($result as $user) {
+            $formatted[] = [
+                'id' => $user->getId(),
+                'timestamp' => $user->getTimestamp(),
+                'longitude' => $user->getLongitude(),
+                'latitude' => $user->getLatitude(),
+                'angle' => $user->getAngle(),
+                'speed' => $user->getSpeed(),
+                'contact' => $user->getContact(),
+                'box' => $user->getBox()->getImei(),
+
+            ];
+        }
+        if(count($result)==0)
+            return null;
+        else
+            return $formatted;
+    }
+
+    /**
+     * @Rest\Get("/fleett",name="no asoo")
+     */
+    public function GetFleetBynorefIdAction()
+    {
+        $fleets = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:fleet')->findAll();
+        //var_dump($fleets);die();
+        if ($fleets === null) {
+            return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
+        }
+        $formatted1= array();
+        foreach ($fleets as $user) {
+
+
+            //$formatted2[] = [];
+            //if ($user->getBox()->getCompany()->getId() == "5be74a4413cf753d698b4567") {
+                foreach ($user->getVehicles() as $result) {
+
+                    if(!empty($result->getBox()) || $result->getBox() != null){
+
+
+                        $trams=$this->idBoxtrames($result->getBox());
+                        $box=$this->idBoxval($result->getBox()->getId(),$trams);
+
+                    }
+                    else{
+                        $box=null;
+                    }
+
+                    $formatted1[] = [
+                        'reg_number' => $result->getRegNumber(),
+                        'box' => $box,
+                        'flot' => $result->getFlot()->getId(),
+                        'type_carburant' => $result->getFuelType(),
+                        'reservoir' => $result->getReservoir(),
+                        'id' => $result->getId(),
+                        'libele' => $result->getLibele(),
+                        'adress' => $result->getAdress(),
+                        'type' => $result->getType(),
+                        'mark' => $result->getMark(),
+                        'model' => $result->getModel(),
+                        'fuel_type' => $result->getFuelType(),
+                        'puissance' => $result->getPuissance(),
+                        'rpmMax' => $result->getRpmMax(),
+                        'videngekm' => $result->getVidengekm(),
+                        'videngetime' => $result->getVidengetime(),
+                        'nom' => $result->getNom(),
+                        'prenom' => $result->getPrenom(),
+                        'positionx' => $result->getPositionx(),
+                        'positiony' => $result->getPositiony(),
+                        'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
+                        'insurance' => date('Y-m-d', $result->getInsurance()->sec),
+                        'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
+
+                    ];
+                    //
+                    //var_dump(count($formatted1));
+                }
+               // var_dump($user->getComapny()->getId());die();
+            $company =$user->getComapny();
+                $formatted2 = [
+                    'id' => $company->getId(),
+                    'name'=>$company->getName(),
+                    'adress'=>$company->getAdress(),
+                    'phone'=>$company->getPhone(),
+                    'created_date'=>$company->getCreatedDate(),
+                    'end_date'=>strtotime($company->getEndDate()),
+                    'cp_name'=>$company->getCpName(),
+                    'cp_phone'=>$company->getCpPhone(),
+                    'cpa_name'=>$company->getCpaName(),
+                    'cpa_phone'=>$company->getCpaPhone(),
+                ];
+
+                $formatted[] = [
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'vehicles' => $formatted1,
+                    'comapny' => $formatted2,
+
+                ];
+            $formatted1 = array();
+            }
+       // }
+return $formatted;
+    }
     /////////////////////////////
     /////   Get my fleets no affected   /////
     /////////////////////////////

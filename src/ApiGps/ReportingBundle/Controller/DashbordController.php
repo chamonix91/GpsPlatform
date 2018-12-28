@@ -300,6 +300,7 @@ class DashbordController extends FOSRestController
         $x=array();
         for($c=0;$c<count($result);$c++){
             if($result[$c]->getCompany()->getId()==$id){
+
                 array_push($x,$result[$c]);
             }
         }
@@ -315,8 +316,11 @@ class DashbordController extends FOSRestController
                 for ($j = 0; $j < count($trames); $j++) {
                     //$time= Date("d-m-Y",$trames[$j]->getTimestamp()); $trames[$j]->getTimestamp()
                     //date('Y-m-d',$result[$i]->getBox()->getTrame()[$j]->getTimestamp())
-                    if ((date('Y-m-d', $trames[$j]->getTimestamp()) >= $d2) &&
-                        (date('Y-m-d', $trames[$j]->getTimestamp()) <= $d1)) {
+                    //var_dump($d2);
+                    //var_dump(strtotime(substr($trames[$j]->getTimestamp(),0,24)));
+                    //var_dump(date('Y-m-d', strtotime(substr($trames[$j]->getTimestamp(),0,24))));die();
+                    if ((date('Y-m-d', strtotime(substr($trames[$j]->getTimestamp(),0,24))) >= $d2) &&
+                        (date('Y-m-d', strtotime(substr($trames[$j]->getTimestamp(),0,24))) <= $d1)) {
                         //var_dump((date('Y-m-d', $trames[$j]->getTimestamp()) ));
 
                         $resTrame[$c] = $trames[$j];
@@ -329,7 +333,8 @@ class DashbordController extends FOSRestController
                     'mark' => $x[$i]->getMark(),
                     'model' => $x[$i]->getModel(),
                     //'last' => $x[$i]->getTrame()[count($x[$i]->getTrame())-1]->getTimestamp(),
-                    'last' => date('Y-m-d',$x[$i]->getTrame()[count($x[$i]->getTrame())-1]->getTimestamp()),
+                    //'last' => date('Y-m-d', strtotime(substr($trames[$j]->getTimestamp(),0,24))),
+                    'last' => date('Y-m-d',strtotime($x[$i]->getTrame()[count($x[$i]->getTrame())-1]->getTimestamp())),
                 ];
                 array_push($final,$formatted);
             }

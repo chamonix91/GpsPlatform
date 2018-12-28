@@ -83,7 +83,7 @@ class Company
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\EspaceUserBundle\Document\User", mappedBy="company") */
     private $users;
 
-    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company",) */
     private $fleets;
 
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */

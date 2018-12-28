@@ -93,6 +93,15 @@ class fleet
     {
         $this->vehicles = new ArrayCollection();
     }
+
+    /**
+     * @param mixed $vehicles
+     */
+    public function setVehicles($vehicles)
+    {
+        $this->vehicles = $vehicles;
+    }
+
     
     /**
      * Add vehicle
