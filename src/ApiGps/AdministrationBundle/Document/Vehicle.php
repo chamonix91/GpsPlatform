@@ -116,12 +116,21 @@ class Vehicle
     /**
      * @MongoDB\Field(type="boolean")
      */
+    private $panne;
+
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
     private $active;
 
     /**
      * @MongoDB\ReferenceMany(targetDocument="Alert",mappedBy="vehicle")
      */
     private $alters;
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="Operation",mappedBy="vehicle")
+     */
+    private $operations;
 
     /**
      * @return mixed
@@ -171,6 +180,11 @@ class Vehicle
      */
     private $capteurs;
 
+    /**
+     * @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Sonde", mappedBy="objets")
+     */
+    private $sondes;
+
 
     /**
      * Get id
@@ -181,6 +195,40 @@ class Vehicle
     {
         return $this->id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOperations()
+    {
+        return $this->operations;
+    }
+
+    /**
+     * @param mixed $operations
+     */
+    public function setOperations($operations)
+    {
+        $this->operations = $operations;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSondes()
+    {
+        return $this->sondes;
+    }
+
+    /**
+     * @param mixed $sondes
+     */
+    public function setSondes($sondes)
+    {
+        $this->sondes = $sondes;
+    }
+
+
 
     /**
      * Set regNumber
@@ -756,4 +804,21 @@ class Vehicle
     {
         return $this->active;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPanne()
+    {
+        return $this->panne;
+    }
+
+    /**
+     * @param mixed $panne
+     */
+    public function setPanne($panne)
+    {
+        $this->panne = $panne;
+    }
+
 }

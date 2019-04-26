@@ -412,6 +412,7 @@ class FleetController extends FOSRestController
                         'flot' => $result->getFlot()->getId(),
                         'type_carburant' => $result->getFuelType(),
                         'reservoir' => $result->getReservoir(),
+                        'panne' => $result->getPanne(),
                         'id' => $result->getId(),
                         'libele' => $result->getLibele(),
                         'adress' => $result->getAdress(),

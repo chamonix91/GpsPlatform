@@ -143,7 +143,7 @@ class CapteurController extends FOSRestController
                     'valeur1' => $fleet->getValeur1(),
                     'valeur2' => $fleet->getValeur2(),
                     'type' => $fleet->getType(),
-                    'object' => ($fleet->getObjets()),
+                    //'object' => ($fleet->getObjets()),
                 ];
             }else{
                 $company[] = [
@@ -161,13 +161,42 @@ class CapteurController extends FOSRestController
             }
 
         }
-        return $results;
         if(count($results)==0){
             return null;
         }
         else{
             return $company;
         }
+    }
+
+    /**
+     * @Rest\Put("/unsetcapteur/{id}/{id1}")
+     * @param Request $request
+     * @return string
+     */
+    public function getUnsetcapteursAction(Request $request)
+    {
+        $id = $request->get('id');
+        $id1 = $request->get('id1');
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Capteur')
+            ->find($id);
+
+        if ($results === null) {
+            return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
+        }
+
+        $x=0;
+        foreach ($results->getObjets() as $fleet) {
+            if($fleet->getId()==$id1){
+                unset($results->getObjets()[$x]);
+            }
+            $x++;
+        }
+        $sn = $this->get('doctrine_mongodb')->getManager();
+        $sn->merge($results);
+        $sn->flush();
+        return new View("Vehicle Updated Successfully", Response::HTTP_OK);
+
     }
 
     }

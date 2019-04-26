@@ -52,7 +52,12 @@ traffic:
 sonde:
     type:     rest
     resource: "@ApiGpsAdministrationBundle/Controller/SondeController.php"
-    prefix:   /
+    prefix:   /api
+#operation_rest
+operation:
+    type:     rest
+    resource: "@ApiGpsAdministrationBundle/Controller/OperationController.php"
+    prefix:   /api
 #Vehicle_rest
 vehicle:
     type:     rest

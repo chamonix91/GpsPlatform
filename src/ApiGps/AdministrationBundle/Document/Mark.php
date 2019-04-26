@@ -26,6 +26,10 @@ class Mark
      * @MongoDB\Field(type="string")
      */
     private $name;
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    private $image;
 
     /**
      * @MongoDB\Field(type="boolean")
@@ -53,6 +57,23 @@ class Mark
     {
         return $this->id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
 
     /**
      * Set name

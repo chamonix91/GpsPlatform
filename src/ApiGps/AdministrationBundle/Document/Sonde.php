@@ -30,6 +30,29 @@ class Sonde
     private $ru;
 
     /**
+     * @MongoDB\ReferenceMany(targetDocument="Vehicle", inversedBy="sondes")
+     */
+    private $objets;
+
+    /**
+     * @return mixed
+     */
+    public function getObjets()
+    {
+        return $this->objets;
+    }
+
+    /**
+     * @param mixed $objets
+     */
+    public function setObjets($objets)
+    {
+        $this->objets = $objets;
+    }
+
+
+
+    /**
      * @return mixed
      */
     public function getId()

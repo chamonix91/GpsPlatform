@@ -27,7 +27,14 @@ class MarkController extends  FOSRestController
         if ($marks === null) {
             return new View("there are no marks exist", Response::HTTP_NOT_FOUND);
         }
-        return $marks;
+        foreach ($marks as $mark) {
+            $formatted[] = [
+                'id' => $mark->getId(),
+                'name' => $mark->getName(),
+                'image' => $mark->getImage(),
+                ];
+        }
+        return $formatted;
     }
 
 
@@ -44,6 +51,7 @@ class MarkController extends  FOSRestController
     {
         $data = new Mark();
         $name = $request->get('name');
+        $image = $request->get('image');
         //$idVehicle = $request->get('idvehicle');
         //$Vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
         if(empty($name))
@@ -51,6 +59,7 @@ class MarkController extends  FOSRestController
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
         $data->setName($name);
+        $data->setImage($image);
         //$data->setVehicle($Vehicle);
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -58,4 +67,32 @@ class MarkController extends  FOSRestController
         $result = new View("Mark Added Successfully", Response::HTTP_OK);
         return $result;
  }
+
+    /**
+     * @Rest\Put("/mark/{id}")
+     * @param Request $request
+     * @return View
+     */
+    public function putMarkAction(Request $request)
+    {
+        $id = $request->get('id');
+        $name = $request->get('name');
+        $image = $request->get('image');
+        $data = $marks = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')
+            ->find($id);
+        //$idVehicle = $request->get('idvehicle');
+        //$Vehicle = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($idVehicle);
+        if(empty($name))
+        {
+            return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
+        }
+        $data->setName($name);
+        $data->setImage($image);
+        //$data->setVehicle($Vehicle);
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $em->persist($data);
+        $em->flush();
+        $result = new View("Mark Added Successfully", Response::HTTP_OK);
+        return $result;
+    }
 }

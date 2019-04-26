@@ -33,9 +33,17 @@ class Alert
      */
     private $type;
     /**
+     * @MongoDB\Field(type="string")
+     */
+    private $radus;
+    /**
      * @MongoDB\Field(type="float")
      */
     private $valeur;
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    private $valeur1;
     /**
      * @MongoDB\Field(type="string")
      */
@@ -65,6 +73,22 @@ class Alert
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValeur1()
+    {
+        return $this->valeur1;
+    }
+
+    /**
+     * @param mixed $valeur1
+     */
+    public function setValeur1($valeur1)
+    {
+        $this->valeur1 = $valeur1;
     }
 
     /**
@@ -110,6 +134,23 @@ class Alert
     {
         return $this->type;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRadus()
+    {
+        return $this->radus;
+    }
+
+    /**
+     * @param mixed $radus
+     */
+    public function setRadus($radus)
+    {
+        $this->radus = $radus;
+    }
+
 
     /**
      * Set valeur
@@ -165,6 +206,9 @@ class Alert
     {
         $this->vehicle[] = $vehicle;
         return $this;
+    }
+    public function remove(){
+        $this->vehicle->remove();
     }
 
     /**

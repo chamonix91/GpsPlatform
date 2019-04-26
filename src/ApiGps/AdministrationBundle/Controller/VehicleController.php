@@ -33,8 +33,16 @@ class VehicleController extends FOSRestController
             $a=array();
             return($a);
         }
+        $x=0;
         foreach ($results as $result) {
+
+            if(empty($result->getPanne()) || $result->getPanne() == false){
+                $result->setPanne(false);
+            }
+            //var_dump($result);die();
             if($result->getFlot()->getComapny()->getId()==$user->getCompany()->getId()) {
+                //var_dump($result->getMark());die();
+
                 $formatted[] = [
                     'reg_number' => $result->getRegNumber(),
                     //'flot' => $result->getFlot(),
@@ -46,6 +54,7 @@ class VehicleController extends FOSRestController
                     'type' => $result->getType(),
                     'mark' => $result->getMark(),
                     'model' => $result->getModel(),
+                    'panne' => $result->getPanne(),
                     'fuel_type' => $result->getFuelType(),
                     'puissance' => $result->getPuissance(),
                     'rpmMax' => $result->getRpmMax(),
@@ -59,8 +68,13 @@ class VehicleController extends FOSRestController
                     'insurance' => date('Y-m-d', $result->getInsurance()->sec),
                     'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
                 ];
+               $x++;
             }
+
+
         }
+
+
         return ($formatted);
     }
     public function idBoxtrames($id)
@@ -72,21 +86,44 @@ class VehicleController extends FOSRestController
             return null;
         }
         foreach ($result as $user) {
-            $formatted[] = [
-                'id' => $user->getId(),
-                'timestamp' => $user->getTimestamp(),
-                'street' => $user->getStreet(),
-                'longitude' => $user->getLongitude(),
-                'latitude' => $user->getLatitude(),
-                'angle' => $user->getAngle(),
-                'speed' => $user->getSpeed(),
-                'contact' => $user->getContact(),
-                'din1' => $user->getContact(),
-                'box' => $user->getBox()->getImei(),
+            $pos = strpos($user->getTimestamp(), "T");
 
-            ];
+            if($pos ==false){
+                $az=date('Y-m-d H:i:s', $user->getTimestamp());
+
+            }
+            else{
+                $az =str_replace("T", " ", $user->getTimestamp());
+                $az =str_replace(".000Z", "", $az);
+                $az =str_replace("-", "/", $az);
+                $az =substr_replace($az ,"", -1);
+                $az =substr($az, 1);
+            }//daclofdeano
+            $d2=date('Y-m-d',strtotime("-1 days"));
+
+
+                if($az>$d2){
+                    $formatted[] = [
+                        'id' => $user->getId(),
+                        'timestamp' => $az,
+                        'street' => $user->getStreet(),
+                        'longitude' => $user->getLongitude(),
+                        'latitude' => $user->getLatitude(),
+                        'angle' => $user->getAngle(),
+                        'speed' => $user->getSpeed(),
+                        'contact' => $user->getContact(),
+                        'din1' => $user->getContact(),
+                        'kilo' => $user->getTotalMileage(),
+                        'box' => $user->getBox()->getImei(),
+
+                    ];
+                }
+
         }
         //var_dump(count($formatted));die();
+        usort($formatted, function ($a, $b) {
+            return $a['timestamp'] >= $b['timestamp'];
+        });
         if(count($result)==0)
             return null;
         else
@@ -100,6 +137,7 @@ class VehicleController extends FOSRestController
      */
     public function getmyrealVehicleAction(Request $request)
     {
+
         $id = $request->get('id');
         $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
             ->find($id);
@@ -108,18 +146,42 @@ class VehicleController extends FOSRestController
         /*************/
         $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
             ->findAll();
+        $imagess = $this->get('doctrine_mongodb')->getRepository
+        ('ApiGpsAdministrationBundle:Mark')
+            ->findAll();
+        foreach ($imagess as $im){
+            $images[]=[
+              'name'=>$im->getName(),
+              'image'=>$im->getImage(),
+            ];
+        }
 
         if(count($results)==0){
             $a=array();
             return($a);
         }
         $formatted=[];
+
         foreach ($results as $result) {
             if($result->getFlot()->getComapny()->getId()==$user->getCompany()->getId() &&
                 (!empty($result->getBox()) || $result->getBox() != null)
                 && $result->getType()!="personne" && $result->getType()!="depot"
                 ) {
+                //var_dump($result->getMark());
+                foreach ($images as $im){
+
+                    if($im['name']==$result->getMark()){
+
+                        $image=$im['image'];
+                    }
+                }
+                $nameimage="";
+                if(!empty($image))
+                    $nameimage=$image;
                 $capteurs = array();
+                unset($capteurs);
+
+                //var_dump(count($result->getCapteurs()));
                 foreach ($result->getCapteurs() as $cap){
                     $capteurs[] = [
                         'id' => $cap->getId(),
@@ -134,12 +196,54 @@ class VehicleController extends FOSRestController
                     ];
 
                 }
-                $trams=$this->idBoxtrames($result->getBox());
-
+                $trams=$this->idBoxtrames($result->getBox());//sweetydeano
+                //var_dump(count($trams));
+               // var_dump($result->getId());
                 //var_dump([count($trams)]->getId());die();
+                unset($operat);
+                foreach ($result->getOperations() as $op){
+                    $operat[] = [
+                        'id' => $op->getId(),
+                        'libele' => $op->getLibelle(),
+                        'type' => $op->getType(),
+                        'price' => $op->getPrice(),
+                        'operation_date' => date('Y-m-d', $op->getOperationDate()->sec),
+                    ];
+                }
+                unset($drivers);
+                foreach ($result->getAlters() as $aler){
+                    $drivers[] = [
+                        'id' => $aler->getId(),
+                        'libele' => $aler->getLibelle(),
+                        'type' => $aler->getType(),
+                        'description' => $aler->getDescription(),
+                         'valeur' => $aler->getValeur(),
+                        'valeur1' => $aler->getValeur1(),
+                         'radus' => $aler->getRadus(),
+                    ];
+                }
+                $d2=date('Y-m-d',strtotime("-2 days"));
+
                 if(count($trams)>0) {
+
+                    if(((strtotime(date('Y-m-d', strtotime($trams[count($trams) - 1]['timestamp'])))
+                                <strtotime($d2))*-1)/86400){
+                        $boxpanne=true;
+                    }else{
+                        $boxpanne=false;
+                    }
+                    //var_dump($result->getMark());
+
+                        //->findOneBy(array("image"=>$result->getMark()));
+
+
                     $formatted[] = [
                         'reg_number' => $result->getRegNumber(),
+                        'image' => $nameimage,
+                        'boxpanne' => $boxpanne,
+                        'alert' => $drivers,
+                        'operation' => $operat,
+                        'panne' => $result->getPanne(),
                         'flot' => $result->getFlot()->getId(),
                         'box' => $result->getBox()->getImei(),
                         'trams' => ($trams),
@@ -164,11 +268,25 @@ class VehicleController extends FOSRestController
                         'insurance' => date('Y-m-d', $result->getInsurance()->sec),
                         'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
                         'lastposition' => $trams[count($trams) - 1]['street'],
+                        'timestamp' => $trams[count($trams) - 1]['timestamp'],
+
+                        //'date' => $trams[count($trams) - 1]['timestamp'],
+                        'date' => date('Y-m-d', strtotime($trams[count($trams) - 1]['timestamp'])),
+                        'time' => date('H:i:s', strtotime($trams[count($trams) - 1]['timestamp'])),
+                        'kilo' => $trams[count($trams) - 1]['kilo'],
+                        //'time' => $trams[count($trams) - 1]['timestamp'],
                     ];
                 }
                 else{
+
+                    $boxpanne=false;
                         $formatted[] = [
                             'reg_number' => $result->getRegNumber(),
+                            'image' => $nameimage,
+                            'alert' => $drivers,
+                            'boxpanne' => $boxpanne,
+                            'operation' => $operat,
+                            'panne' => $result->getPanne(),
                             'flot' => $result->getFlot()->getId(),
                             'box' => $result->getBox()->getImei(),
                             'capteurs' => ($capteurs),
@@ -195,12 +313,131 @@ class VehicleController extends FOSRestController
                             'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
                             'insurance' => date('Y-m-d', $result->getInsurance()->sec),
                             'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
-                            //'lastposition' => $trams[count($trams) - 1]->getStreet(),
+                            'lastposition' => "Non identifier",
+                            'timestamp' => "Non identifier",
+                            'date' => "Non identifier",
+                            'time' => "Non identifier",
+                            'kilo' => "Non identifier",
                         ];
 
                 }
             }
         }
+        //die();
+
+        return ($formatted);
+    }
+    /**
+     * @Rest\Get("/mydflot/{id}",name="hfgealfh")
+     * @param Request $request
+     * @return view
+     */
+    public function getmyrealdepotAction(Request $request)
+    {
+
+        $id = $request->get('id');
+        $user = $this->get('doctrine_mongodb')->getRepository('ApiGpsEspaceUserBundle:User')
+            ->find($id);
+        //var_dump($user->getCompany()->getId());die();
+
+        /*************/
+        $results = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();
+
+
+        if(count($results)==0){
+            $a=array();
+            return($a);
+        }
+        $formatted=[];
+
+        foreach ($results as $result) {
+            if($result->getFlot()->getComapny()->getId()==$user->getCompany()->getId()
+                 && $result->getType()=="depot"
+            ) {
+                //var_dump($result->getMark());
+
+                unset($capteurs);
+
+                //var_dump(count($result->getCapteurs()));
+                foreach ($result->getCapteurs() as $cap){
+                    $capteurs[] = [
+                        'id' => $cap->getId(),
+                        'nom' => $cap->getNom(),
+                        'key1' => $cap->getKey1(),
+                        'key2' => $cap->getKey2(),
+                        'description' => $cap->getDescription(),
+                        'ioement' => $cap->getIoement(),
+                        'valeur1' => $cap->getValeur1(),
+                        'valeur2' => $cap->getValeur2(),
+                        'type' => $cap->getType(),
+                    ];
+
+                }
+               // $trams=$this->idBoxtrames($result->getBox());//sweetydeano
+                // var_dump($result->getId());
+                //var_dump([count($trams)]->getId());die();
+                unset($operat);
+                foreach ($result->getOperations() as $op){
+                    $operat[] = [
+                        'id' => $op->getId(),
+                        'libele' => $op->getLibelle(),
+                        'type' => $op->getType(),
+                        'price' => $op->getPrice(),
+                        'operation_date' => date('Y-m-d', $op->getOperationDate()->sec),
+                    ];
+                }
+                $d2=date('Y-m-d',strtotime("-2 days"));
+
+                //if(count($trams)>0) {
+                if(0==0) {
+
+                    //var_dump($result->getMark());
+
+                    //->findOneBy(array("image"=>$result->getMark()));
+
+
+                    $formatted[] = [
+                        //'boxpanne' => $boxpanne,
+                        'operation' => $operat,
+                        'flot' => $result->getFlot()->getId(),
+                        //'trams' => ($trams),
+                        //'ctrams' => count($trams),
+                        'id' => $result->getId(),
+                        'type' => $result->getType(),
+                        'nom' => $result->getLibele(),
+                        'positionx' => $result->getPositionx(),
+                        'positiony' => $result->getPositiony(),
+                        'capteurs' => ($capteurs),
+                        //'timestamp' => $trams[count($trams) - 1]['timestamp'],
+                        //'date' => date('Y-m-d', strtotime($trams[count($trams) - 1]['timestamp'])),
+                        //'time' => date('H:i:s', strtotime($trams[count($trams) - 1]['timestamp'])),
+                    ];
+                }
+                else{
+
+                    $boxpanne=false;
+                    $formatted[] = [
+                        'boxpanne' => $boxpanne,
+                        'operation' => $operat,
+                        'flot' => $result->getFlot()->getId(),
+                        'box' => $result->getBox()->getImei(),
+                        //'trams' => ($trams),
+                        //'ctrams' => count($trams),
+                        'id' => $result->getId(),
+                        'type' => $result->getType(),
+                        'nom' => $result->getLibele(),
+                        'positionx' => $result->getPositionx(),
+                        'positiony' => $result->getPositiony(),
+                        'timestamp' => "Non identifier",
+                        'date' => "Non identifier",
+                        'time' => "Non identifier",
+                    ];
+
+                }
+            }
+        }
+        //die();
 
         return ($formatted);
     }
@@ -230,11 +467,16 @@ class VehicleController extends FOSRestController
                 $result->getType()!="personne" && $result->getType()!="depot"
             ) {
                 $trams=$this->idBoxtrames($result->getBox());
-
-                //var_dump([count($trams)]->getId());die();
+                $image = $this->get('doctrine_mongodb')->getRepository
+                ('ApiGpsAdministrationBundle:Mark')->findOneBy(array("image"=>$result->getName()));
+                $nameimage=$image->getImage();
                 if(count($trams)>0) {
                     $formatted[] = [
                         'reg_number' => $result->getRegNumber(),
+                        'image' => $nameimage,
+                        'alert' => "eeee",
+                        'panne' => $result->getPanne(),
+                        //'alert' => count($result->getAlters()),
                         'flot' => $result->getFlot()->getId(),
                         'company' => $result->getComapny()->getId(),
                         'trams' => ($trams),
@@ -254,6 +496,7 @@ class VehicleController extends FOSRestController
                         'prenom' => $result->getPrenom(),
                         'positionx' => $result->getPositionx(),
                         'positiony' => $result->getPositiony(),
+                        'timestamp' => $result->getTimestamp(),
                         'technical_visit' => date('Y-m-d', $result->getTechnicalVisit()->sec),
                         'insurance' => date('Y-m-d', $result->getInsurance()->sec),
                         'vignettes' => date('Y-m-d', $result->getVignettes()->sec),
@@ -263,6 +506,9 @@ class VehicleController extends FOSRestController
                 else{
                     $formatted[] = [
                         'reg_number' => $result->getRegNumber(),
+                        'image' => $nameimage,
+                        //'alert' => count($result->getAlters()),
+                        'alert' => 'eeeee',
                         'flot' => $result->getFlot()->getId(),
                         'trams' => ($trams),
                         'ctrams' => count($trams),
@@ -317,6 +563,7 @@ class VehicleController extends FOSRestController
                 'reg_number' => $result->getRegNumber(),
                 'imei' => $box->getImei(),
                 'type_carburant' => $result->getFuelType(),
+                'panne' => $result->getPanne(),
                 /*'reservoir' => $result->getReservoir(),
                 'id' => $result->getId(),
                 'fuel_consumed' => $t[count($t)-1]->getFeelConsumed(),
@@ -364,6 +611,7 @@ class VehicleController extends FOSRestController
         $positiony = $request->get('positiony');
         $matricule = $request->get('reg_number');
         $type = $request->get('type');
+        //$panne = $request->get('panne');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('fuel_type');
         $idmark = $request->get('mark');
@@ -388,6 +636,7 @@ class VehicleController extends FOSRestController
         $data->setLibele($libele);
         $data->setAdress($adress);
         $data->setNom($nom);
+        $data->setPanne(false);
         $data->setPrenom($prenom);
         $data->setPositionx($positionx);
         $data->setPositiony($positiony);
@@ -427,11 +676,11 @@ class VehicleController extends FOSRestController
         $matricule = $request->get('reg_number');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
-        $idmark = $request->get('idmark');
-
+        $idmark = $request->get('mark');
+        $panne = $request->get('panne');
         $puissance = $request->get('puissance');
         $rpmMax = $request->get('rpmMax');
-        $idmodele =  $request->get('idmodel');
+        $idmodele =  $request->get('model');
         $insurance = strtotime(substr($request->get('insurance'),0,24));
         $vignettes = strtotime(substr($request->get('vignettes'),0,24));
         $technical_visit = strtotime(substr($request->get('technical_visit'),0,24));
@@ -457,7 +706,13 @@ class VehicleController extends FOSRestController
             $vehicule->setVignettes($vignettes);
             $vehicule->setInsurance($insurance);
             $vehicule->setRegNumber($matricule);
-            $vehicule->setBox($boitier);
+            $vehicule->setFlot($vehicule->getFlot());
+            if(!empty($boitier))
+                $vehicule->setBox($boitier);
+            if($panne=='true')
+                $vehicule->setPanne(true);
+            else
+                $vehicule->setPanne(false);
             $vehicule->setType($type);
             $vehicule->setVidengetime($videngetime);
             $vehicule->setVidengekm($videngekm);
@@ -465,8 +720,10 @@ class VehicleController extends FOSRestController
             $vehicule->setReservoir($reservoir);
             $vehicule->setRpmMax($rpmMax);
             $vehicule->setFuelType($typeCarburant);
-            $vehicule->setMark($mark);
-            $vehicule->setModel($model);
+                $vehicule->setMark($idmark);
+                $vehicule->setModel($idmodele);
+            //$sn->merge($vehicule);
+        //var_dump($vehicule->getModel());die();
             $sn->flush();
             return new View("Vehicle Updated Successfully", Response::HTTP_OK);
 /*
@@ -494,7 +751,7 @@ class VehicleController extends FOSRestController
      */
     public function assigntoflotteAction($id,Request $request)
     {
-        $matricule = $request->get('reg_number');
+        /*$matricule = $request->get('reg_number');
         $reservoir = $request->get('reservoir');
         $typeCarburant = $request->get('type_carburant');
         $idmark = $request->get('idmark');
@@ -513,17 +770,19 @@ class VehicleController extends FOSRestController
         }
         $type = $request->get('type');
         $sn = $this->get('doctrine_mongodb')->getManager();
-        $vehicule = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
-        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
-        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);
 
+        $mark = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Mark')->find($idmark);
+        $model = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Model')->find($idmodele);*/
+        $idfleet = $request->get('idfleet');
+        $vehicule = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
+        $vehicule = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')->find($id);
         if (empty($vehicule)) {
             return new View("Vehicle not found", Response::HTTP_NOT_ACCEPTABLE);
         }
 
 
         // elseif(!empty($matricule) && !empty($idBoitier)&& !empty($type)){
-        $vehicule->setTechnicalVisit($technical_visit);
+        /*$vehicule->setTechnicalVisit($technical_visit);
         $vehicule->setVignettes($vignettes);
         $vehicule->setInsurance($insurance);
         $vehicule->setRegNumber($matricule);
@@ -534,8 +793,8 @@ class VehicleController extends FOSRestController
         $vehicule->setRpmMax($rpmMax);
         $vehicule->setFuelType($typeCarburant);
         $vehicule->setMark($mark);
-        $vehicule->setModel($model);
-        $sn->flush();
+        $vehicule->setModel($model);*/
+        //$sn->flush();
         return new View("Vehicle Updated Successfully", Response::HTTP_OK);
         /*
                 }
@@ -562,63 +821,85 @@ class VehicleController extends FOSRestController
      */
     public function getVehicleBetweenTwoDatesAction(Request $request)
     {
-
+        //var_dump("aaaa");die();
         $userID=$request->get('id');
         /*$user=$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')
             ->find($userID);*/
         $datemin=$request->get('datemin');
         $datemax=$request->get('datemax');
 
+
+        /*$allvehicle=$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
+            ->findAll();*/
         $allvehicle=$this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Vehicle')
-            ->findAll();
+            ->findOneBy(array('reg_number'=>$userID));
         $result= [];
         $resTrame=array();
         $c=0;
-        for($i=0;$i<count($allvehicle);$i++) {
-            if ((!empty($allvehicle[$i]->getBox()) || $allvehicle[$i]->getBox() != null)
-                && $allvehicle[$i]->getFlot()->getComapny()->getId()==$userID ){
-                $trames = $allvehicle[$i]->getBox()->getTrame();
-            for ($j = 0; $j < count($trames); $j++) {
+
+        //for($i=0;$i<count($allvehicle);$i++) {
+
+            unset($resTrame);
+            if ((!empty($allvehicle->getBox()) || $allvehicle->getBox() != null)
+                ) {
+                // $trames = $allvehicle[$i]->getBox()->getTrame();
+                unset($trames);
+                $trames = $this->idBoxtrames($allvehicle->getBox());
+                foreach ($trames as $user) {
 
 
-                if ((date('Y-m-d', $trames[$j]->getTimestamp()) > $datemin) &&
-                    (date('Y-m-d', $trames[$j]->getTimestamp()) < $datemax)) {
-                    $resTrame[$c] = $trames[$j];
-                    $c++;
+                    if (date('Y-m-d', strtotime($user["timestamp"])) <= $datemax &&
+                        date('Y-m-d', strtotime($user["timestamp"])) >= $datemin) {
+
+                        $resTrame[$c] = $user;
+                        $c++;
+                    }
                 }
+                //var_dump(count($resTrame));
             }
-        }
-        }
+            /*var_dump($allvehicle[$i]->getRegNumber());
+                die();*/
 
-        for ($i=0;$i<count($resTrame);$i++){
-            /*$s = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" . $resTrame[$i]->getLatitude()
-                . "&lon=" . $resTrame[$i]->getLongitude() . "&accept-language=fr";
+            unset($result);
+            for ($j = 0; $j < count($resTrame); $j++) {
+                $result[] = [
+                    //'reg_number' => $allvehicle[$i]->getRegNumber(),
+                    //'adress' => $obj->display_name,
+                    'adress' => $resTrame[$j]["street"],
+                    'timestamp' => date('Y-m-d H:i:s', $resTrame[$j]["timestamp"]),
+                    'date' => date('Y-m-d H:i:s', $resTrame[$j]["timestamp"]),
+                    'longitude' => $resTrame[$j]["longitude"],
+                    'latitude' => $resTrame[$j]["latitude"],
+                    'speed' => $resTrame[$j]["speed"],
+                    'contact' => $resTrame[$j]["contact"],
+                ];
 
-            $options = array(
-                "http" => array(
-                    "header" => "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
-                )
-            );
-            $context = stream_context_create($options);
-            $resultj = file_get_contents($s, true, $context);
-            $obj = json_decode($resultj);*/
-            $result[]=[
-                'reg_number' => $resTrame[$i]->getBox()->getVehicle()->getRegNumber(),
-                //'adress' => $obj->display_name,
-                'adress' =>$resTrame[$i]->getStreet(),
-                'timestamp' => date('Y-m-d H:i:s',$resTrame[$i]->getTimeStamp()) ,
-                'date' => date('Y-m-d H:i:s', $resTrame[$i]->getTimeStamp()),
-                'longitude' => $resTrame[$i]->getLongitude(),
-                'latitude' => $resTrame[$i]->getLatitude(),
-                'speed' => $resTrame[$i]->getSpeed(),
-                'contact' => $resTrame[$i]->getContact(),
-            ];
+            }
+            if(empty($allvehicle->getMark())){
+                $allvehicle->setMark("mercedes");
+            }
+            if(empty($allvehicle->getModel())){
+                $allvehicle->setModel("Benz");
+            }
+            if (count($result )> 0) {
+                $result1 = [
+                    'reg_number' => $allvehicle->getRegNumber(),
+                    'mark' => $allvehicle->getMark(),
+                    'model' => $allvehicle->getModel(),
+                    //'adress' => $obj->display_name,
+                    'trams' => ($result),
+                ];
+            }
 
-        }
-
-        return $result;
+        //}
+        //die();
+        if(count($result1)>0)
+            return $result1;
+        else
+            return null;
 
     }
+
     /**
      * @Rest\Get("/allvehicle")
      * @param Request $request

@@ -88,6 +88,8 @@ class Company
 
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\fleet", mappedBy="company") */
     private $alerts;
+    /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\operation", mappedBy="company") */
+    private $operations;
 
     /** @MongoDB\ReferenceMany(targetDocument="ApiGps\AdministrationBundle\Document\Driver", mappedBy="company") */
     private $drivers;
@@ -538,4 +540,21 @@ class Company
     {
         return $this->active;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOperations()
+    {
+        return $this->operations;
+    }
+
+    /**
+     * @param mixed $operations
+     */
+    public function setOperations($operations)
+    {
+        $this->operations = $operations;
+    }
+
 }

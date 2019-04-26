@@ -137,7 +137,7 @@ class BoxController extends  FOSRestController
      */
     public function BoxbyimeiAction($id)
     {
-        var_dump($id);die();
+        //var_dump($id);die();
         $result = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Box')
             ->findOneBy(array("imei"=>$id));
         if ($result === null) {
@@ -146,7 +146,7 @@ class BoxController extends  FOSRestController
 
 
 
-        return $result->getCompany()->getId();
+        return $result->getMark();
     }
 
 
@@ -291,9 +291,14 @@ class BoxController extends  FOSRestController
         if ($results === null) {
             return new View("there are no fleet exist", Response::HTTP_NOT_FOUND);
         }
-
         foreach ($results as $fleet) {
            // if (empty($fleet->getVehicle())) {
+            if($fleet->getVehicle()!=null || !empty($fleet->getVehicle())){
+                $vehi=$fleet->getVehicle()->getRegNumber();
+            }
+            else{
+                $vehi="non associé";
+            }
                 $formatted[] = [
                     'id' => $fleet->getId(),
                     'imei' => $fleet->getImei(),
@@ -303,6 +308,7 @@ class BoxController extends  FOSRestController
                     'ass_sim' => $fleet->getAssSim(),
                     'client_sim' => $fleet->getClientSim(),
                     'active' => $fleet->getActive(),
+                    'vehi' =>$vehi,
                     'company' => $fleet->getCompany()->getId(),
 
                 ];

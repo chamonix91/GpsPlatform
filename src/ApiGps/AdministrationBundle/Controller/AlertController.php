@@ -30,6 +30,9 @@ class AlertController extends FOSRestController
         }
 
         foreach ($results as $result) {
+            if(empty($result->getRadus())){
+                $result->setRadus("-");
+            }
             $formatted1=null;
             if(count($result->getVehicle())>0) {
                 foreach ($result->getVehicle() as $vehicle) {
@@ -82,6 +85,8 @@ class AlertController extends FOSRestController
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
+                    'valeur1' => $result->getValeur1(),
+                    'radus' => $result->getRadus(),
                     'company' => $formatted,
                     'active' => $result->getActive(),
                     'object' => $formatted1,
@@ -95,6 +100,8 @@ class AlertController extends FOSRestController
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
+                    'valeur1' => $result->getValeur1(),
+                    'radus' => $result->getRadus(),
                     'active' => $result->getActive(),
                     'object' => $formatted1,
                     'objectc' => count($result->getVehicle()),
@@ -179,6 +186,8 @@ class AlertController extends FOSRestController
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
+                    'valeur1' => $result->getValeur1(),
+                    'radus' => $result->getRadus(),
                     'company' => $formatted,
                     'active' => $result->getActive(),
                     'object' => $formatted1,
@@ -192,6 +201,8 @@ class AlertController extends FOSRestController
                     'type' => $result->getType(),
                     'description' => $result->getDescription(),
                     'valeur' => $result->getValeur(),
+                    'valeur1' => $result->getValeur1(),
+                    'radus' => $result->getRadus(),
                     'active' => $result->getActive(),
                     'object' => $formatted1,
                     'objectc' => count($result->getVehicle()),
@@ -217,6 +228,7 @@ class AlertController extends FOSRestController
      */
     public function postAlertAction(Request $request)
     {
+
         $data = new Alert();
         /*
          *  $drivers[] = [
@@ -230,17 +242,16 @@ class AlertController extends FOSRestController
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
+        $valeur1 = $request->get('valeur1');
+        $zone = $request->get('radus');
         $idcompany = $request->get('idcompany');
-        if($idcompany != null) {
-            $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
-            $data->setCompany($company);
-        }else{
-            $company=null;
-        }
+        $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
+
+
 
 
         //var_dump($boitier);die();
-        if(empty($libelle)|| empty($type) || empty($valeur) )
+        if(empty($libelle)|| empty($type)  )
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
@@ -248,8 +259,12 @@ class AlertController extends FOSRestController
         $data ->setLibelle($libelle);
         $data ->setActive(true);
         $data ->setType($type);
+        $data ->setRadus($zone);
         $data->setValeur($valeur);
+        $data->setValeur1($valeur1);
         $data->setDescription($description);
+        if(!empty($company))
+            $data->setCompany($company);
 
         $em = $this->get('doctrine_mongodb')->getManager();
         $em->persist($data);
@@ -277,6 +292,8 @@ class AlertController extends FOSRestController
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
+        $valeur1 = $request->get('valeur1');
+        $zone= $request->get('radus');
         $idcompany = $request->get('id');
 
             $company = $this->get('doctrine_mongodb')->getRepository('ApiGpsAdministrationBundle:Company')->find($idcompany);
@@ -289,7 +306,9 @@ class AlertController extends FOSRestController
 
         $data ->setLibelle($libelle);
         $data ->setType($type);
+        $data ->setRadus($zone);
         $data->setValeur($valeur);
+        $data->setValeur1($valeur1);
         $data->setActive(true);
         $data->setDescription($description);
         $data->setCompany($company);
@@ -318,6 +337,7 @@ class AlertController extends FOSRestController
         $type = $request->get('type');
         $description = $request->get('description');
         $valeur = $request->get('valeur');
+        $zone = $request->get('radus');
         $id = $request->get('id');
 
         $sn = $this->get('doctrine_mongodb')->getManager();
@@ -331,6 +351,7 @@ class AlertController extends FOSRestController
         $alert->setType($type);
         $alert->setDescription($description);
         $alert->setValeur($valeur);
+        $alert->setRadus($zone);
         //$driver->setVehicle($vehicle);
         $sn->flush();
         return new View("Alert Updated Successfully", Response::HTTP_OK);
@@ -469,11 +490,12 @@ class AlertController extends FOSRestController
             return new View("alert not found", Response::HTTP_NOT_FOUND);
 
         }
-
+        var_dump($alert);
         $alert->setActive(true);
         $alert->setVehicle($object);
         $alert->setCompany($client);
         $sn->merge($alert);
+        var_dump($alert);
         $sn->flush();
         return new View("alert activated Successfully", Response::HTTP_OK);
 
@@ -503,6 +525,7 @@ class AlertController extends FOSRestController
         }
 
         $alert->setActive(true);
+        $alert->remove();
         $alert->setVehicle($object);
         $sn->merge($alert);
         $sn->flush();
